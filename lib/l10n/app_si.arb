@@ -1,0 +1,58 @@
+{
+    "@@locale": "si",
+    "appTitle": "ආරක්ෂිත මසුන් ඇල්ලීම",
+    "weatherAlert": "කාලගුණ අනතුරු ඇඟවීම",
+    "community": "සමාජය",
+    "settings": "සැකසුම්",
+    "account": "ගිණුම",
+    "profile": "පැතිකඩ",
+    "securityPrivacy": "ආරක්ෂාව සහ පෞද්ගලිකත්වය",
+    "appPreferences": "යෙදුම් මනාප",
+    "notifications": "නිවේදන",
+    "language": "භාෂාව",
+    "darkMode": "අඳුරු මාදිලිය",
+    "support": "සහාය",
+    "helpFAQ": "උදව් සහ නිතර අසන ප්‍රශ්න",
+    "aboutDheewarayo": "ධීවරයෝ ගැන",
+    "logOut": "ඉවත්වන්න",
+    "home": "මුල් පිටුව",
+    "weather": "කාලගුණය",
+    "aiFishing": "AI මසුන් ඇල්ලීම",
+    "email": "විද්‍යුත් තැපෑල",
+    "username": "පරිශීලක නාමය",
+    "fullName": "සම්පූර්ණ නම",
+    "phoneNumber": "දුරකථන අංකය",
+    "saveChanges": "වෙනස්කම් සුරකින්න",
+    "profileUpdatedSuccessfully": "පැතිකඩ සාර්ථකව යාවත්කාලීන කරන ලදී!",
+    "aiFishingInsights": "AI මසුන් ඇල්ලීමේ තොරතුරු",
+    "hotspotPredictionMap": "උණුසුම් ස්ථාන පුරෝකථන සිතියම",
+    "interactiveMapPlaceholder": "අන්තර්ක්‍රියාකාරී සිතියම් ස්ථාන රඳවනය (Google Maps)",
+    "predictedHotspot": "පුරෝකථනය කළ උණුසුම් ස්ථානය: ඊසාන දෙසින් 5km (ඉහළ විශ්වාසය)",
+    "speciesIdentification": "විශේෂ හඳුනාගැනීම",
+    "uploadCatchPhotoText": "විශේෂය ක්ෂණිකව හඳුනා ගැනීමට සහ දේශීය රෙගුලාසි පරීක්ෂා කිරීමට ඔබගේ ඇල්ලීමේ ඡායාරූපයක් උඩුගත කරන්න.",
+    "identifying": "හඳුනාගනිමින්...",
+    "uploadCatchPhoto": "ඡායාරූපයක් උඩුගත කරන්න",
+    "aiResult": "AI ප්‍රතිඵලය:",
+    "localName": "දේශීය නම: {name}",
+    "@localName": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "confidence": "විශ්වාසය: {percentage}%",
+    "@confidence": {
+        "placeholders": {
+            "percentage": {
+                "type": "String"
+            }
+        }
+    },
+    "regulations": "රෙගුලාසි",
+    "sustainableFishingTips": "තිරසාර මසුන් ඇල්ලීමේ උපදෙස්",
+    "checkMinimumSize": "අවම ප්‍රමාණය පරීක්ෂා කරන්න",
+    "checkMinimumSizeDesc": "මාළුවෙකු තබා ගැනීමට පෙර සෑම විටම අවම නීතිමය ප්‍රමාණය තහවුරු කරන්න.",
+    "catchAndRelease": "අල්ලා මුදා හැරීම",
+    "catchAndReleaseDesc": "මුදා හරින ලද මසුන්ගේ ඉහළ පැවැත්ම සහතික කිරීම සඳහා නිසි ක්‍රම භාවිතා කරන්න."
+}

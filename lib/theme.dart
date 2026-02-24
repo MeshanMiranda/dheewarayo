@@ -18,16 +18,14 @@ final ThemeData dheewarayoTheme = ThemeData(
   scaffoldBackgroundColor: backgroundWhite,
 
   // Color scheme for modern Material 3 design
-  colorScheme: ColorScheme.light(
+  colorScheme: const ColorScheme.light(
     primary: primaryDark,
     secondary: secondaryLight,
     surface: backgroundWhite,
-    background: backgroundWhite,
     error: Colors.red,
     onPrimary: textSecondary, // Text on primary color
     onSecondary: textPrimary, // Text on secondary color
     onSurface: textPrimary, // Text on surface color
-    onBackground: textPrimary, // Text on background color
     onError: textSecondary, // Text on error color
     brightness: Brightness.light,
   ),

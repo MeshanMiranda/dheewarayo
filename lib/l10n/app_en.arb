@@ -1,0 +1,58 @@
+{
+    "@@locale": "en",
+    "appTitle": "Safe Fishing App",
+    "weatherAlert": "Weather Alert",
+    "community": "Community",
+    "settings": "Settings",
+    "account": "Account",
+    "profile": "Profile",
+    "securityPrivacy": "Security & Privacy",
+    "appPreferences": "App Preferences",
+    "notifications": "Notifications",
+    "language": "Language",
+    "darkMode": "Dark Mode",
+    "support": "Support",
+    "helpFAQ": "Help & FAQ",
+    "aboutDheewarayo": "About Dheewarayo",
+    "logOut": "Log Out",
+    "home": "Home",
+    "weather": "Weather",
+    "aiFishing": "AI Fishing",
+    "email": "Email",
+    "username": "Username",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "saveChanges": "Save Changes",
+    "profileUpdatedSuccessfully": "Profile updated successfully!",
+    "aiFishingInsights": "AI Fishing Insights",
+    "hotspotPredictionMap": "Hotspot Prediction Map",
+    "interactiveMapPlaceholder": "Interactive Map Placeholder (Google Maps)",
+    "predictedHotspot": "Predicted Hotspot: 5km North-East (High Confidence)",
+    "speciesIdentification": "Species Identification",
+    "uploadCatchPhotoText": "Upload a photo of your catch to instantly identify the species and check local regulations.",
+    "identifying": "Identifying...",
+    "uploadCatchPhoto": "Upload Catch Photo",
+    "aiResult": "AI Result:",
+    "localName": "Local Name: {name}",
+    "@localName": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "confidence": "Confidence: {percentage}%",
+    "@confidence": {
+        "placeholders": {
+            "percentage": {
+                "type": "String"
+            }
+        }
+    },
+    "regulations": "Regulations",
+    "sustainableFishingTips": "Sustainable Fishing Tips",
+    "checkMinimumSize": "Check Minimum Size",
+    "checkMinimumSizeDesc": "Always verify the minimum legal size before keeping a fish.",
+    "catchAndRelease": "Catch and Release",
+    "catchAndReleaseDesc": "Use proper techniques to ensure high survival rates for released fish."
+}

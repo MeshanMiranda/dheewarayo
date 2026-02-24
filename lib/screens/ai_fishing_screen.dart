@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
 import '../theme.dart';
 import '../services/ai_service.dart';
@@ -43,30 +44,35 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BaseScreen(
-      title: 'AI Fishing Insights',
+      title: l10n.aiFishingInsights,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _buildHotspotMapPlaceholder(context),
+            _buildHotspotMapPlaceholder(context, l10n),
             const SizedBox(height: 20),
-            _buildSpeciesIDCard(context),
+            _buildSpeciesIDCard(context, l10n),
             const SizedBox(height: 20),
-            _buildSustainableTipsCard(context),
+            _buildSustainableTipsCard(context, l10n),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHotspotMapPlaceholder(BuildContext context) {
+  Widget _buildHotspotMapPlaceholder(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hotspot Prediction Map',
+          l10n.hotspotPredictionMap,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             color: primaryDark,
             fontWeight: FontWeight.bold,
@@ -76,26 +82,26 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
         Container(
           height: 250,
           decoration: BoxDecoration(
-            color: secondaryLight.withOpacity(0.2),
+            color: secondaryLight.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: secondaryLight),
           ),
           alignment: Alignment.center,
-          child: const Text(
-            'Interactive Map Placeholder (Google Maps)',
-            style: TextStyle(color: primaryDark),
+          child: Text(
+            l10n.interactiveMapPlaceholder,
+            style: const TextStyle(color: primaryDark),
           ),
         ),
         const SizedBox(height: 10),
-        const Text(
-          'Predicted Hotspot: 5km North-East (High Confidence)',
-          style: TextStyle(fontStyle: FontStyle.italic),
+        Text(
+          l10n.predictedHotspot,
+          style: const TextStyle(fontStyle: FontStyle.italic),
         ),
       ],
     );
   }
 
-  Widget _buildSpeciesIDCard(BuildContext context) {
+  Widget _buildSpeciesIDCard(BuildContext context, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -103,15 +109,13 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Species Identification',
+              l10n.speciesIdentification,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(color: primaryDark),
             ),
             const Divider(),
-            const Text(
-              'Upload a photo of your catch to instantly identify the species and check local regulations.',
-            ),
+            Text(l10n.uploadCatchPhotoText),
             const SizedBox(height: 10),
             if (_imageFile != null) ...[
               // Display the picked image
@@ -134,8 +138,8 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
                     )
                   : const Icon(Icons.camera_alt),
               label: _isLoading
-                  ? const Text('Identifying...')
-                  : const Text('Upload Catch Photo'),
+                  ? Text(l10n.identifying)
+                  : Text(l10n.uploadCatchPhoto),
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryDark,
                 foregroundColor: textSecondary,
@@ -144,20 +148,22 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
             if (_aiResult != null) ...[
               const SizedBox(height: 20),
               Text(
-                'AI Result:',
+                l10n.aiResult,
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               ListTile(
                 title: Text(_aiResult!['species']),
-                subtitle: Text('Local Name: ${_aiResult!['local_name']}'),
+                subtitle: Text(l10n.localName(_aiResult!['local_name'])),
                 trailing: Text(
-                  'Confidence: ${(_aiResult!['confidence'] * 100).toStringAsFixed(0)}%',
+                  l10n.confidence(
+                    (_aiResult!['confidence'] * 100).toStringAsFixed(0),
+                  ),
                 ),
               ),
               ListTile(
-                title: const Text('Regulations'),
+                title: Text(l10n.regulations),
                 subtitle: Text(_aiResult!['regulations']),
               ),
             ],
@@ -167,7 +173,10 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
     );
   }
 
-  Widget _buildSustainableTipsCard(BuildContext context) {
+  Widget _buildSustainableTipsCard(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -175,25 +184,24 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Sustainable Fishing Tips',
+              l10n.sustainableFishingTips,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(color: primaryDark),
             ),
             const Divider(),
-            const ListTile(
-              leading: Icon(Icons.eco, color: secondaryLight),
-              title: Text('Check Minimum Size'),
-              subtitle: Text(
-                'Always verify the minimum legal size before keeping a fish.',
-              ),
+            ListTile(
+              leading: const Icon(Icons.eco, color: secondaryLight),
+              title: Text(l10n.checkMinimumSize),
+              subtitle: Text(l10n.checkMinimumSizeDesc),
             ),
-            const ListTile(
-              leading: Icon(Icons.restore_from_trash, color: secondaryLight),
-              title: Text('Catch and Release'),
-              subtitle: Text(
-                'Use proper techniques to ensure high survival rates for released fish.',
+            ListTile(
+              leading: const Icon(
+                Icons.restore_from_trash,
+                color: secondaryLight,
               ),
+              title: Text(l10n.catchAndRelease),
+              subtitle: Text(l10n.catchAndReleaseDesc),
             ),
           ],
         ),
