@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
-import '../theme.dart';
 import '../services/ai_service.dart';
 import 'dart:io';
 
@@ -74,7 +73,7 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
         Text(
           l10n.hotspotPredictionMap,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            color: primaryDark,
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -82,14 +81,16 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
         Container(
           height: 250,
           decoration: BoxDecoration(
-            color: secondaryLight.withValues(alpha: 0.2),
+            color: Theme.of(
+              context,
+            ).colorScheme.secondary.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: secondaryLight),
+            border: Border.all(color: Theme.of(context).colorScheme.secondary),
           ),
           alignment: Alignment.center,
           child: Text(
             l10n.interactiveMapPlaceholder,
-            style: const TextStyle(color: primaryDark),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
         ),
         const SizedBox(height: 10),
@@ -110,9 +111,9 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           children: [
             Text(
               l10n.speciesIdentification,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(color: primaryDark),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const Divider(),
             Text(l10n.uploadCatchPhotoText),
@@ -128,12 +129,12 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
             ElevatedButton.icon(
               onPressed: _isLoading ? null : _pickAndIdentifyImage,
               icon: _isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: textSecondary,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     )
                   : const Icon(Icons.camera_alt),
@@ -141,8 +142,8 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
                   ? Text(l10n.identifying)
                   : Text(l10n.uploadCatchPhoto),
               style: ElevatedButton.styleFrom(
-                backgroundColor: primaryDark,
-                foregroundColor: textSecondary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
             if (_aiResult != null) ...[
@@ -185,20 +186,23 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           children: [
             Text(
               l10n.sustainableFishingTips,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(color: primaryDark),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.eco, color: secondaryLight),
+              leading: Icon(
+                Icons.eco,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
               title: Text(l10n.checkMinimumSize),
               subtitle: Text(l10n.checkMinimumSizeDesc),
             ),
             ListTile(
-              leading: const Icon(
+              leading: Icon(
                 Icons.restore_from_trash,
-                color: secondaryLight,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               title: Text(l10n.catchAndRelease),
               subtitle: Text(l10n.catchAndReleaseDesc),

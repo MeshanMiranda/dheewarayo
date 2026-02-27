@@ -70,3 +70,61 @@ final ThemeData dheewarayoTheme = ThemeData(
     elevation: 8,
   ),
 );
+
+// Define dark theme colors
+const Color darkBackground = Color(0xFF121212);
+const Color darkSurface = Color(0xFF1E1E1E);
+const Color darkPrimary = Color(
+  0xFF80d4ff,
+); // Lighter version of primary for dark mode
+const Color darkSecondary = Color(0xFF66CCFF);
+
+final ThemeData dheewarayoDarkTheme = ThemeData(
+  fontFamily: 'Roboto',
+  primaryColor: darkPrimary,
+  scaffoldBackgroundColor: darkBackground,
+  colorScheme: const ColorScheme.dark(
+    primary: darkPrimary,
+    secondary: darkSecondary,
+    surface: darkSurface,
+    error: Colors.redAccent,
+    onPrimary: darkBackground,
+    onSecondary: darkBackground,
+    onSurface: textSecondary,
+    onError: textSecondary,
+    brightness: Brightness.dark,
+  ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: darkSurface,
+    foregroundColor: textSecondary,
+    elevation: 0,
+    centerTitle: true,
+    titleTextStyle: TextStyle(
+      color: textSecondary,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: darkPrimary,
+      foregroundColor: darkBackground,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    ),
+  ),
+  cardTheme: CardThemeData(
+    color: darkSurface,
+    elevation: 2,
+    surfaceTintColor: darkSurface,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  ),
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    backgroundColor: darkSurface,
+    selectedItemColor: darkPrimary,
+    unselectedItemColor: Colors.grey,
+    type: BottomNavigationBarType.fixed,
+    elevation: 8,
+  ),
+);

@@ -54,5 +54,93 @@
     "checkMinimumSize": "Check Minimum Size",
     "checkMinimumSizeDesc": "Always verify the minimum legal size before keeping a fish.",
     "catchAndRelease": "Catch and Release",
-    "catchAndReleaseDesc": "Use proper techniques to ensure high survival rates for released fish."
+    "catchAndReleaseDesc": "Use proper techniques to ensure high survival rates for released fish.",
+    "dheewarayoTitle": "Dheewarayo",
+    "weatherSummary": "Weather Summary",
+    "safeToSail": "Safe to Sail",
+    "currentWeatherShort": "Current: 28°C, Wind: 10 kts NW",
+    "nextHighTideShort": "Next High Tide: 14:30",
+    "bestFishingWindow": "Best Fishing Window",
+    "fishingWindowTime": "06:00 - 09:00 (High Probability)",
+    "viewHotspotMap": "View Hotspot Map ->",
+    "latestCommunityPost": "Latest Community Post",
+    "weatherAndSafety": "Weather & Safety",
+    "criticalAlertHighWind": "CRITICAL ALERT: High Wind Warning",
+    "highWindWarningDesc": "Winds up to 30 knots expected from 18:00 to 06:00. Exercise extreme caution.",
+    "sevenDayMarineForecast": "7-Day Marine Forecast",
+    "today": "Today",
+    "sunnyLowSwell": "Sunny, Low Swell",
+    "nw10kts": "NW 10 kts",
+    "tomorrow": "Tomorrow",
+    "cloudyHighWind": "Cloudy, High Wind",
+    "e25kts": "E 25 kts",
+    "day3": "Day 3",
+    "rainModerateSwell": "Rain, Moderate Swell",
+    "s15kts": "S 15 kts",
+    "windPrefix": "Wind: {wind}",
+    "@windPrefix": {
+        "placeholders": {
+            "wind": {
+                "type": "String"
+            }
+        }
+    },
+    "tideChartPlaceholder": "Tide Chart Placeholder (Interactive Map)",
+    "communityFeed": "Community Feed",
+    "like": "Like",
+    "comment": "Comment",
+    "share": "Share",
+    "hoursAgo": "{hours} hours ago",
+    "@hoursAgo": {
+        "placeholders": {
+            "hours": {
+                "type": "String"
+            }
+        }
+    },
+    "daysAgo": "{days} day ago",
+    "@daysAgo": {
+        "placeholders": {
+            "days": {
+                "type": "String"
+            }
+        }
+    },
+    "navBarHome": "Home",
+    "navBarWeather": "Weather",
+    "navBarAiFishing": "AI Fishing",
+    "navBarCommunity": "Community",
+    "navBarSettings": "Settings",
+    "appVersion": "Version 1.0.0",
+    "projectDetails": "Project Details",
+    "projectDetailsContent": "Dheewarayo is a smart mobile application designed to empower local fishing communities by providing weather alerts, AI-driven fishing hotspot predictions, and species identification capabilities. It aims to make fishing safer and more sustainable.",
+    "developerDetails": "Developer Details",
+    "developerDetailsContent": "Developed by Meshan Miranda\nUndergraduate - Computer Science\nPassionate about AI and community-driven tech solutions.",
+    "universityDetails": "University Details",
+    "universityDetailsContent": "BSc (Hons) in Computer Science\nUniversity of Bedfordshire\nSLIIT City Uni",
+    "researchDetails": "Research Details",
+    "researchDetailsContent": "This application is a part of a final year research project focusing on applying Artificial Intelligence and Machine Learning techniques to optimize traditional fishing practices while strictly adhering to marine sustainability policies.",
+    "faq1Question": "How does the AI Fishing Prediction work?",
+    "faq1Answer": "Our AI uses real-time weather, tide, and historical catch data to predict the best times and locations for fishing.",
+    "faq2Question": "How do I identify a species from a photo?",
+    "faq2Answer": "Go to the AI Fishing tab, tap \"Upload Catch Photo\", and choose an image from your gallery or take a new one. The AI will identify it and provide regulations.",
+    "faq3Question": "What does \"Safe to Sail\" mean?",
+    "faq3Answer": "It indicates that current and predicted weather conditions are within safe parameters for small vessels. Always exercise your own judgment as well.",
+    "faq4Question": "How do I change the app language?",
+    "faq4Answer": "Go to Settings -> Language, and choose between English and Sinhala.",
+    "noNotificationsMessage": "No notifications right now.",
+    "notifHighWindTitle": "High Wind Warning",
+    "notifHighWindContent": "Winds up to 30 knots expected from 18:00 to 06:00. Exercise extreme caution.",
+    "notifGoodFishingTitle": "Good Fishing Window",
+    "notifGoodFishingContent": "Predicted hotspot activity is high in your area for the next 3 hours.",
+    "notifAppUpdateTitle": "App Update",
+    "notifAppUpdateContent": "Version 2.0 is out! Check out the new species identification features.",
+    "dataProtectionPolicy": "Data Protection Policy",
+    "dataProtectionPolicyContent": "Your data is encrypted and securely stored. We strictly comply with international data privacy regulations such as GDPR and CCPA to ensure your personal information is protected.",
+    "locationServices": "Location Services",
+    "locationServicesContent": "We only access your location while using the app to provide weather and fishing insights. Your location history is not shared with third-party advertisers.",
+    "accountSecurityPolicy": "Account Security",
+    "accountSecurityPolicyContent": "We use industry-standard encryption protocols. We recommend using a strong password and enabling two-factor authentication if available.",
+    "dataSharingPolicy": "Data Sharing",
+    "dataSharingPolicyContent": "We never sell your personal information. Data shared with partners is anonymized and strictly used to improve fishing predictions and marine safety."
 }

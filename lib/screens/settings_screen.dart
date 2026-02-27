@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
+import '../providers/theme_provider.dart';
 import 'base_screen.dart';
 import 'profile_screen.dart';
-import '../theme.dart';
+import 'security_privacy_screen.dart';
+import 'notification_screen.dart';
+import 'help_faq_screen.dart';
+import 'about_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -14,12 +18,11 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isDarkMode = false;
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final localeProvider = Provider.of<LocaleProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final currentLocale = localeProvider.locale.languageCode;
 
     return BaseScreen(
@@ -46,7 +49,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildSettingsTile(
                 icon: Icons.security_outlined,
                 title: l10n.securityPrivacy,
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SecurityPrivacyScreen(),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -58,7 +68,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildSettingsTile(
                 icon: Icons.notifications_none_outlined,
                 title: l10n.notifications,
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationScreen(),
+                    ),
+                  );
+                },
               ),
               _buildSettingsTile(
                 icon: Icons.language_outlined,
@@ -89,11 +106,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: Icons.dark_mode_outlined,
                 title: l10n.darkMode,
                 trailing: Switch(
-                  value: _isDarkMode,
+                  value: themeProvider.isDarkMode,
                   onChanged: (bool value) {
-                    setState(() {
-                      _isDarkMode = value;
-                    });
+                    themeProvider.toggleTheme(value);
                   },
                 ),
                 onTap: () {},
@@ -108,12 +123,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildSettingsTile(
                 icon: Icons.help_outline,
                 title: l10n.helpFAQ,
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HelpFaqScreen(),
+                    ),
+                  );
+                },
               ),
               _buildSettingsTile(
                 icon: Icons.info_outline,
                 title: l10n.aboutDheewarayo,
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AboutScreen(),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -124,8 +153,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: const Icon(Icons.logout),
               label: Text(l10n.logOut),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red.shade50,
-                foregroundColor: Colors.red,
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.error.withValues(alpha: 0.1),
+                foregroundColor: Theme.of(context).colorScheme.error,
                 elevation: 0,
               ),
             ),
@@ -149,7 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Text(
             title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: primaryDark,
+              color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -171,11 +202,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Widget? trailing,
     required VoidCallback onTap,
   }) {
-    return ListTile(
-      leading: Icon(icon, color: primaryDark),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-      trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: onTap,
+    return Builder(
+      builder: (context) {
+        return ListTile(
+          leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+          title: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          trailing:
+              trailing ??
+              Icon(
+                Icons.chevron_right,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+          onTap: onTap,
+        );
+      },
     );
   }
 }

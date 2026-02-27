@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
-import '../theme.dart';
 
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BaseScreen(
-      title: 'Community Feed',
+      title: l10n.communityFeed,
       actions: [
         IconButton(
           icon: const Icon(Icons.add_comment_outlined),
@@ -24,22 +25,25 @@ class CommunityScreen extends StatelessWidget {
             context,
             'Lasantha Fernando',
             'Ada kattiyata maalu ahuunada? Me photo eka balanna.',
-            '2 hours ago',
+            l10n.hoursAgo('2'),
             'assets/img/fishmarket.jpg',
+            l10n,
           ),
           _buildPostCard(
             context,
             'Sandun Perera',
             'Ada raata muduhu yanna epa kauruwath. News balanna.',
-            '5 hours ago',
+            l10n.hoursAgo('5'),
             null,
+            l10n,
           ),
           _buildPostCard(
             context,
             'Kamal Silva',
             'Poruthota Asala bottuwak peralila. kattiya parissamin yanna',
-            '1 day ago',
+            l10n.daysAgo('1'),
             null,
+            l10n,
           ),
         ],
       ),
@@ -52,6 +56,7 @@ class CommunityScreen extends StatelessWidget {
     String text,
     String time,
     String? imageUrl,
+    AppLocalizations l10n,
   ) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -64,10 +69,12 @@ class CommunityScreen extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: secondaryLight,
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
                   child: Text(
                     user[0],
-                    style: const TextStyle(color: primaryDark),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -111,17 +118,17 @@ class CommunityScreen extends StatelessWidget {
                 TextButton.icon(
                   onPressed: () {},
                   icon: const Icon(Icons.thumb_up_alt_outlined, size: 18),
-                  label: const Text('Like'),
+                  label: Text(l10n.like),
                 ),
                 TextButton.icon(
                   onPressed: () {},
                   icon: const Icon(Icons.comment_outlined, size: 18),
-                  label: const Text('Comment'),
+                  label: Text(l10n.comment),
                 ),
                 TextButton.icon(
                   onPressed: () {},
                   icon: const Icon(Icons.share_outlined, size: 18),
-                  label: const Text('Share'),
+                  label: Text(l10n.share),
                 ),
               ],
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/locale_provider.dart';
+import 'providers/theme_provider.dart';
 import 'theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/weather_screen.dart';
@@ -11,8 +12,11 @@ import 'screens/settings_screen.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => LocaleProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
       child: const DheewarayoApp(),
     ),
   );
@@ -24,10 +28,13 @@ class DheewarayoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localeProvider = Provider.of<LocaleProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
       title: 'Dheewarayo',
+      themeMode: themeProvider.themeMode,
       theme: dheewarayoTheme,
+      darkTheme: dheewarayoDarkTheme,
       home: const MainScreen(),
       debugShowCheckedModeBanner: false,
       locale: localeProvider.locale,
@@ -63,17 +70,30 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.cloud), label: 'Weather'),
-          BottomNavigationBarItem(icon: Icon(Icons.radar), label: 'AI Fishing'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Community'),
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: const Icon(Icons.home),
+            label: l10n.navBarHome,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.cloud),
+            label: l10n.navBarWeather,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.radar),
+            label: l10n.navBarAiFishing,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.people),
+            label: l10n.navBarCommunity,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: l10n.navBarSettings,
           ),
         ],
         currentIndex: _selectedIndex,

@@ -1,5 +1,7 @@
+import 'package:dheewarayo/screens/community_screen.dart';
+import 'package:dheewarayo/screens/notification_screen.dart';
 import 'package:flutter/material.dart';
-import '../theme.dart';
+import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -7,30 +9,35 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BaseScreen(
-      title: 'Dheewarayo | ධීවරයෝ',
+      titleWidget: Image.asset('assets/img/dheewarayoLogo.png', height: 65),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // 1. Weather Summary Card
-            _buildWeatherSummaryCard(context),
+            _buildWeatherSummaryCard(context, l10n),
             const SizedBox(height: 20),
 
             // 2. AI Fishing Insight Card
-            _buildAIFishingInsightCard(context),
+            _buildAIFishingInsightCard(context, l10n),
             const SizedBox(height: 20),
 
             // 3. Latest Community Post Snippet
-            _buildCommunitySnippetCard(context),
+            _buildCommunitySnippetCard(context, l10n),
+            const SizedBox(height: 20),
+
+            // 4. Notifications Card
+            _buildNotificationsCard(context, l10n),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildWeatherSummaryCard(BuildContext context) {
+  Widget _buildWeatherSummaryCard(BuildContext context, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,29 +45,33 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Weather Summary',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(color: primaryDark),
+              l10n.weatherSummary,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.wb_sunny, color: secondaryLight, size: 40),
+                Icon(
+                  Icons.wb_sunny,
+                  color: Theme.of(context).colorScheme.secondary,
+                  size: 40,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'Safe to Sail',
+                      l10n.safeToSail,
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(
-                            color: secondaryLight,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
-                    const Text('Current: 28°C, Wind: 10 kts NW'),
-                    const Text('Next High Tide: 14:30'),
+                    Text(l10n.currentWeatherShort),
+                    Text(l10n.nextHighTideShort),
                   ],
                 ),
               ],
@@ -71,7 +82,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAIFishingInsightCard(BuildContext context) {
+  Widget _buildAIFishingInsightCard(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -79,34 +93,40 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'AI Fishing Insight',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(color: primaryDark),
+              l10n.aiFishingInsights,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.radar, color: primaryDark, size: 40),
+                Icon(
+                  Icons.radar,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 40,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'Best Fishing Window',
+                      l10n.bestFishingWindow,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: primaryDark,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text('06:00 - 09:00 (High Probability)'),
+                    Text(l10n.fishingWindowTime),
                     TextButton(
                       onPressed: () {
                         // TODO: Navigate to AI Fishing Screen
                       },
-                      child: const Text(
-                        'View Hotspot Map ->',
-                        style: TextStyle(color: secondaryLight),
+                      child: Text(
+                        l10n.viewHotspotMap,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
                     ),
                   ],
@@ -119,7 +139,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCommunitySnippetCard(BuildContext context) {
+  Widget _buildCommunitySnippetCard(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -127,16 +150,19 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Latest Community Post',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(color: primaryDark),
+              l10n.latestCommunityPost,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const Divider(),
             ListTile(
-              leading: const CircleAvatar(
-                backgroundColor: secondaryLight,
-                child: Icon(Icons.person, color: primaryDark),
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                child: Icon(
+                  Icons.person,
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
               ),
               title: const Text('Meshan Miranda'),
               subtitle: const Text(
@@ -144,7 +170,53 @@ class HomeScreen extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
-                // TODO: Navigate to Community Screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CommunityScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationsCard(BuildContext context, AppLocalizations l10n) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.notifications,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.warning_amber_rounded,
+                color: Theme.of(context).colorScheme.error,
+                size: 30,
+              ),
+              title: Text(
+                l10n.criticalAlertHighWind,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(l10n.highWindWarningDesc),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationScreen(),
+                  ),
+                );
               },
             ),
           ],

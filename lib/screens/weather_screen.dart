@@ -1,62 +1,67 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
-import '../theme.dart';
 
 class WeatherScreen extends StatelessWidget {
   const WeatherScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BaseScreen(
-      title: 'Weather & Safety',
+      title: l10n.weatherAndSafety,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _buildAlertsCard(context),
+            _buildAlertsCard(context, l10n),
             const SizedBox(height: 20),
-            _buildForecastHeader(context),
+            _buildForecastHeader(context, l10n),
             const SizedBox(height: 10),
             _buildDailyForecast(
               context,
-              'Today',
-              'Sunny, Low Swell',
+              l10n.today,
+              l10n.sunnyLowSwell,
               '28°C',
-              'NW 10 kts',
+              l10n.nw10kts,
+              l10n,
             ),
             _buildDailyForecast(
               context,
-              'Tomorrow',
-              'Cloudy, High Wind',
+              l10n.tomorrow,
+              l10n.cloudyHighWind,
               '26°C',
-              'E 25 kts',
+              l10n.e25kts,
+              l10n,
             ),
             _buildDailyForecast(
               context,
-              'Day 3',
-              'Rain, Moderate Swell',
+              l10n.day3,
+              l10n.rainModerateSwell,
               '25°C',
-              'S 15 kts',
+              l10n.s15kts,
+              l10n,
             ),
             const SizedBox(height: 20),
-            _buildTideChartPlaceholder(context),
+            _buildTideChartPlaceholder(context, l10n),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAlertsCard(BuildContext context) {
+  Widget _buildAlertsCard(BuildContext context, AppLocalizations l10n) {
     return Card(
-      color: Colors.red.shade100,
+      color: Theme.of(context).colorScheme.error.withValues(alpha: 0.2),
+      elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            const Icon(
+            Icon(
               Icons.warning_amber_rounded,
-              color: Colors.red,
+              color: Theme.of(context).colorScheme.error,
               size: 30,
             ),
             const SizedBox(width: 10),
@@ -65,15 +70,13 @@ class WeatherScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'CRITICAL ALERT: High Wind Warning',
+                    l10n.criticalAlertHighWind,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.red,
+                      color: Theme.of(context).colorScheme.error,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Text(
-                    'Winds up to 30 knots expected from 18:00 to 06:00. Exercise extreme caution.',
-                  ),
+                  Text(l10n.highWindWarningDesc),
                 ],
               ),
             ),
@@ -83,11 +86,11 @@ class WeatherScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildForecastHeader(BuildContext context) {
+  Widget _buildForecastHeader(BuildContext context, AppLocalizations l10n) {
     return Text(
-      '7-Day Marine Forecast',
+      l10n.sevenDayMarineForecast,
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-        color: primaryDark,
+        color: Theme.of(context).colorScheme.primary,
         fontWeight: FontWeight.bold,
       ),
     );
@@ -99,29 +102,36 @@ class WeatherScreen extends StatelessWidget {
     String condition,
     String temp,
     String wind,
+    AppLocalizations l10n,
   ) {
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.water, color: secondaryLight),
+        leading: Icon(
+          Icons.water,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
         title: Text(day, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text('$condition, $temp'),
-        trailing: Text('Wind: $wind'),
+        trailing: Text(l10n.windPrefix(wind)),
       ),
     );
   }
 
-  Widget _buildTideChartPlaceholder(BuildContext context) {
+  Widget _buildTideChartPlaceholder(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return Container(
       height: 150,
       decoration: BoxDecoration(
-        color: primaryDark.withValues(alpha: 0.1),
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: primaryDark),
+        border: Border.all(color: Theme.of(context).colorScheme.primary),
       ),
       alignment: Alignment.center,
-      child: const Text(
-        'Tide Chart Placeholder (Interactive Map)',
-        style: TextStyle(color: primaryDark),
+      child: Text(
+        l10n.tideChartPlaceholder,
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
       ),
     );
   }
