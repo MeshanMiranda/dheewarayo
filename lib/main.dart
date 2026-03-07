@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/locale_provider.dart';
 import 'providers/theme_provider.dart';
@@ -9,13 +10,29 @@ import 'screens/weather_screen.dart';
 import 'screens/ai_fishing_screen.dart';
 import 'screens/community_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/login_screen.dart';
+import 'services/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  final prefs = await SharedPreferences.getInstance();
+  final isDarkMode = prefs.getBool('isDarkMode') ?? false;
+  final languageCode = prefs.getString('languageCode') ?? 'en';
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(
+          create: (_) => LocaleProvider(initialLocale: languageCode),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ThemeProvider(initialDarkMode: isDarkMode),
+        ),
       ],
       child: const DheewarayoApp(),
     ),
@@ -35,11 +52,46 @@ class DheewarayoApp extends StatelessWidget {
       themeMode: themeProvider.themeMode,
       theme: dheewarayoTheme,
       darkTheme: dheewarayoDarkTheme,
-      home: const MainScreen(),
+      home: const AuthWrapper(),
       debugShowCheckedModeBanner: false,
       locale: localeProvider.locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
+    );
+  }
+}
+
+class AuthWrapper extends StatefulWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  State<AuthWrapper> createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
+  late final Stream<User?> _authStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _authStream = AuthService().authStateChanges;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: _authStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasData) {
+          return const MainScreen();
+        }
+        return const LoginScreen();
+      },
     );
   }
 }

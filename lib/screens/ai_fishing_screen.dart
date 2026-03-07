@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
-import '../services/ai_service.dart';
-import 'dart:io';
 
 class AIFishingScreen extends StatefulWidget {
   const AIFishingScreen({super.key});
@@ -12,33 +11,12 @@ class AIFishingScreen extends StatefulWidget {
 }
 
 class _AIFishingScreenState extends State<AIFishingScreen> {
-  final AIService _aiService = AIService();
-  File? _imageFile;
-  Map<String, dynamic>? _aiResult;
-  bool _isLoading = false;
+  late GoogleMapController mapController;
 
-  Future<void> _pickAndIdentifyImage() async {
-    setState(() {
-      _isLoading = true;
-      _aiResult = null;
-    });
+  final LatLng _center = const LatLng(7.8731, 80.7718);
 
-    final pickedFile = await _aiService.pickImage();
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = pickedFile;
-      });
-
-      // Show a loading indicator while the mock AI service runs
-      final result = await _aiService.identifySpecies(pickedFile);
-      setState(() {
-        _aiResult = result;
-      });
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
   }
 
   @override
@@ -47,18 +25,9 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
 
     return BaseScreen(
       title: l10n.aiFishingInsights,
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _buildHotspotMapPlaceholder(context, l10n),
-            const SizedBox(height: 20),
-            _buildSpeciesIDCard(context, l10n),
-            const SizedBox(height: 20),
-            _buildSustainableTipsCard(context, l10n),
-          ],
-        ),
+        child: _buildHotspotMapPlaceholder(context, l10n),
       ),
     );
   }
@@ -78,19 +47,27 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           ),
         ),
         const SizedBox(height: 10),
-        Container(
-          height: 250,
-          decoration: BoxDecoration(
-            color: Theme.of(
-              context,
-            ).colorScheme.secondary.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Theme.of(context).colorScheme.secondary),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            l10n.interactiveMapPlaceholder,
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(11),
+              child: GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 6.5,
+                ),
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                mapType: MapType.normal,
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 10),
@@ -99,117 +76,6 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           style: const TextStyle(fontStyle: FontStyle.italic),
         ),
       ],
-    );
-  }
-
-  Widget _buildSpeciesIDCard(BuildContext context, AppLocalizations l10n) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.speciesIdentification,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const Divider(),
-            Text(l10n.uploadCatchPhotoText),
-            const SizedBox(height: 10),
-            if (_imageFile != null) ...[
-              // Display the picked image
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.file(_imageFile!, height: 150, fit: BoxFit.cover),
-              ),
-              const SizedBox(height: 10),
-            ],
-            ElevatedButton.icon(
-              onPressed: _isLoading ? null : _pickAndIdentifyImage,
-              icon: _isLoading
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    )
-                  : const Icon(Icons.camera_alt),
-              label: _isLoading
-                  ? Text(l10n.identifying)
-                  : Text(l10n.uploadCatchPhoto),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-            if (_aiResult != null) ...[
-              const SizedBox(height: 20),
-              Text(
-                l10n.aiResult,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              ListTile(
-                title: Text(_aiResult!['species']),
-                subtitle: Text(l10n.localName(_aiResult!['local_name'])),
-                trailing: Text(
-                  l10n.confidence(
-                    (_aiResult!['confidence'] * 100).toStringAsFixed(0),
-                  ),
-                ),
-              ),
-              ListTile(
-                title: Text(l10n.regulations),
-                subtitle: Text(_aiResult!['regulations']),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSustainableTipsCard(
-    BuildContext context,
-    AppLocalizations l10n,
-  ) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.sustainableFishingTips,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const Divider(),
-            ListTile(
-              leading: Icon(
-                Icons.eco,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              title: Text(l10n.checkMinimumSize),
-              subtitle: Text(l10n.checkMinimumSizeDesc),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.restore_from_trash,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              title: Text(l10n.catchAndRelease),
-              subtitle: Text(l10n.catchAndReleaseDesc),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

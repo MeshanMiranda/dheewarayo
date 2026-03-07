@@ -9,6 +9,10 @@ import 'security_privacy_screen.dart';
 import 'notification_screen.dart';
 import 'help_faq_screen.dart';
 import 'about_screen.dart';
+import 'login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/auth.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -18,6 +22,32 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final AuthService _authService = AuthService();
+
+  Future<void> _updateSettingsInFirestore({
+    String? languageCode,
+    bool? isDarkMode,
+  }) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final docRef = FirebaseFirestore.instance
+          .collection('settings')
+          .doc(user.uid);
+
+      final Map<String, dynamic> updates = {'userId': user.uid};
+
+      if (languageCode != null) {
+        updates['language'] = languageCode == 'en' ? 'English' : 'Sinhala';
+      }
+
+      if (isDarkMode != null) {
+        updates['theme'] = isDarkMode ? 'Dark Mode' : 'Light Mode';
+      }
+
+      await docRef.set(updates, SetOptions(merge: true));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -87,6 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (String? newValue) {
                     if (newValue != null) {
                       localeProvider.setLocale(Locale(newValue));
+                      _updateSettingsInFirestore(languageCode: newValue);
                     }
                   },
                   items: const [
@@ -109,6 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   value: themeProvider.isDarkMode,
                   onChanged: (bool value) {
                     themeProvider.toggleTheme(value);
+                    _updateSettingsInFirestore(isDarkMode: value);
                   },
                 ),
                 onTap: () {},
@@ -148,17 +180,80 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 30),
           Center(
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.logout),
-              label: Text(l10n.logOut),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(
-                  context,
-                ).colorScheme.error.withValues(alpha: 0.1),
-                foregroundColor: Theme.of(context).colorScheme.error,
-                elevation: 0,
-              ),
+            child: StreamBuilder<User?>(
+              stream: _authService.authStateChanges,
+              builder: (context, snapshot) {
+                final bool isLoggedIn = snapshot.hasData;
+                return isLoggedIn
+                    ? ElevatedButton.icon(
+                        onPressed: () async {
+                          final confirmLogout = await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(l10n.logOut),
+                                content: const Text(
+                                  'Are you sure you want to log out?',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: Text(
+                                      l10n.logOut,
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.error,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          if (confirmLogout == true) {
+                            await _authService.signOut();
+                          }
+                        },
+                        icon: const Icon(Icons.logout),
+                        label: Text(l10n.logOut),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.error.withValues(alpha: 0.1),
+                          foregroundColor: Theme.of(context).colorScheme.error,
+                          elevation: 0,
+                        ),
+                      )
+                    : ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.login),
+                        label: const Text('Log In'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.1),
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
+                          elevation: 0,
+                        ),
+                      );
+              },
             ),
           ),
           const SizedBox(height: 20),

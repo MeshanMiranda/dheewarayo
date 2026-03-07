@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "967289418156",
+    "firebase_url": "https://dheewarayo-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "dheewarayo",
+    "storage_bucket": "dheewarayo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:967289418156:android:5e86ef4d7787b810caca09",
+        "android_client_info": {
+          "package_name": "com.example.dheewarayo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "967289418156-rd66ub46ulup25n48fce6dai55ppfsif.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dheewarayo",
+            "certificate_hash": "a7bc10b853abcd1a51489f3a6c0d63830210eec8"
+          }
+        },
+        {
+          "client_id": "967289418156-41f2b2s719456ki6mblpi07bfe5kis7n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAMF14mTDQEakxFmACngrjUvvTHHJCjXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "967289418156-41f2b2s719456ki6mblpi07bfe5kis7n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
