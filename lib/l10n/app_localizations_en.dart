@@ -362,4 +362,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get dataSharingPolicyContent =>
       'We never sell your personal information. Data shared with partners is anonymized and strictly used to improve fishing predictions and marine safety.';
+
+  @override
+  String get territorialSea => 'Territorial Sea';
+
+  @override
+  String get contiguousZone => 'Contiguous Zone';
+
+  @override
+  String get eez => 'Exclusive Economic Zone (EEZ)';
+
+  @override
+  String get indoSriLankaBoundary => 'Indo–Sri Lanka Maritime Boundary';
+
+  @override
+  String get internationalSea => 'International Sea';
+
+  @override
+  String get mapLegend => 'Map Legend';
 }

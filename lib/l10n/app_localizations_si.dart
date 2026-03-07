@@ -365,4 +365,22 @@ class AppLocalizationsSi extends AppLocalizations {
   @override
   String get dataSharingPolicyContent =>
       'අපි කිසි විටෙකත් ඔබේ පුද්ගලික තොරතුරු විකුණන්නේ නැත. හවුල්කරුවන් සමඟ බෙදා ගන්නා දත්ත නිර්නාමික කර ඇති අතර මසුන් ඇල්ලීමේ අනාවැකි සහ සමුද්‍ර ආරක්ෂාව වැඩි දියුණු කිරීම සඳහා දැඩි ලෙස භාවිතා කරයි.';
+
+  @override
+  String get territorialSea => 'දේශීය මුහුද';
+
+  @override
+  String get contiguousZone => 'යාබද කලාපය';
+
+  @override
+  String get eez => 'අනන්‍ය ආර්ථික කලාපය (EEZ)';
+
+  @override
+  String get indoSriLankaBoundary => 'ඉන්දු-ශ්‍රී ලංකා සමුද්‍ර මායිම';
+
+  @override
+  String get internationalSea => 'ජාත්‍යන්තර මුහුද';
+
+  @override
+  String get mapLegend => 'සිතියම් සලකුණු';
 }

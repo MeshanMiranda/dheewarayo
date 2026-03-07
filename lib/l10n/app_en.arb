@@ -142,5 +142,11 @@
     "accountSecurityPolicy": "Account Security",
     "accountSecurityPolicyContent": "We use industry-standard encryption protocols. We recommend using a strong password and enabling two-factor authentication if available.",
     "dataSharingPolicy": "Data Sharing",
-    "dataSharingPolicyContent": "We never sell your personal information. Data shared with partners is anonymized and strictly used to improve fishing predictions and marine safety."
+    "dataSharingPolicyContent": "We never sell your personal information. Data shared with partners is anonymized and strictly used to improve fishing predictions and marine safety.",
+    "territorialSea": "Territorial Sea",
+    "contiguousZone": "Contiguous Zone",
+    "eez": "Exclusive Economic Zone (EEZ)",
+    "indoSriLankaBoundary": "Indo–Sri Lanka Maritime Boundary",
+    "internationalSea": "International Sea",
+    "mapLegend": "Map Legend"
 }

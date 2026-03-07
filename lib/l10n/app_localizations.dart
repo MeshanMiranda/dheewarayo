@@ -745,6 +745,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We never sell your personal information. Data shared with partners is anonymized and strictly used to improve fishing predictions and marine safety.'**
   String get dataSharingPolicyContent;
+
+  /// No description provided for @territorialSea.
+  ///
+  /// In en, this message translates to:
+  /// **'Territorial Sea'**
+  String get territorialSea;
+
+  /// No description provided for @contiguousZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Contiguous Zone'**
+  String get contiguousZone;
+
+  /// No description provided for @eez.
+  ///
+  /// In en, this message translates to:
+  /// **'Exclusive Economic Zone (EEZ)'**
+  String get eez;
+
+  /// No description provided for @indoSriLankaBoundary.
+  ///
+  /// In en, this message translates to:
+  /// **'Indo–Sri Lanka Maritime Boundary'**
+  String get indoSriLankaBoundary;
+
+  /// No description provided for @internationalSea.
+  ///
+  /// In en, this message translates to:
+  /// **'International Sea'**
+  String get internationalSea;
+
+  /// No description provided for @mapLegend.
+  ///
+  /// In en, this message translates to:
+  /// **'Map Legend'**
+  String get mapLegend;
 }
 
 class _AppLocalizationsDelegate
