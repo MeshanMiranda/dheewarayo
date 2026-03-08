@@ -383,4 +383,19 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get mapLegend => 'සිතියම් සලකුණු';
+
+  @override
+  String get addPost => 'පළ කිරීමක් එක් කරන්න';
+
+  @override
+  String get writeCaption => 'විස්තරයක් ලියන්න...';
+
+  @override
+  String get selectImage => 'පින්තූරය තෝරන්න';
+
+  @override
+  String get post => 'පළ කරන්න';
+
+  @override
+  String get posting => 'පළ කරමින්...';
 }

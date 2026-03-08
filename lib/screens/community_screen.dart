@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
+import 'add_post_screen.dart';
 import 'base_screen.dart';
 
 class CommunityScreen extends StatelessWidget {
@@ -14,38 +16,78 @@ class CommunityScreen extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.add_comment_outlined),
           onPressed: () {
-            // TODO: Implement New Post form
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddPostScreen()),
+            );
           },
         ),
       ],
-      body: ListView(
-        padding: const EdgeInsets.all(8.0),
-        children: <Widget>[
-          _buildPostCard(
-            context,
-            'Lasantha Fernando',
-            'Ada kattiyata maalu ahuunada? Me photo eka balanna.',
-            l10n.hoursAgo('2'),
-            'assets/img/fishmarket.jpg',
-            l10n,
-          ),
-          _buildPostCard(
-            context,
-            'Sandun Perera',
-            'Ada raata muduhu yanna epa kauruwath. News balanna.',
-            l10n.hoursAgo('5'),
-            null,
-            l10n,
-          ),
-          _buildPostCard(
-            context,
-            'Kamal Silva',
-            'Poruthota Asala bottuwak peralila. kattiya parissamin yanna',
-            l10n.daysAgo('1'),
-            null,
-            l10n,
-          ),
-        ],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: Text('Something went wrong'));
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text('No posts yet. Be the first to post!'),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(8.0),
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final doc = snapshot.data!.docs[index];
+              final data = doc.data() as Map<String, dynamic>;
+
+              final user = data['username'] as String? ?? 'Unknown User';
+              final text = data['caption'] as String? ?? '';
+              final imageUrl = data['imageUrl'] as String?;
+
+              String timeStr = '';
+              if (data['timestamp'] != null) {
+                DateTime? dateTime;
+                if (data['timestamp'] is Timestamp) {
+                  dateTime = (data['timestamp'] as Timestamp).toDate();
+                } else if (data['timestamp'] is String) {
+                  dateTime = DateTime.tryParse(data['timestamp'] as String);
+                }
+
+                if (dateTime != null) {
+                  final diff = DateTime.now().difference(dateTime);
+                  if (diff.inDays > 0) {
+                    timeStr = l10n.daysAgo(diff.inDays.toString());
+                  } else if (diff.inHours > 0) {
+                    timeStr = l10n.hoursAgo(diff.inHours.toString());
+                  } else if (diff.inMinutes > 0) {
+                    timeStr = '${diff.inMinutes} minutes ago';
+                  } else {
+                    timeStr = 'Just now';
+                  }
+                }
+              }
+
+              return _buildPostCard(
+                context,
+                user,
+                text,
+                timeStr,
+                imageUrl,
+                l10n,
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -71,7 +113,7 @@ class CommunityScreen extends StatelessWidget {
                 CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
                   child: Text(
-                    user[0],
+                    user.isNotEmpty ? user[0].toUpperCase() : '?',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondary,
                     ),
@@ -98,14 +140,15 @@ class CommunityScreen extends StatelessWidget {
             Text(text),
             if (imageUrl != null) ...[
               const SizedBox(height: 10),
-              // Placeholder for image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
+                child: Image.network(
                   imageUrl,
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.error),
                 ),
               ),
             ],

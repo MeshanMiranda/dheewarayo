@@ -781,6 +781,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Map Legend'**
   String get mapLegend;
+
+  /// No description provided for @addPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Post'**
+  String get addPost;
+
+  /// No description provided for @writeCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a caption...'**
+  String get writeCaption;
+
+  /// No description provided for @selectImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Image'**
+  String get selectImage;
+
+  /// No description provided for @post.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get post;
+
+  /// No description provided for @posting.
+  ///
+  /// In en, this message translates to:
+  /// **'Posting...'**
+  String get posting;
 }
 
 class _AppLocalizationsDelegate

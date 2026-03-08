@@ -148,5 +148,10 @@
     "eez": "Exclusive Economic Zone (EEZ)",
     "indoSriLankaBoundary": "Indo–Sri Lanka Maritime Boundary",
     "internationalSea": "International Sea",
-    "mapLegend": "Map Legend"
+    "mapLegend": "Map Legend",
+    "addPost": "Add Post",
+    "writeCaption": "Write a caption...",
+    "selectImage": "Select Image",
+    "post": "Post",
+    "posting": "Posting..."
 }

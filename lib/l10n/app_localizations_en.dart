@@ -380,4 +380,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mapLegend => 'Map Legend';
+
+  @override
+  String get addPost => 'Add Post';
+
+  @override
+  String get writeCaption => 'Write a caption...';
+
+  @override
+  String get selectImage => 'Select Image';
+
+  @override
+  String get post => 'Post';
+
+  @override
+  String get posting => 'Posting...';
 }
