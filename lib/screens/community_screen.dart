@@ -53,6 +53,7 @@ class CommunityScreen extends StatelessWidget {
               final user = data['username'] as String? ?? 'Unknown User';
               final text = data['caption'] as String? ?? '';
               final imageUrl = data['imageUrl'] as String?;
+              final userProfilePic = data['userProfilePic'] as String?;
 
               String timeStr = '';
               if (data['timestamp'] != null) {
@@ -83,6 +84,7 @@ class CommunityScreen extends StatelessWidget {
                 text,
                 timeStr,
                 imageUrl,
+                userProfilePic,
                 l10n,
               );
             },
@@ -98,6 +100,7 @@ class CommunityScreen extends StatelessWidget {
     String text,
     String time,
     String? imageUrl,
+    String? userProfilePic,
     AppLocalizations l10n,
   ) {
     return Card(
@@ -112,12 +115,17 @@ class CommunityScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  child: Text(
-                    user.isNotEmpty ? user[0].toUpperCase() : '?',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                  ),
+                  backgroundImage: userProfilePic != null && userProfilePic.isNotEmpty
+                      ? NetworkImage(userProfilePic)
+                      : null,
+                  child: userProfilePic == null || userProfilePic.isEmpty
+                      ? Text(
+                          user.isNotEmpty ? user[0].toUpperCase() : '?',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSecondary,
+                          ),
+                        )
+                      : null,
                 ),
                 const SizedBox(width: 10),
                 Column(
