@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import '../l10n/app_localizations.dart';
 import 'add_post_screen.dart';
 import 'base_screen.dart';
@@ -58,6 +59,23 @@ class CommunityScreen extends StatelessWidget {
               final imageUrl = data['imageUrl'] as String?;
               final userProfilePic = data['userProfilePic'] as String?;
 
+              final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+              
+              final likesData = data['likes'];
+              List<dynamic> likes = [];
+              if (likesData is List) {
+                likes = likesData;
+              }
+              final isLiked = currentUserId != null && likes.contains(currentUserId);
+              final likeCount = likesData is int ? likesData : likes.length;
+              
+              final commentsData = data['comments'];
+              List<dynamic> comments = [];
+              if (commentsData is List) {
+                comments = commentsData;
+              }
+              final commentCount = commentsData is int ? commentsData : comments.length;
+
               String timeStr = '';
               if (data['timestamp'] != null) {
                 DateTime? dateTime;
@@ -91,6 +109,9 @@ class CommunityScreen extends StatelessWidget {
                 imageUrl,
                 userProfilePic,
                 l10n,
+                isLiked,
+                likeCount,
+                commentCount,
               );
             },
           );
@@ -109,6 +130,9 @@ class CommunityScreen extends StatelessWidget {
     String? imageUrl,
     String? userProfilePic,
     AppLocalizations l10n,
+    bool isLiked,
+    int likeCount,
+    int commentCount,
   ) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -241,17 +265,24 @@ class CommunityScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.thumb_up_alt_outlined, size: 18),
-                  label: Text(l10n.like),
+                  onPressed: () => _toggleLike(postId, isLiked),
+                  icon: Icon(
+                    isLiked ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
+                    size: 18,
+                    color: isLiked ? Theme.of(context).primaryColor : null,
+                  ),
+                  label: Text('$likeCount ${l10n.like}'),
                 ),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showCommentsBottomSheet(context, postId),
                   icon: const Icon(Icons.comment_outlined, size: 18),
-                  label: Text(l10n.comment),
+                  label: Text('$commentCount ${l10n.comment}'),
                 ),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    final String shareText = "$user posted:\n$text${imageUrl != null ? '\n$imageUrl' : ''}";
+                    Share.share(shareText);
+                  },
                   icon: const Icon(Icons.share_outlined, size: 18),
                   label: Text(l10n.share),
                 ),
@@ -260,6 +291,189 @@ class CommunityScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _toggleLike(String postId, bool isLiked) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+    final uid = currentUser.uid;
+
+    final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+
+    try {
+      if (isLiked) {
+        await docRef.update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        await docRef.update({
+          'likes': FieldValue.arrayUnion([uid])
+        });
+      }
+    } catch (e) {
+      if (!isLiked) {
+        await docRef.update({
+          'likes': [uid]
+        });
+      }
+    }
+  }
+
+  void _showCommentsBottomSheet(BuildContext context, String postId) {
+    final TextEditingController commentController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            top: 16,
+            left: 16,
+            right: 16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Comments',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.5,
+                ),
+                child: StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance.collection('posts').doc(postId).snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return const Center(child: Text('Post not found.'));
+                    }
+
+                    final data = snapshot.data!.data() as Map<String, dynamic>?;
+                    final commentsData = data?['comments'];
+                    List<dynamic> comments = [];
+                    if (commentsData is List) {
+                      comments = commentsData;
+                    }
+
+                    if (comments.isEmpty) {
+                      return const Center(child: Text('No comments yet.'));
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        final comment = comments[index] as Map<String, dynamic>;
+                        final username = comment['username'] as String? ?? 'User';
+                        final text = comment['text'] as String? ?? '';
+                        final timestamp = comment['timestamp'];
+
+                        String timeStr = '';
+                        if (timestamp != null) {
+                          DateTime? dt;
+                          if (timestamp is Timestamp) {
+                            dt = timestamp.toDate();
+                          } else if (timestamp is String) {
+                            dt = DateTime.tryParse(timestamp);
+                          }
+
+                          if (dt != null) {
+                            final diff = DateTime.now().difference(dt);
+                            if (diff.inDays > 0) {
+                              timeStr = '${diff.inDays} days ago';
+                            } else if (diff.inHours > 0) {
+                              timeStr = '${diff.inHours} hours ago';
+                            } else if (diff.inMinutes > 0) {
+                              timeStr = '${diff.inMinutes} mins ago';
+                            } else {
+                              timeStr = 'Just now';
+                            }
+                          }
+                        }
+
+                        return ListTile(
+                          title: Text(username, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          subtitle: Text(text),
+                          trailing: Text(timeStr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              const Divider(),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        hintText: 'Add a comment...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(Icons.send),
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () async {
+                      final text = commentController.text.trim();
+                      if (text.isEmpty) return;
+
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user == null) return;
+
+                      String username = user.displayName ?? '';
+                      if (username.isEmpty && user.email != null) {
+                        username = user.email!.split('@')[0];
+                      }
+                      if (username.isEmpty) {
+                        username = 'Unknown User';
+                      }
+
+                      final newComment = {
+                        'userId': user.uid,
+                        'username': username,
+                        'text': text,
+                        'timestamp': Timestamp.now(),
+                      };
+
+                      try {
+                        await FirebaseFirestore.instance.collection('posts').doc(postId).update({
+                          'comments': FieldValue.arrayUnion([newComment])
+                        });
+                      } catch (e) {
+                        await FirebaseFirestore.instance.collection('posts').doc(postId).update({
+                          'comments': [newComment]
+                        });
+                      }
+
+                      commentController.clear();
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
     );
   }
 }
