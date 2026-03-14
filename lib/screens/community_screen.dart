@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'add_post_screen.dart';
@@ -50,6 +51,8 @@ class CommunityScreen extends StatelessWidget {
               final doc = snapshot.data!.docs[index];
               final data = doc.data() as Map<String, dynamic>;
 
+              final postId = doc.id;
+              final userId = data['userId'] as String?;
               final user = data['username'] as String? ?? 'Unknown User';
               final text = data['caption'] as String? ?? '';
               final imageUrl = data['imageUrl'] as String?;
@@ -80,6 +83,8 @@ class CommunityScreen extends StatelessWidget {
 
               return _buildPostCard(
                 context,
+                postId,
+                userId,
                 user,
                 text,
                 timeStr,
@@ -96,6 +101,8 @@ class CommunityScreen extends StatelessWidget {
 
   Widget _buildPostCard(
     BuildContext context,
+    String postId,
+    String? userId,
     String user,
     String text,
     String time,
@@ -128,18 +135,85 @@ class CommunityScreen extends StatelessWidget {
                       : null,
                 ),
                 const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(time, style: Theme.of(context).textTheme.bodySmall),
-                  ],
+                      Text(time, style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
                 ),
+                if (FirebaseAuth.instance.currentUser?.uid == userId && userId != null)
+                  PopupMenuButton<String>(
+                    onSelected: (value) async {
+                      if (value == 'edit') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddPostScreen(
+                              editPostId: postId,
+                              editCaption: text,
+                              editImageUrl: imageUrl,
+                            ),
+                          ),
+                        );
+                      } else if (value == 'delete') {
+                        showDialog(
+                          context: context,
+                          builder: (dialogContext) => AlertDialog(
+                            title: const Text('Delete Post'),
+                            content: const Text('Are you sure you want to delete this post?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(dialogContext),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(dialogContext);
+                                  try {
+                                    await FirebaseFirestore.instance
+                                        .collection('posts')
+                                        .doc(postId)
+                                        .delete();
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Post deleted successfully')),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Failed to delete post: $e')),
+                                      );
+                                    }
+                                  }
+                                },
+                                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Text('Edit'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: Text('Delete'),
+                      ),
+                    ],
+                  ),
               ],
             ),
             const SizedBox(height: 10),

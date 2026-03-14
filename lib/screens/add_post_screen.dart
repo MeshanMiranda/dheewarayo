@@ -10,7 +10,16 @@ import 'package:uuid/uuid.dart';
 import '../l10n/app_localizations.dart';
 
 class AddPostScreen extends StatefulWidget {
-  const AddPostScreen({super.key});
+  final String? editPostId;
+  final String? editCaption;
+  final String? editImageUrl;
+
+  const AddPostScreen({
+    super.key,
+    this.editPostId,
+    this.editCaption,
+    this.editImageUrl,
+  });
 
   @override
   State<AddPostScreen> createState() => _AddPostScreenState();
@@ -25,6 +34,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final Uuid _uuid = const Uuid();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.editCaption != null) {
+      _captionController.text = widget.editCaption!;
+    }
+  }
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
@@ -53,8 +70,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
     });
 
     try {
-      String? imageUrl;
-      final postId = _uuid.v4();
+      String? imageUrl = widget.editImageUrl;
+      final postId = widget.editPostId ?? _uuid.v4();
 
       if (_imageFile != null) {
         // Upload image to Firebase Storage
@@ -80,7 +97,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
             await Future.delayed(const Duration(seconds: 1));
           }
         }
-      } else if (_captionController.text.trim().isEmpty) {
+      } else if (imageUrl == null && _captionController.text.trim().isEmpty) {
         // Require either an image or text
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please add an image or caption')),
@@ -91,26 +108,37 @@ class _AddPostScreenState extends State<AddPostScreen> {
         return;
       }
 
-      // Fetch user data from firestore
-      final userDoc = await _firestore.collection('users').doc(user.uid).get();
-      String username = 'Unknown User';
-      if (userDoc.exists && userDoc.data() != null) {
-        username =
-            userDoc.data()!['fullName'] ?? user.displayName ?? 'Unknown User';
-      }
+      if (widget.editPostId != null) {
+        // Update existing post
+        final updateData = {
+          'caption': _captionController.text.trim(),
+        };
+        if (_imageFile != null) {
+          updateData['imageUrl'] = imageUrl as String;
+        }
+        await _firestore.collection('posts').doc(postId).update(updateData);
+      } else {
+        // Fetch user data from firestore
+        final userDoc = await _firestore.collection('users').doc(user.uid).get();
+        String username = 'Unknown User';
+        if (userDoc.exists && userDoc.data() != null) {
+          username =
+              userDoc.data()!['fullName'] ?? user.displayName ?? 'Unknown User';
+        }
 
-      // Create post document
-      await _firestore.collection('posts').doc(postId).set({
-        'postId': postId,
-        'userId': user.uid,
-        'username': username,
-        'userProfilePic': user
-            .photoURL, // Note: storing photoURL directly from auth might not reflect changes if they uploaded a custom one unless updated in auth profile
-        'imageUrl': imageUrl,
-        'caption': _captionController.text.trim(),
-        'timestamp': FieldValue.serverTimestamp(),
-        'likes': [],
-      });
+        // Create post document
+        await _firestore.collection('posts').doc(postId).set({
+          'postId': postId,
+          'userId': user.uid,
+          'username': username,
+          'userProfilePic': user
+              .photoURL, // Note: storing photoURL directly from auth might not reflect changes if they uploaded a custom one unless updated in auth profile
+          'imageUrl': imageUrl,
+          'caption': _captionController.text.trim(),
+          'timestamp': FieldValue.serverTimestamp(),
+          'likes': [],
+        });
+      }
 
       if (mounted) {
         Navigator.pop(context); // Go back to community screen
@@ -146,7 +174,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.addPost),
+        title: Text(widget.editPostId != null ? 'Edit Post' : l10n.addPost),
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _uploadPost,
@@ -157,7 +185,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : Text(
-                    l10n.post,
+                    widget.editPostId != null ? 'Update' : l10n.post,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -194,6 +222,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         _imageFile = null;
                       });
                     },
+                  ),
+                ],
+              )
+            else if (widget.editImageUrl != null)
+              Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      widget.editImageUrl!,
+                      height: 300,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    onPressed: _pickImage,
                   ),
                 ],
               )
@@ -278,7 +329,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.upload),
-                    label: const Text('Upload post'),
+                    label: Text(widget.editPostId != null ? 'Update post' : 'Upload post'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
