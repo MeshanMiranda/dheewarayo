@@ -60,21 +60,24 @@ class CommunityScreen extends StatelessWidget {
               final userProfilePic = data['userProfilePic'] as String?;
 
               final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-              
+
               final likesData = data['likes'];
               List<dynamic> likes = [];
               if (likesData is List) {
                 likes = likesData;
               }
-              final isLiked = currentUserId != null && likes.contains(currentUserId);
+              final isLiked =
+                  currentUserId != null && likes.contains(currentUserId);
               final likeCount = likesData is int ? likesData : likes.length;
-              
+
               final commentsData = data['comments'];
               List<dynamic> comments = [];
               if (commentsData is List) {
                 comments = commentsData;
               }
-              final commentCount = commentsData is int ? commentsData : comments.length;
+              final commentCount = commentsData is int
+                  ? commentsData
+                  : comments.length;
 
               String timeStr = '';
               if (data['timestamp'] != null) {
@@ -146,7 +149,8 @@ class CommunityScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  backgroundImage: userProfilePic != null && userProfilePic.isNotEmpty
+                  backgroundImage:
+                      userProfilePic != null && userProfilePic.isNotEmpty
                       ? NetworkImage(userProfilePic)
                       : null,
                   child: userProfilePic == null || userProfilePic.isEmpty
@@ -165,15 +169,15 @@ class CommunityScreen extends StatelessWidget {
                     children: [
                       Text(
                         user,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(time, style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                 ),
-                if (FirebaseAuth.instance.currentUser?.uid == userId && userId != null)
+                if (FirebaseAuth.instance.currentUser?.uid == userId &&
+                    userId != null)
                   PopupMenuButton<String>(
                     onSelected: (value) async {
                       if (value == 'edit') {
@@ -192,7 +196,9 @@ class CommunityScreen extends StatelessWidget {
                           context: context,
                           builder: (dialogContext) => AlertDialog(
                             title: const Text('Delete Post'),
-                            content: const Text('Are you sure you want to delete this post?'),
+                            content: const Text(
+                              'Are you sure you want to delete this post?',
+                            ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(dialogContext),
@@ -207,19 +213,33 @@ class CommunityScreen extends StatelessWidget {
                                         .doc(postId)
                                         .delete();
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Post deleted successfully')),
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Post deleted successfully',
+                                          ),
+                                        ),
                                       );
                                     }
                                   } catch (e) {
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Failed to delete post: $e')),
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Failed to delete post: $e',
+                                          ),
+                                        ),
                                       );
                                     }
                                   }
                                 },
-                                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.red,
+                                ),
                                 child: const Text('Delete'),
                               ),
                             ],
@@ -228,10 +248,7 @@ class CommunityScreen extends StatelessWidget {
                       }
                     },
                     itemBuilder: (context) => [
-                      const PopupMenuItem(
-                        value: 'edit',
-                        child: Text('Edit'),
-                      ),
+                      const PopupMenuItem(value: 'edit', child: Text('Edit')),
                       const PopupMenuItem(
                         value: 'delete',
                         child: Text('Delete'),
@@ -280,7 +297,8 @@ class CommunityScreen extends StatelessWidget {
                 ),
                 TextButton.icon(
                   onPressed: () {
-                    final String shareText = "$user posted:\n$text${imageUrl != null ? '\n$imageUrl' : ''}";
+                    final String shareText =
+                        "$user posted:\n$text${imageUrl != null ? '\n$imageUrl' : ''}";
                     Share.share(shareText);
                   },
                   icon: const Icon(Icons.share_outlined, size: 18),
@@ -304,17 +322,17 @@ class CommunityScreen extends StatelessWidget {
     try {
       if (isLiked) {
         await docRef.update({
-          'likes': FieldValue.arrayRemove([uid])
+          'likes': FieldValue.arrayRemove([uid]),
         });
       } else {
         await docRef.update({
-          'likes': FieldValue.arrayUnion([uid])
+          'likes': FieldValue.arrayUnion([uid]),
         });
       }
     } catch (e) {
       if (!isLiked) {
         await docRef.update({
-          'likes': [uid]
+          'likes': [uid],
         });
       }
     }
@@ -342,7 +360,9 @@ class CommunityScreen extends StatelessWidget {
             children: [
               Text(
                 'Comments',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Container(
@@ -350,7 +370,10 @@ class CommunityScreen extends StatelessWidget {
                   maxHeight: MediaQuery.of(context).size.height * 0.5,
                 ),
                 child: StreamBuilder<DocumentSnapshot>(
-                  stream: FirebaseFirestore.instance.collection('posts').doc(postId).snapshots(),
+                  stream: FirebaseFirestore.instance
+                      .collection('posts')
+                      .doc(postId)
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -376,7 +399,8 @@ class CommunityScreen extends StatelessWidget {
                       itemCount: comments.length,
                       itemBuilder: (context, index) {
                         final comment = comments[index] as Map<String, dynamic>;
-                        final username = comment['username'] as String? ?? 'User';
+                        final username =
+                            comment['username'] as String? ?? 'User';
                         final text = comment['text'] as String? ?? '';
                         final timestamp = comment['timestamp'];
 
@@ -404,9 +428,21 @@ class CommunityScreen extends StatelessWidget {
                         }
 
                         return ListTile(
-                          title: Text(username, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          title: Text(
+                            username,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
                           subtitle: Text(text),
-                          trailing: Text(timeStr, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                          trailing: Text(
+                            timeStr,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
                         );
                       },
                     );
@@ -424,7 +460,10 @@ class CommunityScreen extends StatelessWidget {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                       ),
                     ),
                   ),
@@ -455,13 +494,19 @@ class CommunityScreen extends StatelessWidget {
                       };
 
                       try {
-                        await FirebaseFirestore.instance.collection('posts').doc(postId).update({
-                          'comments': FieldValue.arrayUnion([newComment])
-                        });
+                        await FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(postId)
+                            .update({
+                              'comments': FieldValue.arrayUnion([newComment]),
+                            });
                       } catch (e) {
-                        await FirebaseFirestore.instance.collection('posts').doc(postId).update({
-                          'comments': [newComment]
-                        });
+                        await FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(postId)
+                            .update({
+                              'comments': [newComment],
+                            });
                       }
 
                       commentController.clear();

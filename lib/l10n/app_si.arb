@@ -87,8 +87,8 @@
     },
     "tideChartPlaceholder": "වඩදිය බාදිය සිතියම් ස්ථාන රඳවනය (අන්තර්ක්‍රියාකාරී සිතියම)",
     "communityFeed": "සමාජ සංග්‍රහය",
-    "like": "කැමතියි",
-    "comment": "අදහසක්",
+    "like": "කැමති",
+    "comment": "අදහස්",
     "share": "බෙදාගන්න",
     "hoursAgo": "පැය {hours} කට පෙර",
     "@hoursAgo": {

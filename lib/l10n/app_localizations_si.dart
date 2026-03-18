@@ -221,10 +221,10 @@ class AppLocalizationsSi extends AppLocalizations {
   String get communityFeed => 'සමාජ සංග්‍රහය';
 
   @override
-  String get like => 'කැමතියි';
+  String get like => 'කැමති';
 
   @override
-  String get comment => 'අදහසක්';
+  String get comment => 'අදහස්';
 
   @override
   String get share => 'බෙදාගන්න';
