@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
 
@@ -22,6 +23,33 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
   void initState() {
     super.initState();
     _initializeZones();
+    _requestLocationPermission();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return;
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _initializeZones() {
@@ -159,6 +187,7 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,
+            fontSize: 19,
           ),
         ),
         const SizedBox(height: 10),
@@ -190,10 +219,6 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
         const SizedBox(height: 10),
         _buildLegend(context, l10n),
         const SizedBox(height: 10),
-        Text(
-          l10n.predictedHotspot,
-          style: const TextStyle(fontStyle: FontStyle.italic),
-        ),
       ],
     );
   }
