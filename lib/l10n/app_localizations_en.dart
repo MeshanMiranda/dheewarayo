@@ -178,7 +178,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Winds up to 30 knots expected from 18:00 to 06:00. Exercise extreme caution.';
 
   @override
-  String get sevenDayMarineForecast => '7-Day Marine Forecast';
+  String get sevenDayMarineForecast => '5-Day Marine Forecast';
 
   @override
   String get today => 'Today';

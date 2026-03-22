@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
 import '../services/weather_api_service.dart';
@@ -20,6 +22,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
   String _errorMessage = '';
   WeatherData? _currentWeather;
   Map<String, double>? _weatherPredictions;
+  List<DailyForecast>? _dailyForecasts;
+  List<TidePoint>? _tideData;
 
   @override
   void initState() {
@@ -34,6 +38,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
       await _mlService.initialize();
 
       final weather = await _weatherApiService.fetchWeatherForCurrentLocation();
+      final forecasts = await _weatherApiService.fetch5DayForecast();
+      final tides = await _weatherApiService.fetchTideData();
 
       // predict
       final prediction = _mlService.predictWeatherChanges(
@@ -47,6 +53,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
         setState(() {
           _currentWeather = weather;
           _weatherPredictions = prediction;
+          _dailyForecasts = forecasts;
+          _tideData = tides;
           _isLoading = false;
         });
       }
@@ -98,32 +106,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   const SizedBox(height: 10),
                   _buildForecastHeader(context, l10n),
                   const SizedBox(height: 10),
-                  _buildDailyForecast(
-                    context,
-                    l10n.today,
-                    l10n.sunnyLowSwell,
-                    '28°C',
-                    l10n.nw10kts,
-                    l10n,
-                  ),
-                  _buildDailyForecast(
-                    context,
-                    l10n.tomorrow,
-                    l10n.cloudyHighWind,
-                    '26°C',
-                    l10n.e25kts,
-                    l10n,
-                  ),
-                  _buildDailyForecast(
-                    context,
-                    l10n.day3,
-                    l10n.rainModerateSwell,
-                    '25°C',
-                    l10n.s15kts,
-                    l10n,
-                  ),
+                  if (_dailyForecasts != null)
+                    ..._dailyForecasts!.map(
+                      (forecast) => _buildDailyForecast(
+                        context,
+                        forecast.day,
+                        forecast.condition.toUpperCase(),
+                        '${forecast.minTemp.toStringAsFixed(1)}°C - ${forecast.maxTemp.toStringAsFixed(1)}°C',
+                        forecast.windSpeed.toStringAsFixed(1),
+                        l10n,
+                      ),
+                    ),
                   const SizedBox(height: 20),
-                  _buildTideChartPlaceholder(context, l10n),
+                  _buildTideChart(context, l10n),
                 ],
               ),
             ),
@@ -391,22 +386,156 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  Widget _buildTideChartPlaceholder(
-    BuildContext context,
-    AppLocalizations l10n,
-  ) {
-    return Container(
-      height: 150,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).colorScheme.primary),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        l10n.tideChartPlaceholder,
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
-      ),
+  Widget _buildTideChart(BuildContext context, AppLocalizations l10n) {
+    if (_tideData == null || _tideData!.isEmpty) {
+      return Container(
+        height: 150,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Theme.of(context).colorScheme.primary),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          "No Tide Data Available",
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
+      );
+    }
+
+    List<FlSpot> spots = [];
+    double minHeight = double.maxFinite;
+    double maxHeight = -double.maxFinite;
+
+    for (int i = 0; i < _tideData!.length; i++) {
+      final height = _tideData![i].height;
+      spots.add(FlSpot(i.toDouble(), height));
+      if (height < minHeight) minHeight = height;
+      if (height > maxHeight) maxHeight = height;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Sea Tide Chart",
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        AspectRatio(
+          aspectRatio: 1.70,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: Theme.of(context).cardColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.only(
+              right: 24,
+              left: 12,
+              top: 24,
+              bottom: 12,
+            ),
+            child: LineChart(
+              LineChartData(
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: true,
+                  getDrawingHorizontalLine: (value) => FlLine(
+                    color: Colors.grey.withValues(alpha: 0.2),
+                    strokeWidth: 1,
+                  ),
+                  getDrawingVerticalLine: (value) => FlLine(
+                    color: Colors.grey.withValues(alpha: 0.2),
+                    strokeWidth: 1,
+                  ),
+                ),
+                titlesData: FlTitlesData(
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      interval: (_tideData!.length / 5).ceilToDouble(),
+                      getTitlesWidget: (value, meta) {
+                        if (value.toInt() >= 0 &&
+                            value.toInt() < _tideData!.length) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              DateFormat(
+                                'HH:mm',
+                              ).format(_tideData![value.toInt()].time),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        }
+                        return const Text('');
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          '${value.toStringAsFixed(1)}m',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                borderData: FlBorderData(show: false),
+                minX: 0,
+                maxX: spots.length.toDouble() - 1,
+                minY: minHeight - 0.5,
+                maxY: maxHeight + 0.5,
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: spots,
+                    isCurved: true,
+                    curveSmoothness: 0.35,
+                    color: Theme.of(context).colorScheme.primary,
+                    barWidth: 4,
+                    isStrokeCapRound: true,
+                    dotData: const FlDotData(show: false),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.2),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

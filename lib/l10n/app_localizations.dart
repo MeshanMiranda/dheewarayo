@@ -419,7 +419,7 @@ abstract class AppLocalizations {
   /// No description provided for @sevenDayMarineForecast.
   ///
   /// In en, this message translates to:
-  /// **'7-Day Marine Forecast'**
+  /// **'5-Day Marine Forecast'**
   String get sevenDayMarineForecast;
 
   /// No description provided for @today.

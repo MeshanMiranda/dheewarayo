@@ -54,6 +54,7 @@ dependencies:
   location: ^5.0.0
   tflite_flutter: ^0.12.1
   flutter_local_notifications: ^17.1.2
+  fl_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:

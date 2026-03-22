@@ -179,7 +179,7 @@ class AppLocalizationsSi extends AppLocalizations {
       'පැය 18:00 සිට 06:00 දක්වා ගැට 30 දක්වා සුළං අපේක්ෂා කෙරේ. දැඩි අවධානයෙන් කටයුතු කරන්න.';
 
   @override
-  String get sevenDayMarineForecast => 'දින 7 ක කාලගුණ අනාවැකිය';
+  String get sevenDayMarineForecast => 'දින 5 ක කාලගුණ අනාවැකිය';
 
   @override
   String get today => 'අද';

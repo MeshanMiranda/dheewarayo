@@ -67,7 +67,7 @@
     "weatherAndSafety": "Weather & Safety",
     "criticalAlertHighWind": "CRITICAL ALERT: High Wind Warning",
     "highWindWarningDesc": "Winds up to 30 knots expected from 18:00 to 06:00. Exercise extreme caution.",
-    "sevenDayMarineForecast": "7-Day Marine Forecast",
+    "sevenDayMarineForecast": "5-Day Marine Forecast",
     "today": "Today",
     "sunnyLowSwell": "Sunny, Low Swell",
     "nw10kts": "NW 10 kts",
