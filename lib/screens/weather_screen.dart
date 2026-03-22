@@ -54,8 +54,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
       // Send a friendly weather notification
       if (prediction != null) {
         String predictionText =
-            "🌬️ Wind: ${prediction['wind']!.toStringAsFixed(1)} m/s\n"
-            "🌊 Waves: ${prediction['wave']!.toStringAsFixed(1)} m\n"
+            "🌬️ Wind: ${prediction['wind']!.toStringAsFixed(1)} m/s | "
+            "🌊 Waves: ${prediction['wave']!.toStringAsFixed(1)} m | "
             "🌧️ Chance of Rain: ${prediction['rain']!.toStringAsFixed(0)}%";
 
         await notificationService.showPredictionNotification(
@@ -181,40 +181,182 @@ class _WeatherScreenState extends State<WeatherScreen> {
     AppLocalizations l10n,
     Map<String, double> prediction,
   ) {
-    String predictionText =
-        "Next Hour -> Wind: ${prediction['wind']!.toStringAsFixed(1)} m/s, Waves: ${prediction['wave']!.toStringAsFixed(1)}m, Rain Risk: ${prediction['rain']!.toStringAsFixed(0)}%.";
+    final wind = prediction['wind'] ?? 0.0;
+    final wave = prediction['wave'] ?? 0.0;
+    final rain = prediction['rain'] ?? 0.0;
+
+    // Define thresholds for rough marine weather
+    final bool highWind = wind >= 10.0;
+    final bool highWaves = wave >= 2.0;
+    final bool highRain = rain >= 70.0;
+    final bool isCritical = highWind || highWaves || highRain;
+
+    if (!isCritical) {
+      return Card(
+        color: Colors.green.withValues(alpha: 0.1),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.green.shade300, width: 1.5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Icon(
+                Icons.check_circle_outline,
+                color: Colors.green.shade700,
+                size: 36,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Conditions look good!",
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Colors.green.shade800,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "The weather is expected to remain safe for the next hour.",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Card(
-      color: Theme.of(context).colorScheme.error.withValues(alpha: 0.2),
-      elevation: 0,
+      color: Colors.red.shade50,
+      elevation: 4,
+      shadowColor: Colors.red.withValues(alpha: 0.4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.red.shade400, width: 2),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
+        child: Column(
           children: [
-            Icon(
-              Icons.warning_amber_rounded,
-              color: Theme.of(context).colorScheme.error,
-              size: 30,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Critical ML Alert",
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                      fontWeight: FontWeight.bold,
-                    ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade100,
+                    shape: BoxShape.circle,
                   ),
-                  Text(predictionText),
+                  child: Icon(
+                    Icons.warning_rounded,
+                    color: Colors.red.shade800,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Heads Up! Rough Weather",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.red.shade800,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Please be careful. Here's what to expect in the next hour:",
+                        style: TextStyle(
+                          color: Colors.grey.shade800,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildConditionIndicator(
+                    context,
+                    label: "Wind",
+                    value: "${wind.toStringAsFixed(1)} m/s",
+                    icon: Icons.air,
+                    isHigh: highWind,
+                  ),
+                  _buildConditionIndicator(
+                    context,
+                    label: "Waves",
+                    value: "${wave.toStringAsFixed(1)} m",
+                    icon: Icons.water,
+                    isHigh: highWaves,
+                  ),
+                  _buildConditionIndicator(
+                    context,
+                    label: "Rain",
+                    value: "${rain.toStringAsFixed(0)}%",
+                    icon: Icons.umbrella,
+                    isHigh: highRain,
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildConditionIndicator(
+    BuildContext context, {
+    required String label,
+    required String value,
+    required IconData icon,
+    required bool isHigh,
+  }) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          color: isHigh ? Colors.red.shade600 : Colors.blueGrey.shade400,
+          size: 28,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: isHigh ? Colors.red.shade700 : Colors.black87,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      ],
     );
   }
 
