@@ -29,6 +29,22 @@ class TidePoint {
   });
 }
 
+class IntervalForecast {
+  final DateTime time;
+  final double temperature;
+  final double humidity;
+  final double windSpeed;
+  final double pressure;
+
+  IntervalForecast({
+    required this.time,
+    required this.temperature,
+    required this.humidity,
+    required this.windSpeed,
+    required this.pressure,
+  });
+}
+
 class WeatherData {
   final double temperature;
   final double humidity;
@@ -170,6 +186,49 @@ class WeatherApiService {
       return forecasts.take(7).toList();
     } else {
       throw Exception('Failed to load forecast data. Status: ${response.statusCode}');
+    }
+  }
+
+  Future<List<IntervalForecast>> fetchUpcoming3HourForecasts({int limit = 8}) async {
+    Position? position;
+    try {
+      position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.medium,
+        timeLimit: const Duration(seconds: 10),
+      );
+    } catch (e) {
+      position = await Geolocator.getLastKnownPosition();
+    }
+
+    if (position == null) {
+      throw Exception('Could not determine location for background weather update.');
+    }
+
+    final url = Uri.parse(
+      '$forecastUrl?lat=${position.latitude}&lon=${position.longitude}&appid=$apiKey&units=metric',
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      final List<dynamic> list = jsonResponse['list'];
+
+      List<IntervalForecast> forecasts = [];
+
+      for (var i = 0; i < list.length && i < limit; i++) {
+        var item = list[i];
+        forecasts.add(IntervalForecast(
+          time: DateTime.fromMillisecondsSinceEpoch(item['dt'] * 1000, isUtc: true).toLocal(),
+          temperature: (item['main']['temp'] as num).toDouble(),
+          humidity: (item['main']['humidity'] as num).toDouble(),
+          pressure: (item['main']['pressure'] as num).toDouble(),
+          windSpeed: (item['wind']['speed'] as num).toDouble(),
+        ));
+      }
+      return forecasts;
+    } else {
+      throw Exception('Failed to load upcoming forecast data. Status: ${response.statusCode}');
     }
   }
 

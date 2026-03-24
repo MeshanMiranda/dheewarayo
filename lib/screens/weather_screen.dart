@@ -59,18 +59,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
         });
       }
 
-      // Send a friendly weather notification
-      if (prediction != null) {
-        String predictionText =
-            "🌬️ Wind: ${prediction['wind']!.toStringAsFixed(1)} m/s | "
-            "🌊 Waves: ${prediction['wave']!.toStringAsFixed(1)} m | "
-            "🌧️ Chance of Rain: ${prediction['rain']!.toStringAsFixed(0)}%";
-
-        await notificationService.showPredictionNotification(
-          "⚡ Weather Alert: Upcoming Conditions",
-          predictionText,
-        );
-      }
     } catch (e) {
       if (mounted) {
         setState(() {
