@@ -149,59 +149,175 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildWeatherSummaryCard(BuildContext context, AppLocalizations l10n) {
-    String tempStr = _currentWeather != null ? "${_currentWeather!.temperature}°C" : "--";
-    String descStr = _currentWeather != null ? _currentWeather!.description.toUpperCase() : "--";
+    String tempStr = _currentWeather != null
+        ? "${_currentWeather!.temperature}°C"
+        : "--";
+    String descStr = _currentWeather != null
+        ? _currentWeather!.description.toUpperCase()
+        : "--";
     String tideStr = _nextHighTide != null
         ? DateFormat('hh:mm a').format(_nextHighTide!.time)
         : "--";
+    String windStr = _currentWeather != null
+        ? "${_currentWeather!.windSpeed} km/h"
+        : "--";
+    String humStr = _currentWeather != null
+        ? "${_currentWeather!.humidity}%"
+        : "--";
+    String pressStr = _currentWeather != null
+        ? "${_currentWeather!.pressure} hPa"
+        : "--";
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.weatherSummary,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue.shade800, Colors.blue.shade500],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            const Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(
-                  Icons.wb_sunny,
-                  color: Theme.of(context).colorScheme.secondary,
-                  size: 40,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      tempStr,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                          ),
+          ),
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.weatherSummary,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(descStr),
-                    if (_nextHighTide != null) ...[
-                      const SizedBox(height: 4),
-                      Text(l10n.nextHighTideShort),
+                  ),
+                  const Icon(
+                    Icons.cloud_outlined,
+                    color: Colors.white70,
+                    size: 28,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        tideStr,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        tempStr,
+                        style: Theme.of(context).textTheme.displayLarge
+                            ?.copyWith(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      Text(
+                        descStr,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
-                  ],
+                  ),
+                  const Icon(Icons.wb_sunny, color: Colors.amber, size: 64),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildWeatherDetailItem(
+                      Icons.air,
+                      windStr,
+                      l10n.windLabel,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildWeatherDetailItem(
+                      Icons.water_drop_outlined,
+                      humStr,
+                      l10n.humidityLabel,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildWeatherDetailItem(
+                      Icons.speed,
+                      pressStr,
+                      l10n.pressureLabel,
+                    ),
+                  ),
+                ],
+              ),
+              if (_nextHighTide != null) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.waves, color: Colors.white, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        "${l10n.nextHighTideShort} $tideStr",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildWeatherDetailItem(IconData icon, String value, String label) {
+    return Column(
+      children: [
+        Icon(icon, color: Colors.white70, size: 28),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 12),
+        ),
+      ],
     );
   }
 
@@ -212,72 +328,120 @@ class _HomeScreenState extends State<HomeScreen> {
     String probStr = "Analyzing...";
     String statusStr = "Unknown";
     Color statusColor = Theme.of(context).colorScheme.primary;
+    IconData statusIcon = Icons.radar;
 
     if (_pfzProbability != null) {
       probStr = "${(_pfzProbability! * 100).toStringAsFixed(1)}%";
       if (_pfzProbability! > 0.70) {
         statusStr = l10n.excellent;
-        statusColor = Colors.red;
+        statusColor = Colors.green.shade600;
+        statusIcon = Icons.check_circle;
       } else if (_pfzProbability! > 0.50) {
         statusStr = l10n.good;
-        statusColor = Colors.orange;
+        statusColor = Colors.orange.shade600;
+        statusIcon = Icons.info_outline;
       } else {
         statusStr = l10n.moderate;
-        statusColor = Colors.yellow.shade800;
+        statusColor = Colors.red.shade600;
+        statusIcon = Icons.warning_amber_rounded;
       }
     }
 
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: statusColor.withOpacity(0.3), width: 2),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              l10n.aiFishingInsights,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: statusColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
+                  child: Icon(Icons.insights, color: statusColor, size: 24),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.aiFishingInsights,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
             ),
-            const Divider(),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.radar,
-                  color: statusColor,
-                  size: 40,
-                ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       statusStr,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
                             color: statusColor,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
-                    Text("Prob: $probStr"),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AIFishingScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        l10n.viewHotspotMap,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Prob: $probStr",
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                        fontSize: 16,
                       ),
                     ),
                   ],
                 ),
+                Icon(statusIcon, color: statusColor, size: 48),
               ],
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AIFishingScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.map, color: Colors.white),
+                label: Text(
+                  l10n.viewHotspotMap.replaceAll(' ->', ''),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: statusColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
             ),
           ],
         ),
@@ -301,47 +465,112 @@ class _HomeScreenState extends State<HomeScreen> {
       snippet = l10n.noPostsYet;
     }
 
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              l10n.latestCommunityPost,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.purple.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.forum,
+                        color: Colors.purple,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      l10n.latestCommunityPost,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CommunityScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            const Divider(),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                backgroundImage: profilePicUrl != null && profilePicUrl.isNotEmpty
-                    ? NetworkImage(profilePicUrl)
-                    : null,
-                child: profilePicUrl == null || profilePicUrl.isEmpty
-                    ? Icon(
-                        Icons.person,
-                        color: Theme.of(context).colorScheme.onSecondary,
-                      )
-                    : null,
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(16),
               ),
-              title: Text(username),
-              subtitle: Text(
-                snippet,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CommunityScreen(),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundImage:
+                        profilePicUrl != null && profilePicUrl.isNotEmpty
+                        ? NetworkImage(profilePicUrl)
+                        : null,
+                    child: profilePicUrl == null || profilePicUrl.isEmpty
+                        ? Icon(
+                            Icons.person,
+                            color: Theme.of(context).colorScheme.onSecondary,
+                          )
+                        : null,
                   ),
-                );
-              },
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          username,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          snippet,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodySmall?.color,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -353,7 +582,7 @@ class _HomeScreenState extends State<HomeScreen> {
     bool isCritical = false;
     String title = l10n.conditionsGoodTitle;
     String desc = l10n.conditionsGoodDesc;
-    IconData icon = Icons.check_circle_outline;
+    IconData icon = Icons.shield_outlined;
     Color color = Colors.green;
 
     if (_weatherPredictions != null) {
@@ -367,48 +596,73 @@ class _HomeScreenState extends State<HomeScreen> {
       isCritical = highWind || highWaves || highRain;
 
       if (isCritical) {
-        title = l10n.headsUpRoughWeather; 
+        title = l10n.headsUpRoughWeather;
         desc = l10n.roughWeatherDesc;
         icon = Icons.warning_amber_rounded;
         color = Theme.of(context).colorScheme.error;
       }
     }
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.notifications,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-            ),
-            const Divider(),
-            ListTile(
-              leading: Icon(
-                icon,
-                color: color,
-                size: 30,
+    return Container(
+      decoration: BoxDecoration(
+        color: isCritical ? color.withOpacity(0.1) : color.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.5), width: 1),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NotificationScreen(),
               ),
-              title: Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(desc),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationScreen(),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.2),
+                    shape: BoxShape.circle,
                   ),
-                );
-              },
+                  child: Icon(icon, color: color, size: 32),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        desc,
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodySmall?.color,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: color.withOpacity(0.5),
+                  size: 16,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -115,48 +115,135 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   Widget _buildCurrentWeatherCard(BuildContext context, WeatherData weather) {
     final l10n = AppLocalizations.of(context)!;
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              l10n.currentWeatherTitle,
-              style: Theme.of(context).textTheme.titleLarge,
+    String tempStr = "${weather.temperature}°C";
+    String descStr = weather.description.toUpperCase();
+    String windStr = "${weather.windSpeed} km/h";
+    String humStr = "${weather.humidity}%";
+    String pressStr = "${weather.pressure} hPa";
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue.shade800, Colors.blue.shade500],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    const Icon(Icons.thermostat),
-                    Text('${weather.temperature}°C'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    const Icon(Icons.water_drop),
-                    Text('${weather.humidity}%'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    const Icon(Icons.air),
-                    Text('${weather.windSpeed} m/s'),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Text(
-              weather.description.toUpperCase(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
+          ),
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.currentWeatherTitle,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.cloud_outlined,
+                    color: Colors.white70,
+                    size: 28,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tempStr,
+                        style: Theme.of(context).textTheme.displayLarge
+                            ?.copyWith(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      Text(
+                        descStr,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Icon(Icons.wb_sunny, color: Colors.amber, size: 64),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildWeatherDetailItem(
+                      Icons.air,
+                      windStr,
+                      l10n.windLabel,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildWeatherDetailItem(
+                      Icons.water_drop_outlined,
+                      humStr,
+                      l10n.humidityLabel,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildWeatherDetailItem(
+                      Icons.speed,
+                      pressStr,
+                      l10n.pressureLabel,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildWeatherDetailItem(IconData icon, String value, String label) {
+    return Column(
+      children: [
+        Icon(icon, color: Colors.white70, size: 28),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 12),
+        ),
+      ],
     );
   }
 

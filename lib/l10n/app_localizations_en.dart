@@ -520,6 +520,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rainLabel => 'Rain';
 
   @override
+  String get humidityLabel => 'Humidity';
+
+  @override
+  String get pressureLabel => 'Pressure';
+
+  @override
   String get noTideData => 'No Tide Data Available';
 
   @override

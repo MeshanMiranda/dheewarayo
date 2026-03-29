@@ -1040,6 +1040,18 @@ abstract class AppLocalizations {
   /// **'Rain'**
   String get rainLabel;
 
+  /// No description provided for @humidityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Humidity'**
+  String get humidityLabel;
+
+  /// No description provided for @pressureLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure'**
+  String get pressureLabel;
+
   /// No description provided for @noTideData.
   ///
   /// In en, this message translates to:

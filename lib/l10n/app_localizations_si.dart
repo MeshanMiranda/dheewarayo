@@ -523,6 +523,12 @@ class AppLocalizationsSi extends AppLocalizations {
   String get rainLabel => 'වැසි';
 
   @override
+  String get humidityLabel => 'ආර්ද්‍රතාවය';
+
+  @override
+  String get pressureLabel => 'පීඩනය';
+
+  @override
   String get noTideData => 'වඩදිය බාදිය දත්ත නොමැත';
 
   @override

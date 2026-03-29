@@ -206,6 +206,8 @@
     "windLabel": "සුළඟ",
     "wavesLabel": "රළ",
     "rainLabel": "වැසි",
+    "humidityLabel": "ආර්ද්‍රතාවය",
+    "pressureLabel": "පීඩනය",
     "noTideData": "වඩදිය බාදිය දත්ත නොමැත",
     "seaTideChartTitle": "වඩදිය බාදිය සටහන",
     "confirmLogoutPrompt": "ඔබට නිසැකවම ඉවත් වීමට අවශ්‍යද?",

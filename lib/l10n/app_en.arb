@@ -206,6 +206,8 @@
     "windLabel": "Wind",
     "wavesLabel": "Waves",
     "rainLabel": "Rain",
+    "humidityLabel": "Humidity",
+    "pressureLabel": "Pressure",
     "noTideData": "No Tide Data Available",
     "seaTideChartTitle": "Sea Tide Chart",
     "confirmLogoutPrompt": "Are you sure you want to log out?",
