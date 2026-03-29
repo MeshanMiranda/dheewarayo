@@ -114,6 +114,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Widget _buildCurrentWeatherCard(BuildContext context, WeatherData weather) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 2,
       child: Padding(
@@ -121,7 +122,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         child: Column(
           children: [
             Text(
-              'Current Weather',
+              l10n.currentWeatherTitle,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 10),
@@ -197,16 +198,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Conditions look good!",
+                      l10n.conditionsGoodTitle,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Colors.green.shade800,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      "The weather is expected to remain safe for the next hour.",
-                      style: TextStyle(fontSize: 14),
+                    Text(
+                      l10n.conditionsGoodDesc,
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ],
                 ),
@@ -249,7 +250,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Heads Up! Rough Weather",
+                        l10n.headsUpRoughWeather,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.red.shade800,
                           fontWeight: FontWeight.w800,
@@ -257,7 +258,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "Please be careful. Here's what to expect in the next hour:",
+                        l10n.roughWeatherDesc,
                         style: TextStyle(
                           color: Colors.grey.shade800,
                           fontSize: 14,
@@ -280,21 +281,21 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 children: [
                   _buildConditionIndicator(
                     context,
-                    label: "Wind",
+                    label: l10n.windLabel,
                     value: "${wind.toStringAsFixed(1)} m/s",
                     icon: Icons.air,
                     isHigh: highWind,
                   ),
                   _buildConditionIndicator(
                     context,
-                    label: "Waves",
+                    label: l10n.wavesLabel,
                     value: "${wave.toStringAsFixed(1)} m",
                     icon: Icons.water,
                     isHigh: highWaves,
                   ),
                   _buildConditionIndicator(
                     context,
-                    label: "Rain",
+                    label: l10n.rainLabel,
                     value: "${rain.toStringAsFixed(0)}%",
                     icon: Icons.umbrella,
                     isHigh: highRain,
@@ -385,7 +386,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         ),
         alignment: Alignment.center,
         child: Text(
-          "No Tide Data Available",
+          l10n.noTideData,
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
       );
@@ -406,7 +407,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Sea Tide Chart",
+          l10n.seaTideChartTitle,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.bold,

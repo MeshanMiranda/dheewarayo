@@ -165,8 +165,8 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               title: const Text('Meshan Miranda'),
-              subtitle: const Text(
-                'Negombo North Side Eke Sahenna Malu Ahuwenawa.',
+              subtitle: Text(
+                l10n.dummyCommunityPost,
               ),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {

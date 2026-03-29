@@ -153,5 +153,111 @@
     "writeCaption": "Write a caption...",
     "selectImage": "Select Image",
     "post": "Post",
-    "posting": "Posting..."
+    "posting": "Posting...",
+    "loginFailed": "Login failed",
+    "resetPasswordEmailPrompt": "Please enter your email to reset password.",
+    "resetPasswordEmailSent": "Password reset email sent. Please check your inbox.",
+    "failedToSendResetEmail": "Failed to send reset email",
+    "googleSignInFailed": "Google Sign-In failed: {error}",
+    "@googleSignInFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "anonymousSignInFailed": "Anonymous Sign-In failed",
+    "welcomeBack": "Welcome Back",
+    "signInToContinue": "Sign in to continue to Dheewarayo",
+    "passwordLabel": "Password",
+    "pleaseEnterEmail": "Please enter your email",
+    "pleaseEnterPassword": "Please enter your password",
+    "forgotPassword": "Forgot Password?",
+    "signInButton": "Sign In",
+    "orText": "OR",
+    "signInWithGoogle": "Sign in with Google",
+    "continueAsGuest": "Continue as Guest",
+    "dontHaveAccount": "Don't have an account?",
+    "registerLink": "Register",
+    "logInLink": "Log In",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "registrationSuccessful": "Registration successful!",
+    "registrationFailed": "Registration failed",
+    "anErrorOccurred": "An error occurred: {error}",
+    "@anErrorOccurred": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "createAccount": "Create an Account",
+    "joinCommunity": "Join the Dheewarayo community",
+    "mobileNumberLabel": "Mobile Number",
+    "confirmPasswordLabel": "Confirm Password",
+    "alreadyHaveAccount": "Already have an account?",
+    "requiredField": "Required",
+    "dummyCommunityPost": "Negombo North Side Eke Sahenna Malu Ahuwenawa.",
+    "currentWeatherTitle": "Current Weather",
+    "conditionsGoodTitle": "Conditions look good!",
+    "conditionsGoodDesc": "The weather is expected to remain safe for the next hour.",
+    "headsUpRoughWeather": "Heads Up! Rough Weather",
+    "roughWeatherDesc": "Please be careful. Here's what to expect in the next hour:",
+    "windLabel": "Wind",
+    "wavesLabel": "Waves",
+    "rainLabel": "Rain",
+    "noTideData": "No Tide Data Available",
+    "seaTideChartTitle": "Sea Tide Chart",
+    "confirmLogoutPrompt": "Are you sure you want to log out?",
+    "cancel": "Cancel",
+    "editPost": "Edit Post",
+    "update": "Update",
+    "uploadPostBtn": "Upload post",
+    "updatePostBtn": "Update post",
+    "clearBtn": "Clear",
+    "pleaseLogInFirst": "Please log in first",
+    "imageOrCaptionRequired": "Please add an image or caption",
+    "failedToPost": "Failed to post: {error}",
+    "@failedToPost": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "analyzingPfzData": "Analyzing oceanographic data for PFZ...",
+    "excellent": "Excellent",
+    "good": "Good",
+    "moderate": "Moderate",
+    "beyondBoundary": "Beyond Boundary",
+    "somethingWentWrong": "Something went wrong",
+    "noPostsYet": "No posts yet. Be the first to post!",
+    "unknownUser": "Unknown User",
+    "minutesAgo": "{minutes} minutes ago",
+    "@minutesAgo": {
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "justNow": "Just now",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deletePostTitle": "Delete Post",
+    "deletePostPrompt": "Are you sure you want to delete this post?",
+    "postDeletedSuccessfully": "Post deleted successfully",
+    "failedToDeletePost": "Failed to delete post: {error}",
+    "@failedToDeletePost": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "commentsTitle": "Comments",
+    "postNotFound": "Post not found.",
+    "noCommentsYet": "No comments yet.",
+    "addCommentHint": "Add a comment...",
+    "userLabel": "User"
 }

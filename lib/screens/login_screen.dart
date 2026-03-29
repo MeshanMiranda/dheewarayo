@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth.dart';
 import 'register_screen.dart';
+import '../l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,9 +27,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
+    
+    final l10n = AppLocalizations.of(context)!;
 
-    setState(() => _isLoading = true);
-
+    setState(() {
+      _isLoading = true;
+    });
     try {
       await _authService.signInWithEmailAndPassword(
         _emailController.text.trim(),
@@ -41,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(e.message ?? 'Login failed')));
+        ).showSnackBar(SnackBar(content: Text(e.message ?? l10n.loginFailed)));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -49,11 +53,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _resetPassword() async {
+    final l10n = AppLocalizations.of(context)!;
     final email = _emailController.text.trim();
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email to reset password.'),
+        SnackBar(
+          content: Text(l10n.resetPasswordEmailPrompt),
         ),
       );
       return;
@@ -65,9 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
       await _authService.sendPasswordResetEmail(email);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Password reset email sent. Please check your inbox.',
+              l10n.resetPasswordEmailSent,
             ),
           ),
         );
@@ -75,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Failed to send reset email')),
+          SnackBar(content: Text(e.message ?? l10n.failedToSendResetEmail)),
         );
       }
     } finally {
@@ -83,8 +88,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _loginWithGoogle() async {
-    setState(() => _isLoading = true);
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       UserCredential? result = await _authService.signInWithGoogle();
       if (result != null && mounted && Navigator.canPop(context)) {
@@ -94,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Google Sign-In failed: $e')));
+        ).showSnackBar(SnackBar(content: Text(l10n.googleSignInFailed(e.toString()))));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -102,7 +111,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginAnonymously() async {
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+    });
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       await _authService.signInAnonymously();
       if (mounted && Navigator.canPop(context)) {
@@ -112,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Anonymous Sign-In failed')));
+        ).showSnackBar(SnackBar(content: Text(l10n.anonymousSignInFailed)));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -123,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // Determine if it's dark mode
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -147,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Welcome text
                   Text(
-                    'Welcome Back',
+                    l10n.welcomeBack,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -155,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Sign in to continue to Dheewarayo',
+                    l10n.signInToContinue,
                     textAlign: TextAlign.center,
                     style: Theme.of(
                       context,
@@ -177,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
-                              labelText: 'Email',
+                              labelText: l10n.email,
                               prefixIcon: const Icon(Icons.email_outlined),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -185,14 +199,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             keyboardType: TextInputType.emailAddress,
                             validator: (val) => val == null || val.isEmpty
-                                ? 'Please enter your email'
+                                ? l10n.pleaseEnterEmail
                                 : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(
-                              labelText: 'Password',
+                              labelText: l10n.passwordLabel,
                               prefixIcon: const Icon(Icons.lock_outline),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -200,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             obscureText: true,
                             validator: (val) => val == null || val.isEmpty
-                                ? 'Please enter your password'
+                                ? l10n.pleaseEnterPassword
                                 : null,
                           ),
                           const SizedBox(height: 8),
@@ -210,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                               onPressed: _isLoading ? null : _resetPassword,
-                              child: const Text('Forgot Password?'),
+                              child: Text(l10n.forgotPassword),
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -233,9 +247,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.white,
                                     ),
                                   )
-                                : const Text(
-                                    'Sign In',
-                                    style: TextStyle(
+                                : Text(
+                                    l10n.signInButton,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -254,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
-                          'OR',
+                          l10n.orText,
                           style: TextStyle(
                             color: isDarkMode
                                 ? Colors.grey[400]
@@ -270,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Google Sign-In Button
                   OutlinedButton(
-                    onPressed: _isLoading ? null : _loginWithGoogle,
+                    onPressed: _isLoading ? null : _signInWithGoogle,
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -294,7 +308,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          'Sign in with Google',
+                          l10n.signInWithGoogle,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -309,7 +323,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Guest Sign-In
                   TextButton(
                     onPressed: _isLoading ? null : _loginAnonymously,
-                    child: const Text('Continue as Guest'),
+                    child: Text(l10n.continueAsGuest),
                   ),
                   const SizedBox(height: 16),
 
@@ -318,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account?",
+                        l10n.dontHaveAccount,
                         style: TextStyle(
                           color: isDarkMode
                               ? Colors.grey[300]
@@ -334,9 +348,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           );
                         },
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        child: Text(
+                          l10n.registerLink,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],

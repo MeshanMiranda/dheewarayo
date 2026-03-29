@@ -395,4 +395,232 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get posting => 'Posting...';
+
+  @override
+  String get loginFailed => 'Login failed';
+
+  @override
+  String get resetPasswordEmailPrompt =>
+      'Please enter your email to reset password.';
+
+  @override
+  String get resetPasswordEmailSent =>
+      'Password reset email sent. Please check your inbox.';
+
+  @override
+  String get failedToSendResetEmail => 'Failed to send reset email';
+
+  @override
+  String googleSignInFailed(String error) {
+    return 'Google Sign-In failed: $error';
+  }
+
+  @override
+  String get anonymousSignInFailed => 'Anonymous Sign-In failed';
+
+  @override
+  String get welcomeBack => 'Welcome Back';
+
+  @override
+  String get signInToContinue => 'Sign in to continue to Dheewarayo';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get pleaseEnterEmail => 'Please enter your email';
+
+  @override
+  String get pleaseEnterPassword => 'Please enter your password';
+
+  @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get signInButton => 'Sign In';
+
+  @override
+  String get orText => 'OR';
+
+  @override
+  String get signInWithGoogle => 'Sign in with Google';
+
+  @override
+  String get continueAsGuest => 'Continue as Guest';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account?';
+
+  @override
+  String get registerLink => 'Register';
+
+  @override
+  String get logInLink => 'Log In';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get registrationSuccessful => 'Registration successful!';
+
+  @override
+  String get registrationFailed => 'Registration failed';
+
+  @override
+  String anErrorOccurred(String error) {
+    return 'An error occurred: $error';
+  }
+
+  @override
+  String get createAccount => 'Create an Account';
+
+  @override
+  String get joinCommunity => 'Join the Dheewarayo community';
+
+  @override
+  String get mobileNumberLabel => 'Mobile Number';
+
+  @override
+  String get confirmPasswordLabel => 'Confirm Password';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get requiredField => 'Required';
+
+  @override
+  String get dummyCommunityPost =>
+      'Negombo North Side Eke Sahenna Malu Ahuwenawa.';
+
+  @override
+  String get currentWeatherTitle => 'Current Weather';
+
+  @override
+  String get conditionsGoodTitle => 'Conditions look good!';
+
+  @override
+  String get conditionsGoodDesc =>
+      'The weather is expected to remain safe for the next hour.';
+
+  @override
+  String get headsUpRoughWeather => 'Heads Up! Rough Weather';
+
+  @override
+  String get roughWeatherDesc =>
+      'Please be careful. Here\'s what to expect in the next hour:';
+
+  @override
+  String get windLabel => 'Wind';
+
+  @override
+  String get wavesLabel => 'Waves';
+
+  @override
+  String get rainLabel => 'Rain';
+
+  @override
+  String get noTideData => 'No Tide Data Available';
+
+  @override
+  String get seaTideChartTitle => 'Sea Tide Chart';
+
+  @override
+  String get confirmLogoutPrompt => 'Are you sure you want to log out?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get editPost => 'Edit Post';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get uploadPostBtn => 'Upload post';
+
+  @override
+  String get updatePostBtn => 'Update post';
+
+  @override
+  String get clearBtn => 'Clear';
+
+  @override
+  String get pleaseLogInFirst => 'Please log in first';
+
+  @override
+  String get imageOrCaptionRequired => 'Please add an image or caption';
+
+  @override
+  String failedToPost(String error) {
+    return 'Failed to post: $error';
+  }
+
+  @override
+  String get analyzingPfzData => 'Analyzing oceanographic data for PFZ...';
+
+  @override
+  String get excellent => 'Excellent';
+
+  @override
+  String get good => 'Good';
+
+  @override
+  String get moderate => 'Moderate';
+
+  @override
+  String get beyondBoundary => 'Beyond Boundary';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get noPostsYet => 'No posts yet. Be the first to post!';
+
+  @override
+  String get unknownUser => 'Unknown User';
+
+  @override
+  String minutesAgo(String minutes) {
+    return '$minutes minutes ago';
+  }
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get deletePostTitle => 'Delete Post';
+
+  @override
+  String get deletePostPrompt => 'Are you sure you want to delete this post?';
+
+  @override
+  String get postDeletedSuccessfully => 'Post deleted successfully';
+
+  @override
+  String failedToDeletePost(String error) {
+    return 'Failed to delete post: $error';
+  }
+
+  @override
+  String get commentsTitle => 'Comments';
+
+  @override
+  String get postNotFound => 'Post not found.';
+
+  @override
+  String get noCommentsYet => 'No comments yet.';
+
+  @override
+  String get addCommentHint => 'Add a comment...';
+
+  @override
+  String get userLabel => 'User';
 }

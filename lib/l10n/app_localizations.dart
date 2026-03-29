@@ -811,6 +811,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Posting...'**
   String get posting;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed'**
+  String get loginFailed;
+
+  /// No description provided for @resetPasswordEmailPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email to reset password.'**
+  String get resetPasswordEmailPrompt;
+
+  /// No description provided for @resetPasswordEmailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent. Please check your inbox.'**
+  String get resetPasswordEmailSent;
+
+  /// No description provided for @failedToSendResetEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send reset email'**
+  String get failedToSendResetEmail;
+
+  /// No description provided for @googleSignInFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Sign-In failed: {error}'**
+  String googleSignInFailed(String error);
+
+  /// No description provided for @anonymousSignInFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous Sign-In failed'**
+  String get anonymousSignInFailed;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome Back'**
+  String get welcomeBack;
+
+  /// No description provided for @signInToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue to Dheewarayo'**
+  String get signInToContinue;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @pleaseEnterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get pleaseEnterEmail;
+
+  /// No description provided for @pleaseEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get pleaseEnterPassword;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// No description provided for @signInButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signInButton;
+
+  /// No description provided for @orText.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orText;
+
+  /// No description provided for @signInWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
+  String get signInWithGoogle;
+
+  /// No description provided for @continueAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as Guest'**
+  String get continueAsGuest;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get dontHaveAccount;
+
+  /// No description provided for @registerLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get registerLink;
+
+  /// No description provided for @logInLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get logInLink;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @registrationSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful!'**
+  String get registrationSuccessful;
+
+  /// No description provided for @registrationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed'**
+  String get registrationFailed;
+
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred: {error}'**
+  String anErrorOccurred(String error);
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an Account'**
+  String get createAccount;
+
+  /// No description provided for @joinCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Join the Dheewarayo community'**
+  String get joinCommunity;
+
+  /// No description provided for @mobileNumberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Number'**
+  String get mobileNumberLabel;
+
+  /// No description provided for @confirmPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPasswordLabel;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requiredField;
+
+  /// No description provided for @dummyCommunityPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Negombo North Side Eke Sahenna Malu Ahuwenawa.'**
+  String get dummyCommunityPost;
+
+  /// No description provided for @currentWeatherTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Weather'**
+  String get currentWeatherTitle;
+
+  /// No description provided for @conditionsGoodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditions look good!'**
+  String get conditionsGoodTitle;
+
+  /// No description provided for @conditionsGoodDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The weather is expected to remain safe for the next hour.'**
+  String get conditionsGoodDesc;
+
+  /// No description provided for @headsUpRoughWeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Heads Up! Rough Weather'**
+  String get headsUpRoughWeather;
+
+  /// No description provided for @roughWeatherDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Please be careful. Here\'s what to expect in the next hour:'**
+  String get roughWeatherDesc;
+
+  /// No description provided for @windLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind'**
+  String get windLabel;
+
+  /// No description provided for @wavesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Waves'**
+  String get wavesLabel;
+
+  /// No description provided for @rainLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get rainLabel;
+
+  /// No description provided for @noTideData.
+  ///
+  /// In en, this message translates to:
+  /// **'No Tide Data Available'**
+  String get noTideData;
+
+  /// No description provided for @seaTideChartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea Tide Chart'**
+  String get seaTideChartTitle;
+
+  /// No description provided for @confirmLogoutPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get confirmLogoutPrompt;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @editPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Post'**
+  String get editPost;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @uploadPostBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload post'**
+  String get uploadPostBtn;
+
+  /// No description provided for @updatePostBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Update post'**
+  String get updatePostBtn;
+
+  /// No description provided for @clearBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearBtn;
+
+  /// No description provided for @pleaseLogInFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in first'**
+  String get pleaseLogInFirst;
+
+  /// No description provided for @imageOrCaptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add an image or caption'**
+  String get imageOrCaptionRequired;
+
+  /// No description provided for @failedToPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to post: {error}'**
+  String failedToPost(String error);
+
+  /// No description provided for @analyzingPfzData.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing oceanographic data for PFZ...'**
+  String get analyzingPfzData;
+
+  /// No description provided for @excellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get excellent;
+
+  /// No description provided for @good.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get good;
+
+  /// No description provided for @moderate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get moderate;
+
+  /// No description provided for @beyondBoundary.
+  ///
+  /// In en, this message translates to:
+  /// **'Beyond Boundary'**
+  String get beyondBoundary;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @noPostsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts yet. Be the first to post!'**
+  String get noPostsYet;
+
+  /// No description provided for @unknownUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown User'**
+  String get unknownUser;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes ago'**
+  String minutesAgo(String minutes);
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @deletePostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Post'**
+  String get deletePostTitle;
+
+  /// No description provided for @deletePostPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this post?'**
+  String get deletePostPrompt;
+
+  /// No description provided for @postDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Post deleted successfully'**
+  String get postDeletedSuccessfully;
+
+  /// No description provided for @failedToDeletePost.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete post: {error}'**
+  String failedToDeletePost(String error);
+
+  /// No description provided for @commentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get commentsTitle;
+
+  /// No description provided for @postNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Post not found.'**
+  String get postNotFound;
+
+  /// No description provided for @noCommentsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet.'**
+  String get noCommentsYet;
+
+  /// No description provided for @addCommentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a comment...'**
+  String get addCommentHint;
+
+  /// No description provided for @userLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get userLabel;
 }
 
 class _AppLocalizationsDelegate

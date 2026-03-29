@@ -398,4 +398,234 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get posting => 'පළ කරමින්...';
+
+  @override
+  String get loginFailed => 'පිවිසීම අසාර්ථක විය';
+
+  @override
+  String get resetPasswordEmailPrompt =>
+      'මුරපදය යළි සැකසීමට විද්‍යුත් තැපෑල ඇතුළත් කරන්න.';
+
+  @override
+  String get resetPasswordEmailSent =>
+      'මුරපදය යළි සැකසීමේ විද්‍යුත් තැපෑල යවන ලදී. කරුණාකර ඔබගේ එන ලිපි පරීක්ෂා জ্ঞකරන්න.';
+
+  @override
+  String get failedToSendResetEmail =>
+      'යළි සැකසීමේ විද්‍යුත් තැපෑල යැවීම අසාර්ථක විය';
+
+  @override
+  String googleSignInFailed(String error) {
+    return 'Google සමඟින් පිවිසීම අසාර්ථක විය: $error';
+  }
+
+  @override
+  String get anonymousSignInFailed => 'අමුත්තෙකු ලෙස පිවිසීම අසාර්ථක විය';
+
+  @override
+  String get welcomeBack => 'ආපසු සාදරයෙන් පිළිගනිමු';
+
+  @override
+  String get signInToContinue => 'ධීවරයෝ වෙත පිවිසෙන්න';
+
+  @override
+  String get passwordLabel => 'මුරපදය';
+
+  @override
+  String get pleaseEnterEmail => 'කරුණාකර ඔබගේ විද්‍යුත් තැපෑල ඇතුළත් කරන්න';
+
+  @override
+  String get pleaseEnterPassword => 'කරුණාකර ඔබගේ මුරපදය ඇතුළත් කරන්න';
+
+  @override
+  String get forgotPassword => 'මුරපදය අමතකද?';
+
+  @override
+  String get signInButton => 'පිවිසෙන්න';
+
+  @override
+  String get orText => 'හෝ';
+
+  @override
+  String get signInWithGoogle => 'Google සමඟින් පිවිසෙන්න';
+
+  @override
+  String get continueAsGuest => 'අමුත්තෙකු ලෙස ඉදිරියට යන්න';
+
+  @override
+  String get dontHaveAccount => 'ගිණුමක් නැද්ද?';
+
+  @override
+  String get registerLink => 'ලියාපදිංචි වන්න';
+
+  @override
+  String get logInLink => 'පිවිසෙන්න';
+
+  @override
+  String get passwordsDoNotMatch => 'මුරපද නොගැලපේ';
+
+  @override
+  String get registrationSuccessful => 'ලියාපදිංචිය සාර්ථකයි!';
+
+  @override
+  String get registrationFailed => 'ලියාපදිංචිය අසාර්ථක විය';
+
+  @override
+  String anErrorOccurred(String error) {
+    return 'දෝෂයක් ඇති විය: $error';
+  }
+
+  @override
+  String get createAccount => 'ගිණුමක් සාදන්න';
+
+  @override
+  String get joinCommunity => 'ධීවරයෝ සමාජයට එකතු වන්න';
+
+  @override
+  String get mobileNumberLabel => 'ජංගම දුරකථන අංකය';
+
+  @override
+  String get confirmPasswordLabel => 'මුරපදය තහවුරු කරන්න';
+
+  @override
+  String get alreadyHaveAccount => 'දැනටමත් ගිණුමක් තිබේද?';
+
+  @override
+  String get requiredField => 'අවශ්‍යයි';
+
+  @override
+  String get dummyCommunityPost => 'මීගමුව උතුරු පැත්තේ සෑහෙන්න මාළු අහුවෙනවා.';
+
+  @override
+  String get currentWeatherTitle => 'වත්මන් කාලගුණය';
+
+  @override
+  String get conditionsGoodTitle => 'තත්ත්වය යහපත් බව පෙනේ!';
+
+  @override
+  String get conditionsGoodDesc =>
+      'ඉදිරි පැයේදී කාලගුණය ආරක්ෂිතව පවතිනු ඇතැයි අපේක්ෂා කෙරේ.';
+
+  @override
+  String get headsUpRoughWeather => 'අවධානයට! අයහපත් කාලගුණය';
+
+  @override
+  String get roughWeatherDesc =>
+      'කරුණාකර ප්‍රවේශම් වන්න. ඉදිරි පැය තුළ බලාපොරොත්තු විය හැක්කේ:';
+
+  @override
+  String get windLabel => 'සුළඟ';
+
+  @override
+  String get wavesLabel => 'රළ';
+
+  @override
+  String get rainLabel => 'වැසි';
+
+  @override
+  String get noTideData => 'වඩදිය බාදිය දත්ත නොමැත';
+
+  @override
+  String get seaTideChartTitle => 'වඩදිය බාදිය සටහන';
+
+  @override
+  String get confirmLogoutPrompt => 'ඔබට නිසැකවම ඉවත් වීමට අවශ්‍යද?';
+
+  @override
+  String get cancel => 'අවලංගු කරන්න';
+
+  @override
+  String get editPost => 'පළ කිරීම සංස්කරණය කරන්න';
+
+  @override
+  String get update => 'යාවත්කාලීන කරන්න';
+
+  @override
+  String get uploadPostBtn => 'පළ කිරීම උඩුගත කරන්න';
+
+  @override
+  String get updatePostBtn => 'පළ කිරීම යාවත්කාලීන කරන්න';
+
+  @override
+  String get clearBtn => 'මකන්න';
+
+  @override
+  String get pleaseLogInFirst => 'කරුණාකර පළමුව පුරනය වන්න';
+
+  @override
+  String get imageOrCaptionRequired =>
+      'කරුණාකර පින්තූරයක් හෝ විස්තරයක් එක් කරන්න';
+
+  @override
+  String failedToPost(String error) {
+    return 'පළ කිරීම අසාර්ථක විය: $error';
+  }
+
+  @override
+  String get analyzingPfzData =>
+      'PFZ සඳහා සාගර විද්‍යාත්මක දත්ත විශ්ලේෂණය කරමින්...';
+
+  @override
+  String get excellent => 'විශිෂ්ටයි';
+
+  @override
+  String get good => 'හොඳයි';
+
+  @override
+  String get moderate => 'මධ්‍යම';
+
+  @override
+  String get beyondBoundary => 'මායිමෙන් ඔබ්බට';
+
+  @override
+  String get somethingWentWrong => 'යම් දෝෂයක් ඇති විය';
+
+  @override
+  String get noPostsYet => 'තවමත් පළ කිරීම් නොමැත. පළමු පළ කිරීම කරන්න!';
+
+  @override
+  String get unknownUser => 'නොදන්නා පරිශීලකයෙක්';
+
+  @override
+  String minutesAgo(String minutes) {
+    return 'මිනිත්තු $minutes කට පෙර';
+  }
+
+  @override
+  String get justNow => 'මේ දැන්';
+
+  @override
+  String get edit => 'සංස්කරණය කරන්න';
+
+  @override
+  String get delete => 'මකන්න';
+
+  @override
+  String get deletePostTitle => 'පළ කිරීම මකන්න';
+
+  @override
+  String get deletePostPrompt => 'ඔබට නිසැකවම මෙම පළ කිරීම මකා දැමීමට අවශ්‍යද?';
+
+  @override
+  String get postDeletedSuccessfully => 'පළ කිරීම සාර්ථකව මකා දමන ලදී';
+
+  @override
+  String failedToDeletePost(String error) {
+    return 'පළ කිරීම මකා දැමීම අසාර්ථක විය: $error';
+  }
+
+  @override
+  String get commentsTitle => 'අදහස්';
+
+  @override
+  String get postNotFound => 'පළ කිරීම හමු නොවිණි.';
+
+  @override
+  String get noCommentsYet => 'තවමත් අදහස් නොමැත.';
+
+  @override
+  String get addCommentHint => 'අදහසක් එක් කරන්න...';
+
+  @override
+  String get userLabel => 'පරිශීලකයා';
 }

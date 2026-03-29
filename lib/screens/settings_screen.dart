@@ -192,14 +192,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Text(l10n.logOut),
-                                content: const Text(
-                                  'Are you sure you want to log out?',
+                                content: Text(
+                                  l10n.confirmLogoutPrompt,
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: () =>
                                         Navigator.of(context).pop(false),
-                                    child: const Text('Cancel'),
+                                    child: Text(l10n.cancel),
                                   ),
                                   TextButton(
                                     onPressed: () =>
@@ -242,7 +242,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           );
                         },
                         icon: const Icon(Icons.login),
-                        label: const Text('Log In'),
+                        label: Text(l10n.logInLink),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(
                             context,

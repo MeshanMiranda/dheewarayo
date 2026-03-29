@@ -32,7 +32,7 @@ class CommunityScreen extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Center(child: Text('Something went wrong'));
+            return Center(child: Text(l10n.somethingWentWrong));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -40,8 +40,8 @@ class CommunityScreen extends StatelessWidget {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Text('No posts yet. Be the first to post!'),
+            return Center(
+              child: Text(l10n.noPostsYet),
             );
           }
 
@@ -54,7 +54,7 @@ class CommunityScreen extends StatelessWidget {
 
               final postId = doc.id;
               final userId = data['userId'] as String?;
-              final user = data['username'] as String? ?? 'Unknown User';
+              final user = data['username'] as String? ?? l10n.unknownUser;
               final text = data['caption'] as String? ?? '';
               final imageUrl = data['imageUrl'] as String?;
               final userProfilePic = data['userProfilePic'] as String?;
@@ -95,9 +95,9 @@ class CommunityScreen extends StatelessWidget {
                   } else if (diff.inHours > 0) {
                     timeStr = l10n.hoursAgo(diff.inHours.toString());
                   } else if (diff.inMinutes > 0) {
-                    timeStr = '${diff.inMinutes} minutes ago';
+                    timeStr = l10n.minutesAgo(diff.inMinutes.toString());
                   } else {
-                    timeStr = 'Just now';
+                    timeStr = l10n.justNow;
                   }
                 }
               }
@@ -195,14 +195,14 @@ class CommunityScreen extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (dialogContext) => AlertDialog(
-                            title: const Text('Delete Post'),
-                            content: const Text(
-                              'Are you sure you want to delete this post?',
+                            title: Text(l10n.deletePostTitle),
+                            content: Text(
+                              l10n.deletePostPrompt,
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(dialogContext),
-                                child: const Text('Cancel'),
+                                child: Text(l10n.cancel),
                               ),
                               TextButton(
                                 onPressed: () async {
@@ -216,9 +216,9 @@ class CommunityScreen extends StatelessWidget {
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
-                                        const SnackBar(
+                                        SnackBar(
                                           content: Text(
-                                            'Post deleted successfully',
+                                            l10n.postDeletedSuccessfully,
                                           ),
                                         ),
                                       );
@@ -230,7 +230,7 @@ class CommunityScreen extends StatelessWidget {
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            'Failed to delete post: $e',
+                                            l10n.failedToDeletePost(e.toString()),
                                           ),
                                         ),
                                       );
@@ -240,7 +240,7 @@ class CommunityScreen extends StatelessWidget {
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.red,
                                 ),
-                                child: const Text('Delete'),
+                                child: Text(l10n.delete),
                               ),
                             ],
                           ),
@@ -248,10 +248,10 @@ class CommunityScreen extends StatelessWidget {
                       }
                     },
                     itemBuilder: (context) => [
-                      const PopupMenuItem(value: 'edit', child: Text('Edit')),
-                      const PopupMenuItem(
+                      PopupMenuItem(value: 'edit', child: Text(l10n.edit)),
+                      PopupMenuItem(
                         value: 'delete',
-                        child: Text('Delete'),
+                        child: Text(l10n.delete),
                       ),
                     ],
                   ),
@@ -348,6 +348,7 @@ class CommunityScreen extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         return Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -359,7 +360,7 @@ class CommunityScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Comments',
+                l10n.commentsTitle,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -380,7 +381,7 @@ class CommunityScreen extends StatelessWidget {
                     }
 
                     if (!snapshot.hasData || !snapshot.data!.exists) {
-                      return const Center(child: Text('Post not found.'));
+                      return Center(child: Text(l10n.postNotFound));
                     }
 
                     final data = snapshot.data!.data() as Map<String, dynamic>?;
@@ -391,7 +392,7 @@ class CommunityScreen extends StatelessWidget {
                     }
 
                     if (comments.isEmpty) {
-                      return const Center(child: Text('No comments yet.'));
+                      return Center(child: Text(l10n.noCommentsYet));
                     }
 
                     return ListView.builder(
@@ -400,7 +401,7 @@ class CommunityScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final comment = comments[index] as Map<String, dynamic>;
                         final username =
-                            comment['username'] as String? ?? 'User';
+                            comment['username'] as String? ?? l10n.userLabel;
                         final text = comment['text'] as String? ?? '';
                         final timestamp = comment['timestamp'];
 
@@ -416,13 +417,13 @@ class CommunityScreen extends StatelessWidget {
                           if (dt != null) {
                             final diff = DateTime.now().difference(dt);
                             if (diff.inDays > 0) {
-                              timeStr = '${diff.inDays} days ago';
+                              timeStr = l10n.daysAgo(diff.inDays.toString());
                             } else if (diff.inHours > 0) {
-                              timeStr = '${diff.inHours} hours ago';
+                              timeStr = l10n.hoursAgo(diff.inHours.toString());
                             } else if (diff.inMinutes > 0) {
-                              timeStr = '${diff.inMinutes} mins ago';
+                              timeStr = l10n.minutesAgo(diff.inMinutes.toString());
                             } else {
-                              timeStr = 'Just now';
+                              timeStr = l10n.justNow;
                             }
                           }
                         }
@@ -456,7 +457,7 @@ class CommunityScreen extends StatelessWidget {
                     child: TextField(
                       controller: commentController,
                       decoration: InputDecoration(
-                        hintText: 'Add a comment...',
+                        hintText: l10n.addCommentHint,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -483,7 +484,7 @@ class CommunityScreen extends StatelessWidget {
                         username = user.email!.split('@')[0];
                       }
                       if (username.isEmpty) {
-                        username = 'Unknown User';
+                        username = l10n.unknownUser;
                       }
 
                       final newComment = {

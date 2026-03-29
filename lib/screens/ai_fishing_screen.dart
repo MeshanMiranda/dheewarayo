@@ -327,8 +327,8 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           ),
         ),
         if (_isLoadingPfz)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(
               children: [
                 SizedBox(
@@ -337,7 +337,7 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
                 SizedBox(width: 8),
-                Text('Analyzing oceanographic data for PFZ...'),
+                Text(l10n.analyzingPfzData),
               ],
             ),
           ),
@@ -387,7 +387,7 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                '\${l10n.internationalSea} - Beyond Boundary',
+                '${l10n.internationalSea} - ${l10n.beyondBoundary}',
                 style: const TextStyle(fontSize: 12),
               ),
             ),
@@ -403,15 +403,15 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
           children: [
             const Icon(Icons.location_on, color: Colors.red, size: 20),
             const SizedBox(width: 4),
-            const Text('Excellent', style: TextStyle(fontSize: 12)),
+            Text(l10n.excellent, style: const TextStyle(fontSize: 12)),
             const SizedBox(width: 12),
             const Icon(Icons.location_on, color: Colors.orange, size: 20),
             const SizedBox(width: 4),
-            const Text('Good', style: TextStyle(fontSize: 12)),
+            Text(l10n.good, style: const TextStyle(fontSize: 12)),
             const SizedBox(width: 12),
             const Icon(Icons.location_on, color: Colors.yellow, size: 20),
             const SizedBox(width: 4),
-            const Text('Moderate', style: TextStyle(fontSize: 12)),
+            Text(l10n.moderate, style: const TextStyle(fontSize: 12)),
           ],
         ),
       ],

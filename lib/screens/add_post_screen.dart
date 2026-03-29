@@ -57,11 +57,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   Future<void> _uploadPost() async {
+    final l10n = AppLocalizations.of(context)!;
     final user = _auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Please log in first')));
+      ).showSnackBar(SnackBar(content: Text(l10n.pleaseLogInFirst)));
       return;
     }
 
@@ -100,7 +101,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       } else if (imageUrl == null && _captionController.text.trim().isEmpty) {
         // Require either an image or text
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please add an image or caption')),
+          SnackBar(content: Text(l10n.imageOrCaptionRequired)),
         );
         setState(() {
           _isLoading = false;
@@ -147,7 +148,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to post: $e')));
+        ).showSnackBar(SnackBar(content: Text(l10n.failedToPost(e.toString()))));
       }
     } finally {
       if (mounted) {
@@ -174,7 +175,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.editPostId != null ? 'Edit Post' : l10n.addPost),
+        title: Text(widget.editPostId != null ? l10n.editPost : l10n.addPost),
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _uploadPost,
@@ -185,7 +186,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : Text(
-                    widget.editPostId != null ? 'Update' : l10n.post,
+                    widget.editPostId != null ? l10n.update : l10n.post,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -309,7 +310,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             });
                           },
                     icon: const Icon(Icons.clear),
-                    label: const Text('Clear'),
+                    label: Text(l10n.clearBtn),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -329,7 +330,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.upload),
-                    label: Text(widget.editPostId != null ? 'Update post' : 'Upload post'),
+                    label: Text(widget.editPostId != null ? l10n.updatePostBtn : l10n.uploadPostBtn),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(

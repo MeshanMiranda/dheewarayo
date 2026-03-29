@@ -153,5 +153,111 @@
     "writeCaption": "විස්තරයක් ලියන්න...",
     "selectImage": "පින්තූරය තෝරන්න",
     "post": "පළ කරන්න",
-    "posting": "පළ කරමින්..."
+    "posting": "පළ කරමින්...",
+    "loginFailed": "පිවිසීම අසාර්ථක විය",
+    "resetPasswordEmailPrompt": "මුරපදය යළි සැකසීමට විද්‍යුත් තැපෑල ඇතුළත් කරන්න.",
+    "resetPasswordEmailSent": "මුරපදය යළි සැකසීමේ විද්‍යුත් තැපෑල යවන ලදී. කරුණාකර ඔබගේ එන ලිපි පරීක්ෂා জ্ঞකරන්න.",
+    "failedToSendResetEmail": "යළි සැකසීමේ විද්‍යුත් තැපෑල යැවීම අසාර්ථක විය",
+    "googleSignInFailed": "Google සමඟින් පිවිසීම අසාර්ථක විය: {error}",
+    "@googleSignInFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "anonymousSignInFailed": "අමුත්තෙකු ලෙස පිවිසීම අසාර්ථක විය",
+    "welcomeBack": "ආපසු සාදරයෙන් පිළිගනිමු",
+    "signInToContinue": "ධීවරයෝ වෙත පිවිසෙන්න",
+    "passwordLabel": "මුරපදය",
+    "pleaseEnterEmail": "කරුණාකර ඔබගේ විද්‍යුත් තැපෑල ඇතුළත් කරන්න",
+    "pleaseEnterPassword": "කරුණාකර ඔබගේ මුරපදය ඇතුළත් කරන්න",
+    "forgotPassword": "මුරපදය අමතකද?",
+    "signInButton": "පිවිසෙන්න",
+    "orText": "හෝ",
+    "signInWithGoogle": "Google සමඟින් පිවිසෙන්න",
+    "continueAsGuest": "අමුත්තෙකු ලෙස ඉදිරියට යන්න",
+    "dontHaveAccount": "ගිණුමක් නැද්ද?",
+    "registerLink": "ලියාපදිංචි වන්න",
+    "logInLink": "පිවිසෙන්න",
+    "passwordsDoNotMatch": "මුරපද නොගැලපේ",
+    "registrationSuccessful": "ලියාපදිංචිය සාර්ථකයි!",
+    "registrationFailed": "ලියාපදිංචිය අසාර්ථක විය",
+    "anErrorOccurred": "දෝෂයක් ඇති විය: {error}",
+    "@anErrorOccurred": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "createAccount": "ගිණුමක් සාදන්න",
+    "joinCommunity": "ධීවරයෝ සමාජයට එකතු වන්න",
+    "mobileNumberLabel": "ජංගම දුරකථන අංකය",
+    "confirmPasswordLabel": "මුරපදය තහවුරු කරන්න",
+    "alreadyHaveAccount": "දැනටමත් ගිණුමක් තිබේද?",
+    "requiredField": "අවශ්‍යයි",
+    "dummyCommunityPost": "මීගමුව උතුරු පැත්තේ සෑහෙන්න මාළු අහුවෙනවා.",
+    "currentWeatherTitle": "වත්මන් කාලගුණය",
+    "conditionsGoodTitle": "තත්ත්වය යහපත් බව පෙනේ!",
+    "conditionsGoodDesc": "ඉදිරි පැයේදී කාලගුණය ආරක්ෂිතව පවතිනු ඇතැයි අපේක්ෂා කෙරේ.",
+    "headsUpRoughWeather": "අවධානයට! අයහපත් කාලගුණය",
+    "roughWeatherDesc": "කරුණාකර ප්‍රවේශම් වන්න. ඉදිරි පැය තුළ බලාපොරොත්තු විය හැක්කේ:",
+    "windLabel": "සුළඟ",
+    "wavesLabel": "රළ",
+    "rainLabel": "වැසි",
+    "noTideData": "වඩදිය බාදිය දත්ත නොමැත",
+    "seaTideChartTitle": "වඩදිය බාදිය සටහන",
+    "confirmLogoutPrompt": "ඔබට නිසැකවම ඉවත් වීමට අවශ්‍යද?",
+    "cancel": "අවලංගු කරන්න",
+    "editPost": "පළ කිරීම සංස්කරණය කරන්න",
+    "update": "යාවත්කාලීන කරන්න",
+    "uploadPostBtn": "පළ කිරීම උඩුගත කරන්න",
+    "updatePostBtn": "පළ කිරීම යාවත්කාලීන කරන්න",
+    "clearBtn": "මකන්න",
+    "pleaseLogInFirst": "කරුණාකර පළමුව පුරනය වන්න",
+    "imageOrCaptionRequired": "කරුණාකර පින්තූරයක් හෝ විස්තරයක් එක් කරන්න",
+    "failedToPost": "පළ කිරීම අසාර්ථක විය: {error}",
+    "@failedToPost": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "analyzingPfzData": "PFZ සඳහා සාගර විද්‍යාත්මක දත්ත විශ්ලේෂණය කරමින්...",
+    "excellent": "විශිෂ්ටයි",
+    "good": "හොඳයි",
+    "moderate": "මධ්‍යම",
+    "beyondBoundary": "මායිමෙන් ඔබ්බට",
+    "somethingWentWrong": "යම් දෝෂයක් ඇති විය",
+    "noPostsYet": "තවමත් පළ කිරීම් නොමැත. පළමු පළ කිරීම කරන්න!",
+    "unknownUser": "නොදන්නා පරිශීලකයෙක්",
+    "minutesAgo": "මිනිත්තු {minutes} කට පෙර",
+    "@minutesAgo": {
+        "placeholders": {
+            "minutes": {
+                "type": "String"
+            }
+        }
+    },
+    "justNow": "මේ දැන්",
+    "edit": "සංස්කරණය කරන්න",
+    "delete": "මකන්න",
+    "deletePostTitle": "පළ කිරීම මකන්න",
+    "deletePostPrompt": "ඔබට නිසැකවම මෙම පළ කිරීම මකා දැමීමට අවශ්‍යද?",
+    "postDeletedSuccessfully": "පළ කිරීම සාර්ථකව මකා දමන ලදී",
+    "failedToDeletePost": "පළ කිරීම මකා දැමීම අසාර්ථක විය: {error}",
+    "@failedToDeletePost": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "commentsTitle": "අදහස්",
+    "postNotFound": "පළ කිරීම හමු නොවිණි.",
+    "noCommentsYet": "තවමත් අදහස් නොමැත.",
+    "addCommentHint": "අදහසක් එක් කරන්න...",
+    "userLabel": "පරිශීලකයා"
 }
