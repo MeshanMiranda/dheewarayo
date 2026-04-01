@@ -23,10 +23,7 @@ class TidePoint {
   final DateTime time;
   final double height;
 
-  TidePoint({
-    required this.time,
-    required this.height,
-  });
+  TidePoint({required this.time, required this.height});
 }
 
 class IntervalForecast {
@@ -82,12 +79,11 @@ class WeatherApiService {
       'https://api.openweathermap.org/data/2.5/weather';
   static const String forecastUrl =
       'https://api.openweathermap.org/data/2.5/forecast';
-  static const String worldTidesApiKey = 'YOUR_WORLD_TIDES_KEY';
+  static const String worldTidesApiKey =
+      'YOUR_WORLD_TIDES_KEY'; //3b930da6-b951-4a4d-920b-e4e547a85873
 
   Future<WeatherData> fetchWeatherForCity(String city) async {
-    final url = Uri.parse(
-      '$baseUrl?q=$city&appid=$apiKey&units=metric',
-    );
+    final url = Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=metric');
 
     final response = await http.get(url);
 
@@ -152,11 +148,14 @@ class WeatherApiService {
       final List<dynamic> list = jsonResponse['list'];
 
       Map<String, List<dynamic>> dailyData = {};
-      
+
       for (var item in list) {
-        final DateTime date = DateTime.fromMillisecondsSinceEpoch(item['dt'] * 1000, isUtc: true).toLocal();
+        final DateTime date = DateTime.fromMillisecondsSinceEpoch(
+          item['dt'] * 1000,
+          isUtc: true,
+        ).toLocal();
         final String dayKey = DateFormat('yyyy-MM-dd').format(date);
-        
+
         if (!dailyData.containsKey(dayKey)) {
           dailyData[dayKey] = [];
         }
@@ -164,51 +163,62 @@ class WeatherApiService {
       }
 
       List<DailyForecast> forecasts = [];
-      
+
       dailyData.forEach((dayKey, items) {
         double maxTemp = -100;
         double minTemp = 100;
         double maxWind = 0;
         Map<String, int> conditions = {};
-        
+
         for (var item in items) {
           final double temp = (item['main']['temp'] as num).toDouble();
           final double wind = (item['wind']['speed'] as num).toDouble();
           final String condition = item['weather'][0]['description'] as String;
-          
+
           if (temp > maxTemp) maxTemp = temp;
           if (temp < minTemp) minTemp = temp;
           if (wind > maxWind) maxWind = wind;
-          
+
           conditions[condition] = (conditions[condition] ?? 0) + 1;
         }
-        
-        String mainCondition = conditions.entries.reduce((a, b) => a.value > b.value ? a : b).key;
-        
+
+        String mainCondition = conditions.entries
+            .reduce((a, b) => a.value > b.value ? a : b)
+            .key;
+
         DateTime date = DateTime.parse(dayKey);
         String dayName = DateFormat('EEEE').format(date);
         if (dayKey == DateFormat('yyyy-MM-dd').format(DateTime.now())) {
           dayName = 'Today';
-        } else if (dayKey == DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1)))) {
+        } else if (dayKey ==
+            DateFormat(
+              'yyyy-MM-dd',
+            ).format(DateTime.now().add(const Duration(days: 1)))) {
           dayName = 'Tomorrow';
         }
-        
-        forecasts.add(DailyForecast(
-          day: dayName,
-          condition: mainCondition,
-          maxTemp: maxTemp,
-          minTemp: minTemp,
-          windSpeed: maxWind,
-        ));
+
+        forecasts.add(
+          DailyForecast(
+            day: dayName,
+            condition: mainCondition,
+            maxTemp: maxTemp,
+            minTemp: minTemp,
+            windSpeed: maxWind,
+          ),
+        );
       });
-      
+
       return forecasts.take(7).toList();
     } else {
-      throw Exception('Failed to load forecast data. Status: ${response.statusCode}');
+      throw Exception(
+        'Failed to load forecast data. Status: ${response.statusCode}',
+      );
     }
   }
 
-  Future<List<IntervalForecast>> fetchUpcoming3HourForecasts({int limit = 8}) async {
+  Future<List<IntervalForecast>> fetchUpcoming3HourForecasts({
+    int limit = 8,
+  }) async {
     Position? position;
     try {
       position = await Geolocator.getCurrentPosition(
@@ -220,7 +230,9 @@ class WeatherApiService {
     }
 
     if (position == null) {
-      throw Exception('Could not determine location for background weather update.');
+      throw Exception(
+        'Could not determine location for background weather update.',
+      );
     }
 
     final url = Uri.parse(
@@ -237,17 +249,24 @@ class WeatherApiService {
 
       for (var i = 0; i < list.length && i < limit; i++) {
         var item = list[i];
-        forecasts.add(IntervalForecast(
-          time: DateTime.fromMillisecondsSinceEpoch(item['dt'] * 1000, isUtc: true).toLocal(),
-          temperature: (item['main']['temp'] as num).toDouble(),
-          humidity: (item['main']['humidity'] as num).toDouble(),
-          pressure: (item['main']['pressure'] as num).toDouble(),
-          windSpeed: (item['wind']['speed'] as num).toDouble(),
-        ));
+        forecasts.add(
+          IntervalForecast(
+            time: DateTime.fromMillisecondsSinceEpoch(
+              item['dt'] * 1000,
+              isUtc: true,
+            ).toLocal(),
+            temperature: (item['main']['temp'] as num).toDouble(),
+            humidity: (item['main']['humidity'] as num).toDouble(),
+            pressure: (item['main']['pressure'] as num).toDouble(),
+            windSpeed: (item['wind']['speed'] as num).toDouble(),
+          ),
+        );
       }
       return forecasts;
     } else {
-      throw Exception('Failed to load upcoming forecast data. Status: ${response.statusCode}');
+      throw Exception(
+        'Failed to load upcoming forecast data. Status: ${response.statusCode}',
+      );
     }
   }
 
@@ -266,7 +285,10 @@ class WeatherApiService {
 
       List<TidePoint> tidePoints = heights.map((item) {
         return TidePoint(
-          time: DateTime.fromMillisecondsSinceEpoch(item['dt'] * 1000, isUtc: true).toLocal(),
+          time: DateTime.fromMillisecondsSinceEpoch(
+            item['dt'] * 1000,
+            isUtc: true,
+          ).toLocal(),
           height: (item['height'] as num).toDouble(),
         );
       }).toList();
@@ -282,10 +304,12 @@ class WeatherApiService {
     List<TidePoint> dummyData = [];
     DateTime now = DateTime.now();
     for (int i = 0; i < 24; i++) {
-        dummyData.add(TidePoint(
-            time: now.add(Duration(hours: i)),
-            height: 1.5 + 1.0 * (i % 12 < 6 ? 1 : -1) * (i%6)/6,
-        ));
+      dummyData.add(
+        TidePoint(
+          time: now.add(Duration(hours: i)),
+          height: 1.5 + 1.0 * (i % 12 < 6 ? 1 : -1) * (i % 6) / 6,
+        ),
+      );
     }
     return dummyData;
   }
