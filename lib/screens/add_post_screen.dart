@@ -491,6 +491,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         final time = await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.now(),
+                          builder: (BuildContext context, Widget? child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                              child: Localizations.override(
+                                context: context,
+                                locale: const Locale('en', 'US'),
+                                child: child!,
+                              ),
+                            );
+                          },
                         );
                         if (time != null) {
                           setState(() => _selectedTime = time);
@@ -501,7 +511,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           labelText: l10n.time,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                         ),
-                        child: Text(_selectedTime != null ? _selectedTime!.format(context) : l10n.selectTime),
+                        child: Text(_selectedTime != null 
+                            ? '${_selectedTime!.hourOfPeriod == 0 ? 12 : _selectedTime!.hourOfPeriod}:${_selectedTime!.minute.toString().padLeft(2, '0')} ${_selectedTime!.period == DayPeriod.am ? 'AM' : 'PM'}' 
+                            : l10n.selectTime),
                       ),
                     ),
                   ),

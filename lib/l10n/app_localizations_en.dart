@@ -680,4 +680,82 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectTime => 'Select Time';
+
+  @override
+  String get fishermanSettings => 'Fisherman Settings';
+
+  @override
+  String get selectFishingDays => 'Select Fishing Days';
+
+  @override
+  String get selectFishingTime => 'Select Fishing Time';
+
+  @override
+  String get tapToSelectTime => 'Tap to select time';
+
+  @override
+  String get selectBoatType => 'Select Boat Type';
+
+  @override
+  String get chooseYourBoatType => 'Choose your boat type';
+
+  @override
+  String get boatTypeTraditional => 'Traditional Canoe (Oruwa)';
+
+  @override
+  String get boatTypeFrp => 'FRP Boat (Fiber Reinforced Plastic)';
+
+  @override
+  String get boatTypeOneDay => 'One-day Boat';
+
+  @override
+  String get boatTypeMultiDay => 'Multi-day Boat';
+
+  @override
+  String get boatTypeTrawler => 'Trawler';
+
+  @override
+  String get boatTypeOther => 'Other';
+
+  @override
+  String get dayMo => 'M';
+
+  @override
+  String get dayTu => 'T';
+
+  @override
+  String get dayWe => 'W';
+
+  @override
+  String get dayTh => 'T';
+
+  @override
+  String get dayFr => 'F';
+
+  @override
+  String get daySa => 'S';
+
+  @override
+  String get daySu => 'S';
+
+  @override
+  String get pleaseSelectAtLeastOneDay => 'Please select at least one day.';
+
+  @override
+  String get pleaseSelectATime => 'Please select a time.';
+
+  @override
+  String get pleaseSelectABoatType => 'Please select a boat type.';
+
+  @override
+  String get fishermanSettingsSavedSuccessfully =>
+      'Fisherman settings saved successfully!';
+
+  @override
+  String failedToSaveData(String error) {
+    return 'Failed to save data: $error';
+  }
+
+  @override
+  String get saveBtn => 'Save';
 }

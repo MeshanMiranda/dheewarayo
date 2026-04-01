@@ -1351,6 +1351,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Time'**
   String get selectTime;
+
+  /// No description provided for @fishermanSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Fisherman Settings'**
+  String get fishermanSettings;
+
+  /// No description provided for @selectFishingDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Fishing Days'**
+  String get selectFishingDays;
+
+  /// No description provided for @selectFishingTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Fishing Time'**
+  String get selectFishingTime;
+
+  /// No description provided for @tapToSelectTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select time'**
+  String get tapToSelectTime;
+
+  /// No description provided for @selectBoatType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Boat Type'**
+  String get selectBoatType;
+
+  /// No description provided for @chooseYourBoatType.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your boat type'**
+  String get chooseYourBoatType;
+
+  /// No description provided for @boatTypeTraditional.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional Canoe (Oruwa)'**
+  String get boatTypeTraditional;
+
+  /// No description provided for @boatTypeFrp.
+  ///
+  /// In en, this message translates to:
+  /// **'FRP Boat (Fiber Reinforced Plastic)'**
+  String get boatTypeFrp;
+
+  /// No description provided for @boatTypeOneDay.
+  ///
+  /// In en, this message translates to:
+  /// **'One-day Boat'**
+  String get boatTypeOneDay;
+
+  /// No description provided for @boatTypeMultiDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-day Boat'**
+  String get boatTypeMultiDay;
+
+  /// No description provided for @boatTypeTrawler.
+  ///
+  /// In en, this message translates to:
+  /// **'Trawler'**
+  String get boatTypeTrawler;
+
+  /// No description provided for @boatTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get boatTypeOther;
+
+  /// No description provided for @dayMo.
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get dayMo;
+
+  /// No description provided for @dayTu.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get dayTu;
+
+  /// No description provided for @dayWe.
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
+  String get dayWe;
+
+  /// No description provided for @dayTh.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get dayTh;
+
+  /// No description provided for @dayFr.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get dayFr;
+
+  /// No description provided for @daySa.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get daySa;
+
+  /// No description provided for @daySu.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get daySu;
+
+  /// No description provided for @pleaseSelectAtLeastOneDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one day.'**
+  String get pleaseSelectAtLeastOneDay;
+
+  /// No description provided for @pleaseSelectATime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a time.'**
+  String get pleaseSelectATime;
+
+  /// No description provided for @pleaseSelectABoatType.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a boat type.'**
+  String get pleaseSelectABoatType;
+
+  /// No description provided for @fishermanSettingsSavedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Fisherman settings saved successfully!'**
+  String get fishermanSettingsSavedSuccessfully;
+
+  /// No description provided for @failedToSaveData.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save data: {error}'**
+  String failedToSaveData(String error);
+
+  /// No description provided for @saveBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveBtn;
 }
 
 class _AppLocalizationsDelegate

@@ -278,5 +278,37 @@
     "tsunami": "Tsunami",
     "pleaseFillAllRequiredFields": "Please fill all required fields",
     "selectDate": "Select Date",
-    "selectTime": "Select Time"
+    "selectTime": "Select Time",
+    "fishermanSettings": "Fisherman Settings",
+    "selectFishingDays": "Select Fishing Days",
+    "selectFishingTime": "Select Fishing Time",
+    "tapToSelectTime": "Tap to select time",
+    "selectBoatType": "Select Boat Type",
+    "chooseYourBoatType": "Choose your boat type",
+    "boatTypeTraditional": "Traditional Canoe (Oruwa)",
+    "boatTypeFrp": "FRP Boat (Fiber Reinforced Plastic)",
+    "boatTypeOneDay": "One-day Boat",
+    "boatTypeMultiDay": "Multi-day Boat",
+    "boatTypeTrawler": "Trawler",
+    "boatTypeOther": "Other",
+    "dayMo": "M",
+    "dayTu": "T",
+    "dayWe": "W",
+    "dayTh": "T",
+    "dayFr": "F",
+    "daySa": "S",
+    "daySu": "S",
+    "pleaseSelectAtLeastOneDay": "Please select at least one day.",
+    "pleaseSelectATime": "Please select a time.",
+    "pleaseSelectABoatType": "Please select a boat type.",
+    "fishermanSettingsSavedSuccessfully": "Fisherman settings saved successfully!",
+    "failedToSaveData": "Failed to save data: {error}",
+    "@failedToSaveData": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "saveBtn": "Save"
 }

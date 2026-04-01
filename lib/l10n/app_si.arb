@@ -278,5 +278,37 @@
     "tsunami": "සුනාමි",
     "pleaseFillAllRequiredFields": "කරුණාකර අවශ්‍ය සියලුම ක්ෂේත්‍ර පුරවන්න",
     "selectDate": "දිනය තෝරන්න",
-    "selectTime": "වේලාව තෝරන්න"
+    "selectTime": "වේලාව තෝරන්න",
+    "fishermanSettings": "ධීවර සැකසුම්",
+    "selectFishingDays": "මසුන් ඇල්ලීමේ දින තෝරන්න",
+    "selectFishingTime": "මසුන් ඇල්ලීමේ වේලාව තෝරන්න",
+    "tapToSelectTime": "වේලාව තෝරා ගැනීමට තට්ටු කරන්න",
+    "selectBoatType": "බෝට්ටු වර්ගය තෝරන්න",
+    "chooseYourBoatType": "ඔබගේ බෝට්ටු වර්ගය තෝරන්න",
+    "boatTypeTraditional": "සාම්ප්‍රදායික ඔරුව",
+    "boatTypeFrp": "ෆයිබර් ග්ලාස් බෝට්ටුව (FRP)",
+    "boatTypeOneDay": "එක් දින බෝට්ටුව",
+    "boatTypeMultiDay": "බහු දින බෝට්ටුව",
+    "boatTypeTrawler": "ට්‍රෝලර් යාත්‍රාව",
+    "boatTypeOther": "වෙනත්",
+    "dayMo": "ස",
+    "dayTu": "අ",
+    "dayWe": "බ",
+    "dayTh": "බ්‍ර",
+    "dayFr": "සි",
+    "daySa": "සෙ",
+    "daySu": "ඉ",
+    "pleaseSelectAtLeastOneDay": "කරුණාකර අවම වශයෙන් එක් දිනක්වත් තෝරන්න.",
+    "pleaseSelectATime": "කරුණාකර වේලාවක් තෝරන්න.",
+    "pleaseSelectABoatType": "කරුණාකර බෝට්ටු වර්ගයක් තෝරන්න.",
+    "fishermanSettingsSavedSuccessfully": "ධීවර සැකසුම් සාර්ථකව සුරකින ලදී!",
+    "failedToSaveData": "දත්ත සුරැකීම අසාර්ථක විය: {error}",
+    "@failedToSaveData": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "saveBtn": "සුරකින්න"
 }

@@ -10,6 +10,7 @@ import 'notification_screen.dart';
 import 'help_faq_screen.dart';
 import 'about_screen.dart';
 import 'login_screen.dart';
+import 'fisherman_settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/auth.dart';
@@ -84,6 +85,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const SecurityPrivacyScreen(),
+                    ),
+                  );
+                },
+              ),
+              _buildSettingsTile(
+                icon: Icons.sailing_outlined,
+                title: l10n.fishermanSettings,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FishermanSettingsScreen(),
                     ),
                   );
                 },

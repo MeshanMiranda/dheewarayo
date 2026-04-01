@@ -686,4 +686,83 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get selectTime => 'වේලාව තෝරන්න';
+
+  @override
+  String get fishermanSettings => 'ධීවර සැකසුම්';
+
+  @override
+  String get selectFishingDays => 'මසුන් ඇල්ලීමේ දින තෝරන්න';
+
+  @override
+  String get selectFishingTime => 'මසුන් ඇල්ලීමේ වේලාව තෝරන්න';
+
+  @override
+  String get tapToSelectTime => 'වේලාව තෝරා ගැනීමට තට්ටු කරන්න';
+
+  @override
+  String get selectBoatType => 'බෝට්ටු වර්ගය තෝරන්න';
+
+  @override
+  String get chooseYourBoatType => 'ඔබගේ බෝට්ටු වර්ගය තෝරන්න';
+
+  @override
+  String get boatTypeTraditional => 'සාම්ප්‍රදායික ඔරුව';
+
+  @override
+  String get boatTypeFrp => 'ෆයිබර් ග්ලාස් බෝට්ටුව (FRP)';
+
+  @override
+  String get boatTypeOneDay => 'එක් දින බෝට්ටුව';
+
+  @override
+  String get boatTypeMultiDay => 'බහු දින බෝට්ටුව';
+
+  @override
+  String get boatTypeTrawler => 'ට්‍රෝලර් යාත්‍රාව';
+
+  @override
+  String get boatTypeOther => 'වෙනත්';
+
+  @override
+  String get dayMo => 'ස';
+
+  @override
+  String get dayTu => 'අ';
+
+  @override
+  String get dayWe => 'බ';
+
+  @override
+  String get dayTh => 'බ්‍ර';
+
+  @override
+  String get dayFr => 'සි';
+
+  @override
+  String get daySa => 'සෙ';
+
+  @override
+  String get daySu => 'ඉ';
+
+  @override
+  String get pleaseSelectAtLeastOneDay =>
+      'කරුණාකර අවම වශයෙන් එක් දිනක්වත් තෝරන්න.';
+
+  @override
+  String get pleaseSelectATime => 'කරුණාකර වේලාවක් තෝරන්න.';
+
+  @override
+  String get pleaseSelectABoatType => 'කරුණාකර බෝට්ටු වර්ගයක් තෝරන්න.';
+
+  @override
+  String get fishermanSettingsSavedSuccessfully =>
+      'ධීවර සැකසුම් සාර්ථකව සුරකින ලදී!';
+
+  @override
+  String failedToSaveData(String error) {
+    return 'දත්ත සුරැකීම අසාර්ථක විය: $error';
+  }
+
+  @override
+  String get saveBtn => 'සුරකින්න';
 }
