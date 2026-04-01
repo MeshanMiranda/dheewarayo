@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,12 +18,16 @@ class AIFishingScreen extends StatefulWidget {
 class _AIFishingScreenState extends State<AIFishingScreen> {
   late GoogleMapController mapController;
 
+  static Set<Marker>? _cachedMarkers;
+  static DateTime? _lastGeneratedTime;
+
   final LatLng _center = const LatLng(7.8731, 80.7718);
   Set<Polygon> _polygons = {};
   Set<Polyline> _polylines = {};
   Set<Marker> _markers = {};
   final PfzMlService _pfzMlService = PfzMlService();
   bool _isLoadingPfz = true;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
@@ -30,11 +35,32 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
     _initializeZones();
     _requestLocationPermission();
     _initPfzModel();
+    _startRefreshTimer();
+  }
+
+  void _startRefreshTimer() {
+    _refreshTimer = Timer.periodic(const Duration(minutes: 5), (_) {
+      _generatePfzMarkers();
+    });
   }
 
   Future<void> _initPfzModel() async {
     await _pfzMlService.init();
-    await _generatePfzMarkers();
+
+    final bool hasValidCache = _cachedMarkers != null && 
+        _lastGeneratedTime != null && 
+        DateTime.now().difference(_lastGeneratedTime!) < const Duration(minutes: 5);
+
+    if (hasValidCache) {
+      if (mounted) {
+        setState(() {
+          _markers = _cachedMarkers!;
+          _isLoadingPfz = false;
+        });
+      }
+    } else {
+      await _generatePfzMarkers();
+    }
   }
 
   // Precise ray-casting point-in-polygon algorithm to exclude land
@@ -73,9 +99,10 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
     
     final math.Random random = math.Random();
     int attempts = 0;
+    final int targetMarkers = 3 + random.nextInt(8); // random between 3 and 10
     
-    // Attempt to dynamically find 15 highly probable zones scattered naturally securely in the sea
-    while (markers.length < 15 && attempts < 1500) {
+    // Attempt to dynamically find highly probable zones scattered naturally securely in the sea
+    while (markers.length < targetMarkers && attempts < 1500) {
       attempts++;
       double lat = 5.5 + random.nextDouble() * 5.0; // 5.5 to 10.5
       double lng = 78.5 + random.nextDouble() * 4.0; // 78.5 to 82.5
@@ -120,6 +147,9 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
       }
     }
 
+    _cachedMarkers = markers;
+    _lastGeneratedTime = DateTime.now();
+
     if (mounted) {
       setState(() {
         _markers = markers;
@@ -130,6 +160,7 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
 
   @override
   void dispose() {
+    _refreshTimer?.cancel();
     _pfzMlService.dispose();
     mapController.dispose();
     super.dispose();
