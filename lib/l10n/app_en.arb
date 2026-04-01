@@ -261,5 +261,22 @@
     "postNotFound": "Post not found.",
     "noCommentsYet": "No comments yet.",
     "addCommentHint": "Add a comment...",
-    "userLabel": "User"
+    "userLabel": "User",
+    "postType": "Post Type",
+    "weatherAndSeaConditions": "Weather & Sea Conditions",
+    "fishInformationAndTips": "Fish Information & Tips",
+    "communityAndFishermanStories": "Community & Fisherman Stories",
+    "others": "Others",
+    "date": "Date",
+    "time": "Time",
+    "place": "Place",
+    "weatherType": "Weather Type",
+    "rain": "Rain",
+    "storm": "Storm",
+    "thunder": "Thunder",
+    "highWind": "High Wind",
+    "tsunami": "Tsunami",
+    "pleaseFillAllRequiredFields": "Please fill all required fields",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time"
 }

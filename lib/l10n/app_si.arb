@@ -261,5 +261,22 @@
     "postNotFound": "පළ කිරීම හමු නොවිණි.",
     "noCommentsYet": "තවමත් අදහස් නොමැත.",
     "addCommentHint": "අදහසක් එක් කරන්න...",
-    "userLabel": "පරිශීලකයා"
+    "userLabel": "පරිශීලකයා",
+    "postType": "පළ කිරීමේ වර්ගය",
+    "weatherAndSeaConditions": "කාලගුණය සහ මුහුදු තත්ත්වයන්",
+    "fishInformationAndTips": "මසුන් පිළිබඳ තොරතුරු සහ උපදෙස්",
+    "communityAndFishermanStories": "ප්‍රජාව සහ ධීවර කතා",
+    "others": "වෙනත්",
+    "date": "දිනය",
+    "time": "වේලාව",
+    "place": "ස්ථානය",
+    "weatherType": "කාලගුණ වර්ගය",
+    "rain": "වැස්ස",
+    "storm": "කුණාටුව",
+    "thunder": "ගිගුරුම්",
+    "highWind": "තද සුළං",
+    "tsunami": "සුනාමි",
+    "pleaseFillAllRequiredFields": "කරුණාකර අවශ්‍ය සියලුම ක්ෂේත්‍ර පුරවන්න",
+    "selectDate": "දිනය තෝරන්න",
+    "selectTime": "වේලාව තෝරන්න"
 }

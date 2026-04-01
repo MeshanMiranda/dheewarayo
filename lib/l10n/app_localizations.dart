@@ -1249,6 +1249,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'User'**
   String get userLabel;
+
+  /// No description provided for @postType.
+  ///
+  /// In en, this message translates to:
+  /// **'Post Type'**
+  String get postType;
+
+  /// No description provided for @weatherAndSeaConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather & Sea Conditions'**
+  String get weatherAndSeaConditions;
+
+  /// No description provided for @fishInformationAndTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish Information & Tips'**
+  String get fishInformationAndTips;
+
+  /// No description provided for @communityAndFishermanStories.
+  ///
+  /// In en, this message translates to:
+  /// **'Community & Fisherman Stories'**
+  String get communityAndFishermanStories;
+
+  /// No description provided for @others.
+  ///
+  /// In en, this message translates to:
+  /// **'Others'**
+  String get others;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time;
+
+  /// No description provided for @place.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get place;
+
+  /// No description provided for @weatherType.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather Type'**
+  String get weatherType;
+
+  /// No description provided for @rain.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get rain;
+
+  /// No description provided for @storm.
+  ///
+  /// In en, this message translates to:
+  /// **'Storm'**
+  String get storm;
+
+  /// No description provided for @thunder.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunder'**
+  String get thunder;
+
+  /// No description provided for @highWind.
+  ///
+  /// In en, this message translates to:
+  /// **'High Wind'**
+  String get highWind;
+
+  /// No description provided for @tsunami.
+  ///
+  /// In en, this message translates to:
+  /// **'Tsunami'**
+  String get tsunami;
+
+  /// No description provided for @pleaseFillAllRequiredFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields'**
+  String get pleaseFillAllRequiredFields;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date'**
+  String get selectDate;
+
+  /// No description provided for @selectTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time'**
+  String get selectTime;
 }
 
 class _AppLocalizationsDelegate

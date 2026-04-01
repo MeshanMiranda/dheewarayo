@@ -634,4 +634,56 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get userLabel => 'පරිශීලකයා';
+
+  @override
+  String get postType => 'පළ කිරීමේ වර්ගය';
+
+  @override
+  String get weatherAndSeaConditions => 'කාලගුණය සහ මුහුදු තත්ත්වයන්';
+
+  @override
+  String get fishInformationAndTips => 'මසුන් පිළිබඳ තොරතුරු සහ උපදෙස්';
+
+  @override
+  String get communityAndFishermanStories => 'ප්‍රජාව සහ ධීවර කතා';
+
+  @override
+  String get others => 'වෙනත්';
+
+  @override
+  String get date => 'දිනය';
+
+  @override
+  String get time => 'වේලාව';
+
+  @override
+  String get place => 'ස්ථානය';
+
+  @override
+  String get weatherType => 'කාලගුණ වර්ගය';
+
+  @override
+  String get rain => 'වැස්ස';
+
+  @override
+  String get storm => 'කුණාටුව';
+
+  @override
+  String get thunder => 'ගිගුරුම්';
+
+  @override
+  String get highWind => 'තද සුළං';
+
+  @override
+  String get tsunami => 'සුනාමි';
+
+  @override
+  String get pleaseFillAllRequiredFields =>
+      'කරුණාකර අවශ්‍ය සියලුම ක්ෂේත්‍ර පුරවන්න';
+
+  @override
+  String get selectDate => 'දිනය තෝරන්න';
+
+  @override
+  String get selectTime => 'වේලාව තෝරන්න';
 }

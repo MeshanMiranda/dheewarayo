@@ -51,6 +51,7 @@ class WeatherData {
   final double windSpeed;
   final double pressure;
   final String description;
+  final String name;
 
   WeatherData({
     required this.temperature,
@@ -58,6 +59,7 @@ class WeatherData {
     required this.windSpeed,
     required this.pressure,
     required this.description,
+    required this.name,
   });
 
   factory WeatherData.fromJson(Map<String, dynamic> json) {
@@ -69,6 +71,7 @@ class WeatherData {
       description: json['weather'] != null && json['weather'].isNotEmpty
           ? json['weather'][0]['description'] as String
           : 'Unknown',
+      name: json['name'] ?? 'Unknown',
     );
   }
 }
@@ -80,6 +83,22 @@ class WeatherApiService {
   static const String forecastUrl =
       'https://api.openweathermap.org/data/2.5/forecast';
   static const String worldTidesApiKey = 'YOUR_WORLD_TIDES_KEY';
+
+  Future<WeatherData> fetchWeatherForCity(String city) async {
+    final url = Uri.parse(
+      '$baseUrl?q=$city&appid=$apiKey&units=metric',
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return WeatherData.fromJson(json.decode(response.body));
+    } else {
+      throw Exception(
+        'Failed to load weather data for city. Status: ${response.statusCode}',
+      );
+    }
+  }
 
   Future<WeatherData> fetchWeatherForCurrentLocation() async {
     bool serviceEnabled;

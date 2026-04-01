@@ -629,4 +629,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get userLabel => 'User';
+
+  @override
+  String get postType => 'Post Type';
+
+  @override
+  String get weatherAndSeaConditions => 'Weather & Sea Conditions';
+
+  @override
+  String get fishInformationAndTips => 'Fish Information & Tips';
+
+  @override
+  String get communityAndFishermanStories => 'Community & Fisherman Stories';
+
+  @override
+  String get others => 'Others';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get place => 'Place';
+
+  @override
+  String get weatherType => 'Weather Type';
+
+  @override
+  String get rain => 'Rain';
+
+  @override
+  String get storm => 'Storm';
+
+  @override
+  String get thunder => 'Thunder';
+
+  @override
+  String get highWind => 'High Wind';
+
+  @override
+  String get tsunami => 'Tsunami';
+
+  @override
+  String get pleaseFillAllRequiredFields => 'Please fill all required fields';
+
+  @override
+  String get selectDate => 'Select Date';
+
+  @override
+  String get selectTime => 'Select Time';
 }

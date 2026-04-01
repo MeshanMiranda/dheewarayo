@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 import '../l10n/app_localizations.dart';
+import '../services/ai_service.dart';
+import '../services/weather_api_service.dart';
 
 class AddPostScreen extends StatefulWidget {
   final String? editPostId;
@@ -30,6 +32,45 @@ class _AddPostScreenState extends State<AddPostScreen> {
   File? _imageFile;
   bool _isLoading = false;
 
+  String _selectedPostType = 'Others';
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+  String? _selectedWeatherType;
+
+  final List<String> _postTypes = [
+    'Weather & Sea Conditions',
+    'Fish Information & Tips',
+    'Community & Fisherman Stories',
+    'Others',
+  ];
+
+  final List<String> _weatherTypes = [
+    'Rain',
+    'Storm',
+    'Thunder',
+    'High Wind',
+    'Tsunami',
+  ];
+
+  String? _selectedPlace;
+  List<String> _availablePlaces = [];
+  bool _isLoadingPlaces = false;
+
+  final Map<String, List<String>> _districtCoastalCities = {
+    'Gampaha': ['Negombo', 'Ja-Ela', 'Wattala'],
+    'Colombo': ['Colombo', 'Dehiwala', 'Mount Lavinia', 'Moratuwa'],
+    'Kalutara': ['Panadura', 'Kalutara', 'Beruwala', 'Aluthgama'],
+    'Galle': ['Bentota', 'Ambalangoda', 'Hikkaduwa', 'Galle', 'Koggala'],
+    'Matara': ['Weligama', 'Mirissa', 'Matara', 'Dondra', 'Dickwella'],
+    'Hambantota': ['Tangalle', 'Hambantota', 'Ambalantota'],
+    'Puttalam': ['Puttalam', 'Kalpitiya', 'Chilaw', 'Wennappuwa'],
+    'Mannar': ['Mannar', 'Pesalai'],
+    'Jaffna': ['Jaffna', 'Point Pedro', 'Kankesanthurai'],
+    'Trincomalee': ['Trincomalee', 'Kinniya', 'Mutur'],
+    'Batticaloa': ['Vakarai', 'Kalkudah', 'Batticaloa', 'Kattankudy'],
+    'Ampara': ['Kalmunai', 'Akkaraipattu', 'Pottuvil', 'Arugam Bay'],
+  };
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -40,6 +81,46 @@ class _AddPostScreenState extends State<AddPostScreen> {
     super.initState();
     if (widget.editCaption != null) {
       _captionController.text = widget.editCaption!;
+    }
+    _selectedDate = DateTime.now();
+    _selectedTime = TimeOfDay.now();
+  }
+
+  Future<void> _fetchCurrentLocationCities() async {
+    setState(() {
+      _isLoadingPlaces = true;
+    });
+    
+    try {
+      final weatherService = WeatherApiService();
+      final weather = await weatherService.fetchWeatherForCurrentLocation();
+      final city = weather.name;
+
+      String? matchedDistrict;
+      for (var entry in _districtCoastalCities.entries) {
+        if (entry.value.any((c) => c.toLowerCase() == city.toLowerCase())) {
+          matchedDistrict = entry.key;
+          break;
+        }
+      }
+
+      setState(() {
+        if (matchedDistrict != null) {
+          _availablePlaces = _districtCoastalCities[matchedDistrict]!;
+        } else {
+          _availablePlaces = _districtCoastalCities.values.expand((x) => x).toList();
+          _availablePlaces.sort(); 
+        }
+        _isLoadingPlaces = false;
+      });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _availablePlaces = _districtCoastalCities.values.expand((x) => x).toList();
+          _availablePlaces.sort();
+          _isLoadingPlaces = false;
+        });
+      }
     }
   }
 
@@ -109,13 +190,71 @@ class _AddPostScreenState extends State<AddPostScreen> {
         return;
       }
 
+      if (_selectedPostType == 'Weather & Sea Conditions') {
+        if (_selectedDate == null ||
+            _selectedTime == null ||
+            _selectedPlace == null ||
+            _selectedWeatherType == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.pleaseFillAllRequiredFields)),
+          );
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+
+        // AI Verification
+        setState(() {
+          _isLoading = true;
+        });
+
+        final aiMock = AIService();
+        final verificationResult = await aiMock.verifyPostAccuracy(
+          place: _selectedPlace!,
+          date: _selectedDate!,
+          time: _selectedTime!,
+          weatherType: _selectedWeatherType!,
+          caption: _captionController.text.trim(),
+        );
+
+        if (verificationResult['isAccurate'] == false) {
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Post Verification Failed'),
+                content: Text(verificationResult['reason'] ?? 'False information detected.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
+            setState(() {
+              _isLoading = false;
+            });
+          }
+          return;
+        }
+      }
+
       if (widget.editPostId != null) {
         // Update existing post
-        final updateData = {
+        final updateData = <String, dynamic>{
           'caption': _captionController.text.trim(),
+          'postType': _selectedPostType,
         };
         if (_imageFile != null) {
           updateData['imageUrl'] = imageUrl as String;
+        }
+        if (_selectedPostType == 'Weather & Sea Conditions') {
+          updateData['date'] = _selectedDate?.toIso8601String();
+          updateData['time'] = _selectedTime != null ? '${_selectedTime!.hour}:${_selectedTime!.minute}' : null;
+          updateData['place'] = _selectedPlace;
+          updateData['weatherType'] = _selectedWeatherType;
         }
         await _firestore.collection('posts').doc(postId).update(updateData);
       } else {
@@ -128,7 +267,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         }
 
         // Create post document
-        await _firestore.collection('posts').doc(postId).set({
+        final postData = <String, dynamic>{
           'postId': postId,
           'userId': user.uid,
           'username': username,
@@ -136,9 +275,17 @@ class _AddPostScreenState extends State<AddPostScreen> {
               .photoURL, // Note: storing photoURL directly from auth might not reflect changes if they uploaded a custom one unless updated in auth profile
           'imageUrl': imageUrl,
           'caption': _captionController.text.trim(),
+          'postType': _selectedPostType,
           'timestamp': FieldValue.serverTimestamp(),
           'likes': [],
-        });
+        };
+        if (_selectedPostType == 'Weather & Sea Conditions') {
+          postData['date'] = _selectedDate?.toIso8601String();
+          postData['time'] = _selectedTime != null ? '${_selectedTime!.hour}:${_selectedTime!.minute}' : null;
+          postData['place'] = _selectedPlace;
+          postData['weatherType'] = _selectedWeatherType;
+        }
+        await _firestore.collection('posts').doc(postId).set(postData);
       }
 
       if (mounted) {
@@ -284,6 +431,120 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 ),
               ),
             const SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              value: _selectedPostType,
+              decoration: InputDecoration(
+                labelText: l10n.postType,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              items: _postTypes.map((type) {
+                String display = type;
+                if (type == 'Weather & Sea Conditions') display = l10n.weatherAndSeaConditions;
+                else if (type == 'Fish Information & Tips') display = l10n.fishInformationAndTips;
+                else if (type == 'Community & Fisherman Stories') display = l10n.communityAndFishermanStories;
+                else if (type == 'Others') display = l10n.others;
+                return DropdownMenuItem(value: type, child: Text(display));
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedPostType = value;
+                    if (_selectedPostType == 'Weather & Sea Conditions' && _availablePlaces.isEmpty) {
+                      _fetchCurrentLocationCities();
+                    }
+                  });
+                }
+              },
+            ),
+            if (_selectedPostType == 'Weather & Sea Conditions') ...[
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() => _selectedDate = date);
+                        }
+                      },
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: l10n.date,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        child: Text(_selectedDate != null ? '${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}' : l10n.selectDate),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () async {
+                        final time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (time != null) {
+                          setState(() => _selectedTime = time);
+                        }
+                      },
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: l10n.time,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        child: Text(_selectedTime != null ? _selectedTime!.format(context) : l10n.selectTime),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (_isLoadingPlaces) 
+                const Center(child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                ))
+              else 
+                DropdownButtonFormField<String>(
+                  value: _selectedPlace,
+                  decoration: InputDecoration(
+                    labelText: l10n.place,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  items: _availablePlaces.map((place) {
+                    return DropdownMenuItem(value: place, child: Text(place));
+                  }).toList(),
+                  onChanged: (value) => setState(() => _selectedPlace = value),
+                ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: _selectedWeatherType,
+                decoration: InputDecoration(
+                  labelText: l10n.weatherType,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                items: _weatherTypes.map((wType) {
+                  String display = wType;
+                  if (wType == 'Rain') display = l10n.rain;
+                  else if (wType == 'Storm') display = l10n.storm;
+                  else if (wType == 'Thunder') display = l10n.thunder;
+                  else if (wType == 'High Wind') display = l10n.highWind;
+                  else if (wType == 'Tsunami') display = l10n.tsunami;
+                  return DropdownMenuItem(value: wType, child: Text(display));
+                }).toList(),
+                onChanged: (value) => setState(() => _selectedWeatherType = value),
+              ),
+            ],
+            const SizedBox(height: 16),
             TextField(
               controller: _captionController,
               maxLines: 5,
@@ -307,6 +568,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             setState(() {
                               _imageFile = null;
                               _captionController.clear();
+                              _selectedPostType = 'Others';
+                              _selectedDate = DateTime.now();
+                              _selectedTime = TimeOfDay.now();
+                              _selectedWeatherType = null;
+                              _selectedPlace = null;
                             });
                           },
                     icon: const Icon(Icons.clear),
