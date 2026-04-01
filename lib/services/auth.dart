@@ -3,23 +3,31 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
+// AuthService handles everything related to user accounts (login, register, logout)
 class AuthService {
+  // Instance of FirebaseAuth to handle secure authentication
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  // Instance of GoogleSignIn to allow seamless Google login
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  // Instance of Firestore database to store and read user profile data
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Stream listening to auth state changes
+  // Stream that constantly listens to changes in the user's login status (logged in vs logged out)
+  // This helps the app automatically switch between the Login Screen and Main Dashboard
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // Get current user
+  // Getter to quickly access the currently logged-in user's information
   User? get currentUser => _auth.currentUser;
 
-  // 1. Sign in anonymously
+  // 1. Sign in anonymously (without requiring an email or Google account)
+  // Useful for letting users try the app before committing to an account
   Future<UserCredential?> signInAnonymously() async {
     try {
+      // Call Firebase to create a temporary anonymous session
       UserCredential result = await _auth.signInAnonymously();
       return result;
     } catch (e) {
+      // Print the error to the console if sign-in fails
       debugPrint('Error during anonymous sign in: $e');
       rethrow;
     }

@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
 
+// AboutScreen shows information about the Dheewarayo app, developers, and the project
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Get the translated text strings for the current language
     final l10n = AppLocalizations.of(context)!;
+    
+    // BaseScreen provides the standard top AppBar and background layout
     return BaseScreen(
       title: l10n.aboutDheewarayo,
+      // ListView lets the content scroll if it's too long for the screen
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -70,10 +75,11 @@ class AboutScreen extends StatelessWidget {
   }
 }
 
+// A private helper widget to display a single section of information consistently
 class _InfoSection extends StatelessWidget {
-  final String title;
-  final String content;
-  final IconData icon;
+  final String title; // Section heading
+  final String content; // Section body text
+  final IconData icon; // Icon displayed next to the heading
 
   const _InfoSection({
     required this.title,

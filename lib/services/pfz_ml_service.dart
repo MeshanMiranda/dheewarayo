@@ -1,10 +1,14 @@
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'copernicus_service.dart';
 
+// PfzMlService runs an AI model to detect Potential Fishing Zones (PFZ)
 class PfzMlService {
+  // The interpreter that runs the TensorFlow Lite model
   Interpreter? _interpreter;
+  // A flag indicating whether the model is ready to use
   bool _isModelLoaded = false;
 
+  // Loads the AI model from the app's assets folder
   Future<void> init() async {
     try {
       _interpreter = await Interpreter.fromAsset('assets/models/pfz_model.tflite');

@@ -11,6 +11,7 @@ import '../l10n/app_localizations.dart';
 import '../services/ai_service.dart';
 import '../services/weather_api_service.dart';
 
+// AddPostScreen allows users to create new community posts or edit existing ones
 class AddPostScreen extends StatefulWidget {
   final String? editPostId;
   final String? editCaption;
@@ -28,15 +29,20 @@ class AddPostScreen extends StatefulWidget {
 }
 
 class _AddPostScreenState extends State<AddPostScreen> {
+  // Controller to read the text the user types into the caption box
   final TextEditingController _captionController = TextEditingController();
+  // Variable to store the image selected by the user from their gallery
   File? _imageFile;
+  // Keeps track of whether the app is currently uploading so we can show a loader
   bool _isLoading = false;
 
+  // State variables for "Weather & Sea Conditions" specific fields
   String _selectedPostType = 'Others';
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   String? _selectedWeatherType;
 
+  // The different categories a post can belong to
   final List<String> _postTypes = [
     'Weather & Sea Conditions',
     'Fish Information & Tips',
@@ -124,6 +130,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
   }
 
+  // Opens the phone's image gallery to pick a photo
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -137,8 +144,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
   }
 
+  // This function handles the entire process of uploading the post to Firebase
   Future<void> _uploadPost() async {
     final l10n = AppLocalizations.of(context)!;
+    
+    // Check if the user is actually logged in
     final user = _auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(
@@ -204,7 +214,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
           return;
         }
 
-        // AI Verification
+        // AI Verification Check
+        // Before allowing the post, we ask the AI service to verify if the weather condition matches reality
         setState(() {
           _isLoading = true;
         });
@@ -218,6 +229,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
           caption: _captionController.text.trim(),
         );
 
+        // If the AI determines the post is fake or inaccurate, block the upload
         if (verificationResult['isAccurate'] == false) {
           if (mounted) {
             showDialog(

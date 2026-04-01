@@ -4,6 +4,7 @@ import '../services/auth.dart';
 import 'register_screen.dart';
 import '../l10n/app_localizations.dart';
 
+// LoginScreen allows users to authenticate using email, Google, or anonymously
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -25,8 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  // Attempts to log the user in using the email and password entered in the form
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return; // Form validation failed
     
     final l10n = AppLocalizations.of(context)!;
 
@@ -52,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Sends a password reset email to the address entered in the email field
   Future<void> _resetPassword() async {
     final l10n = AppLocalizations.of(context)!;
     final email = _emailController.text.trim();
@@ -88,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Initiates the Google Sign-In flow
   Future<void> _signInWithGoogle() async {
     setState(() {
       _isLoading = true;
@@ -110,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Allows the user to continue without creating an account (guest mode)
   Future<void> _loginAnonymously() async {
     setState(() {
       _isLoading = true;

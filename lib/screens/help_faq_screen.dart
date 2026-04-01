@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
 
+// HelpFaqScreen displays a list of Frequently Asked Questions (FAQs) and their answers
 class HelpFaqScreen extends StatelessWidget {
   const HelpFaqScreen({super.key});
 
@@ -9,6 +10,7 @@ class HelpFaqScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    // A list of all questions and answers loaded from the translation file
     final faqs = [
       {'q': l10n.faq1Question, 'a': l10n.faq1Answer},
       {'q': l10n.faq2Question, 'a': l10n.faq2Answer},

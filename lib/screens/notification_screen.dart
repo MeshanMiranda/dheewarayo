@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
 
+// NotificationScreen displays alerts and messages (e.g., weather warnings, app updates)
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
 

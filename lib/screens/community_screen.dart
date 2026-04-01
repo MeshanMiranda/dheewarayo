@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import 'add_post_screen.dart';
 import 'base_screen.dart';
 
+// CommunityScreen displays a social feed where users can see posts from other fishermen
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
 
@@ -25,10 +26,11 @@ class CommunityScreen extends StatelessWidget {
           },
         ),
       ],
+      // StreamBuilder listens to the 'posts' collection in Firebase in real-time
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('posts')
-            .orderBy('timestamp', descending: true)
+            .orderBy('timestamp', descending: true) // Sort newest posts first
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -123,6 +125,7 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
+  // Builds a single post card in the feed
   Widget _buildPostCard(
     BuildContext context,
     String postId,
@@ -312,9 +315,10 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
+  // Handles when a user taps the "Like" button on a post
   Future<void> _toggleLike(String postId, bool isLiked) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
+    if (currentUser == null) return; // Must be logged in to like
     final uid = currentUser.uid;
 
     final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
@@ -338,6 +342,7 @@ class CommunityScreen extends StatelessWidget {
     }
   }
 
+  // Shows a bottom sheet overlay with all comments for a specific post
   void _showCommentsBottomSheet(BuildContext context, String postId) {
     final TextEditingController commentController = TextEditingController();
 

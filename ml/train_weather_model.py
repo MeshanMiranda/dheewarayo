@@ -27,12 +27,17 @@ rain_next_hour = np.clip(rain_next_hour, 0, 100)
 
 y = np.stack([wind_next_hour, wave_next_hour, rain_next_hour], axis=1)
 
+# Create a blank neural network model using Keras
 model = tf.keras.Sequential([
+    # First layer: 32 neurons, expecting 4 inputs (temperature, humidity, wind, pressure)
     tf.keras.layers.Dense(32, activation='relu', input_shape=(4,)),
+    # Second layer: 16 neurons
     tf.keras.layers.Dense(16, activation='relu'),
+    # Output layer: 3 neurons (predicting wind next hour, wave next hour, and rain next hour)
     tf.keras.layers.Dense(3)  # Output size is 3 for wind, wave, rain
 ])
 
+# Configure the learning process
 model.compile(optimizer='adam', loss='mse')
 print("Training model...")
 model.fit(X, y, epochs=100, batch_size=32, verbose=0)
@@ -40,6 +45,7 @@ print("Training complete.")
 
 os.makedirs('assets/models', exist_ok=True)
 
+# Convert the trained model to TensorFlow Lite format so it can run efficiently on mobile
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 tflite_model = converter.convert()
 

@@ -2,29 +2,36 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:math';
 
+// A simple "data holder" class to neatly group marine data together
 class MarineData {
   final double sst; // Sea Surface Temperature in Celsius
   final double chlorophyll; // Chlorophyll-a in mg/m^3
   final double ssh; // Sea Surface Height anomaly in meters
 
+  // Constructor requires all three values to be provided when creating a MarineData object
   MarineData({required this.sst, required this.chlorophyll, required this.ssh});
 }
 
+// CopernicusService handles fetching real oceanographic data from the European Copernicus Marine Service
 class CopernicusService {
   final Random _random = Random();
 
   // TODO: Enter your Copernicus Marine Service credentials here
+  // These credentials are required to authenticate with the Copernicus API
   final String cmemsUsername = "prashansamm200327@gmail.com";
   final String cmemsPassword = "Copernicus@2003";
 
-  /// WMS endpoints based on the dataset IDs provided
+  /// WMS (Web Map Service) endpoints based on the dataset IDs provided
+  /// These URLs point to the specific satellite datasets we want to read
   final String chlDatasetUrl =
       'https://wmts.marine.copernicus.eu/teroWms/GLOBAL_ANALYSISFORECAST_BGC_001_028/cmems_mod_glo_bgc-pft_anfc_0.25deg_P1D-m_202311';
   final String phyDatasetUrl =
       'https://wmts.marine.copernicus.eu/teroWms/GLOBAL_ANALYSISFORECAST_PHY_001_024/cmems_mod_glo_phy_anfc_0.083deg_P1D-m_202406';
 
+  // Function to get the marine data for a specific location on the map
   Future<MarineData> fetchMarineData(double lat, double lng) async {
     // If no credentials are provided, tightly fallback to realistic mocked data
+    // This prevents the app from crashing if the API keys are missing
     if (cmemsUsername.isEmpty || cmemsPassword.isEmpty) {
       return _getMockMarineData(lat, lng);
     }

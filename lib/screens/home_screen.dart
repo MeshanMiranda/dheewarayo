@@ -12,6 +12,7 @@ import '../services/pfz_ml_service.dart';
 import '../services/copernicus_service.dart';
 import 'base_screen.dart';
 
+// HomeScreen is the main dashboard of the app, showing weather, AI predictions, and community updates
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -41,8 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _initServicesAndData();
   }
 
+  // Fetches all the data needed for the home screen when it loads
   Future<void> _initServicesAndData() async {
     try {
+      // Initialize the AI models first so they are ready to make predictions
       await _mlService.initialize();
       await _pfzMlService.init();
 
@@ -50,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final weather = await _weatherApiService.fetchWeatherForCurrentLocation();
       final tides = await _weatherApiService.fetchTideData();
 
+      // Use the local ML service to predict if weather conditions are getting worse based on current data
       final prediction = _mlService.predictWeatherChanges(
         weather.temperature,
         weather.humidity,
@@ -148,6 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Builds the large blue card at the top showing current temperature, wind, etc.
   Widget _buildWeatherSummaryCard(BuildContext context, AppLocalizations l10n) {
     String tempStr = _currentWeather != null
         ? "${_currentWeather!.temperature}°C"
@@ -321,6 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Builds the card showing the AI's prediction for finding fish (Excellent, Good, Moderate)
   Widget _buildAIFishingInsightCard(
     BuildContext context,
     AppLocalizations l10n,
@@ -578,6 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Builds the red/green alert card at the bottom based on AI weather predictions (e.g., High Wind warning)
   Widget _buildNotificationsCard(BuildContext context, AppLocalizations l10n) {
     bool isCritical = false;
     String title = l10n.conditionsGoodTitle;

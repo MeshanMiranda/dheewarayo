@@ -3,14 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'weather_api_service.dart';
 
+// AIService handles AI-related tasks like species identification and weather verification
 class AIService {
+  // A helper object to pick images from the device's gallery or camera
   final ImagePicker _picker = ImagePicker();
 
+  // Function to let the user select an image from their gallery
   Future<File?> pickImage() async {
+    // Open the gallery and wait for the user to pick an image
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    // If an image was selected, return it as a File object
     if (image != null) {
       return File(image.path);
     }
+    // Return null if the user cancelled the selection
     return null;
   }
 

@@ -1,10 +1,13 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:io' show Platform;
 
+// NotificationService handles sending alerts to the user's phone (e.g., high wind warnings)
 class NotificationService {
+  // Plugin instance for handling local notifications on the device
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  // Initializes the notification plugin with required platform-specific settings
   Future<void> initialize() async {
     // Requires a mipmap named launcher_icon or similar. 
     // Using @mipmap/ic_launcher which is common, but dheewarayo might have 
@@ -20,6 +23,7 @@ class NotificationService {
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
+  // Requests permission from the user to send notifications (required on modern Android/iOS)
   Future<void> requestPermissions() async {
     if (Platform.isAndroid) {
       await _flutterLocalNotificationsPlugin
@@ -38,6 +42,7 @@ class NotificationService {
     }
   }
 
+  // Shows a notification immediately with a specific title and body text
   Future<void> showPredictionNotification(String title, String body) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(

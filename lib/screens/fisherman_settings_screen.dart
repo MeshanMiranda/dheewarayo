@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../l10n/app_localizations.dart';
 
+// FishermanSettingsScreen allows users to define their fishing schedule and boat type
 class FishermanSettingsScreen extends StatefulWidget {
   const FishermanSettingsScreen({super.key});
 
@@ -38,9 +39,10 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     _loadExistingData();
   }
 
+  // Fetches any previously saved fisherman settings from Firebase so the user can edit them
   Future<void> _loadExistingData() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+    if (user == null) return; // Must be logged in
 
     setState(() {
       _isLoading = true;
@@ -124,6 +126,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     }
   }
 
+  // Saves the selected configuration to the 'fisherman_data' collection in Firebase
   Future<void> _saveData() async {
     final user = FirebaseAuth.instance.currentUser;
     final l10n = AppLocalizations.of(context);

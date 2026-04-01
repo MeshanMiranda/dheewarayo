@@ -15,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/auth.dart';
 
+// SettingsScreen allows users to customize app preferences (language, theme) and manage their account
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -25,6 +26,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final AuthService _authService = AuthService();
 
+  // Saves user preferences (like language and theme) to the Firestore database
   Future<void> _updateSettingsInFirestore({
     String? languageCode,
     bool? isDarkMode,
@@ -275,6 +277,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  // Helper method to create a grouped section in the settings (e.g., "Account", "App Preferences")
   Widget _buildSettingsSection(
     BuildContext context, {
     required String title,
@@ -304,6 +307,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  // Helper method to create an individual clickable row (tile) in a settings section
   Widget _buildSettingsTile({
     required IconData icon,
     required String title,

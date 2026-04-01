@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth.dart';
 import '../l10n/app_localizations.dart';
 
+// RegisterScreen allows new users to create an account using their email and personal details
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -34,9 +35,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  // Attempts to register the user by sending their input data to Firebase
   Future<void> _register() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return; // Stop if form is incomplete
     final l10n = AppLocalizations.of(context)!;
+    
+    // Ensure both password inputs match before proceeding
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(
         context,

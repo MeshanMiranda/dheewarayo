@@ -8,6 +8,7 @@ import '../services/copernicus_service.dart';
 import '../services/pfz_ml_service.dart';
 import 'base_screen.dart';
 
+// AIFishingScreen displays a map with predicted hotspots for fishing (PFZ - Potential Fishing Zones)
 class AIFishingScreen extends StatefulWidget {
   const AIFishingScreen({super.key});
 
@@ -16,15 +17,22 @@ class AIFishingScreen extends StatefulWidget {
 }
 
 class _AIFishingScreenState extends State<AIFishingScreen> {
+  // Controller to interact with the Google Map once it is loaded
   late GoogleMapController mapController;
 
+  // Cached markers so we don't regenerate them every time the user opens the screen
   static Set<Marker>? _cachedMarkers;
   static DateTime? _lastGeneratedTime;
 
+  // The default center point of the map (Sri Lanka)
   final LatLng _center = const LatLng(7.8731, 80.7718);
-  Set<Polygon> _polygons = {};
-  Set<Polyline> _polylines = {};
-  Set<Marker> _markers = {};
+  
+  // Sets that hold the map overlays
+  Set<Polygon> _polygons = {}; // Map areas (like territorial sea)
+  Set<Polyline> _polylines = {}; // Lines (like maritime borders)
+  Set<Marker> _markers = {}; // Map pins (fishing zones)
+  
+  // The AI service that predicts the fishing zones
   final PfzMlService _pfzMlService = PfzMlService();
   bool _isLoadingPfz = true;
   Timer? _refreshTimer;
@@ -44,9 +52,12 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
     });
   }
 
+  // Checks if there are already cached zones that are less than 5 minutes old
   Future<void> _initPfzModel() async {
+    // Make sure the AI model is loaded into memory
     await _pfzMlService.init();
 
+    // Check if we have valid cached data
     final bool hasValidCache = _cachedMarkers != null && 
         _lastGeneratedTime != null && 
         DateTime.now().difference(_lastGeneratedTime!) < const Duration(minutes: 5);
@@ -93,7 +104,9 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
     return (intersectCount % 2) == 1;
   }
 
+  // Generates new Potential Fishing Zone (PFZ) markers using AI
   Future<void> _generatePfzMarkers() async {
+    // Show the loading indicator
     setState(() => _isLoadingPfz = true);
     final Set<Marker> markers = {};
     
