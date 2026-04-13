@@ -182,6 +182,9 @@ class AppLocalizationsSi extends AppLocalizations {
   String get sevenDayMarineForecast => 'දින 5 ක කාලගුණ අනාවැකිය';
 
   @override
+  String get tenHourMarineForecast => 'පැය 10 ක සාගර කාලගුණ අනාවැකිය';
+
+  @override
   String get today => 'අද';
 
   @override

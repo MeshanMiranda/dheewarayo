@@ -181,6 +181,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sevenDayMarineForecast => '5-Day Marine Forecast';
 
   @override
+  String get tenHourMarineForecast => '10-Hour Marine Forecast';
+
+  @override
   String get today => 'Today';
 
   @override

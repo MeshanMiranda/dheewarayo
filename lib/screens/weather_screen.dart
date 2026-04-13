@@ -23,6 +23,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   WeatherData? _currentWeather;
   Map<String, double>? _weatherPredictions;
   List<DailyForecast>? _dailyForecasts;
+  List<IntervalForecast>? _hourlyForecasts;
   List<TidePoint>? _tideData;
 
   @override
@@ -40,6 +41,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
       final weather = await _weatherApiService.fetchWeatherForCurrentLocation();
       final forecasts = await _weatherApiService.fetch5DayForecast();
+      final intervalForecasts = await _weatherApiService
+          .fetchUpcoming3HourForecasts(limit: 4);
       final tides = await _weatherApiService.fetchTideData();
 
       // predict
@@ -55,11 +58,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
           _currentWeather = weather;
           _weatherPredictions = prediction;
           _dailyForecasts = forecasts;
+          _hourlyForecasts = intervalForecasts;
           _tideData = tides;
           _isLoading = false;
         });
       }
-
     } catch (e) {
       debugPrint('WeatherScreen Data Fetch Error: $e');
       if (mounted) {
@@ -88,6 +91,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   if (_currentWeather != null)
                     _buildCurrentWeatherCard(context, _currentWeather!),
                   const SizedBox(height: 10),
+                  if (_hourlyForecasts != null) ...[
+                    _build10HourForecastHeader(context, l10n),
+                    const SizedBox(height: 10),
+                    _build10HourForecastList(context, _hourlyForecasts!),
+                    const SizedBox(height: 20),
+                  ],
                   _buildForecastHeader(context, l10n),
                   const SizedBox(height: 10),
                   if (_dailyForecasts != null)
@@ -612,5 +621,70 @@ class _WeatherScreenState extends State<WeatherScreen> {
         ),
       ],
     );
+  }
+
+  Widget _build10HourForecastHeader(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    return Text(
+      l10n.tenHourMarineForecast,
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+        color: Theme.of(context).colorScheme.primary,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget _build10HourForecastList(
+    BuildContext context,
+    List<IntervalForecast> forecasts,
+  ) {
+    return SizedBox(
+      height: 140,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: forecasts.length,
+        itemBuilder: (context, index) {
+          final forecast = forecasts[index];
+          final timeString = DateFormat('ha').format(forecast.time);
+          return Card(
+            margin: const EdgeInsets.only(right: 14),
+            child: Container(
+              width: 80,
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    timeString,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Icon(
+                    _getWeatherIconForWind(forecast.windSpeed),
+                    color: Theme.of(context).colorScheme.secondary,
+                    size: 32,
+                  ),
+                  Text(
+                    '${forecast.temperature.toStringAsFixed(1)}°C',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    '${forecast.windSpeed.toStringAsFixed(1)} km/h',
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  IconData _getWeatherIconForWind(double windSpeed) {
+    if (windSpeed > 20) return Icons.air;
+    if (windSpeed > 10) return Icons.water;
+    return Icons.wb_sunny;
   }
 }
