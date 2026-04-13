@@ -26,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final PfzMlService _pfzMlService = PfzMlService();
 
   bool _isLoading = true;
-  String _errorMessage = '';
 
   WeatherData? _currentWeather;
   TidePoint? _nextHighTide;
@@ -102,9 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
+      debugPrint('HomeScreen Data Fetch Error: $e');
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString();
           _isLoading = false;
         });
       }
@@ -123,15 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  if (_errorMessage.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Text(
-                        'Error: $_errorMessage',
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-
                   // 1. Weather Summary Card
                   _buildWeatherSummaryCard(context, l10n),
                   const SizedBox(height: 20),

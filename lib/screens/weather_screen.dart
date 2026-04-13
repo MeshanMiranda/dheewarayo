@@ -20,7 +20,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
   final MLService _mlService = MLService();
 
   bool _isLoading = true;
-  String _errorMessage = '';
   WeatherData? _currentWeather;
   Map<String, double>? _weatherPredictions;
   List<DailyForecast>? _dailyForecasts;
@@ -62,9 +61,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
       }
 
     } catch (e) {
+      debugPrint('WeatherScreen Data Fetch Error: $e');
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString();
           _isLoading = false;
         });
       }
@@ -83,11 +82,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  if (_errorMessage.isNotEmpty)
-                    Text(
-                      'Error: $_errorMessage',
-                      style: const TextStyle(color: Colors.red),
-                    ),
                   if (_currentWeather != null && _weatherPredictions != null)
                     _buildAlertsCard(context, l10n, _weatherPredictions!),
                   const SizedBox(height: 20),
