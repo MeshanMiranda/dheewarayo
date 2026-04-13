@@ -568,8 +568,7 @@ class AppLocalizationsSi extends AppLocalizations {
   }
 
   @override
-  String get analyzingPfzData =>
-      'PFZ සඳහා සාගර විද්‍යාත්මක දත්ත විශ්ලේෂණය කරමින්...';
+  String get analyzingPfzData => 'PFZ සඳහා සාගර දත්ත විශ්ලේෂණය කරමින්..';
 
   @override
   String get excellent => 'විශිෂ්ටයි';

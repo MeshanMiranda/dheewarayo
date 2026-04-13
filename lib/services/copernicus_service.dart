@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:math';
 
 // A simple "data holder" class to neatly group marine data together
 class MarineData {
@@ -14,8 +13,6 @@ class MarineData {
 
 // CopernicusService handles fetching real oceanographic data from the European Copernicus Marine Service
 class CopernicusService {
-  final Random _random = Random();
-
   // TODO: Enter your Copernicus Marine Service credentials here
   // These credentials are required to authenticate with the Copernicus API
   final String cmemsUsername = "prashansamm200327@gmail.com";
@@ -29,26 +26,24 @@ class CopernicusService {
       'https://wmts.marine.copernicus.eu/teroWms/GLOBAL_ANALYSISFORECAST_PHY_001_024/cmems_mod_glo_phy_anfc_0.083deg_P1D-m_202406';
 
   // Function to get the marine data for a specific location on the map
-  Future<MarineData> fetchMarineData(double lat, double lng) async {
-    // If no credentials are provided, tightly fallback to realistic mocked data
-    // This prevents the app from crashing if the API keys are missing
+  Future<MarineData?> fetchMarineData(double lat, double lng) async {
+    // If no credentials are provided, we cannot fetch real data.
     if (cmemsUsername.isEmpty || cmemsPassword.isEmpty) {
-      return _getMockMarineData(lat, lng);
+      print('Copernicus credentials missing. Cannot fetch real data.');
+      return null;
     }
 
     try {
       // Fetch actual Chlorophyll-a
-      double chl =
-          await _fetchWmsFeatureInfo(chlDatasetUrl, 'chl', lat, lng) ??
-          _getMockMarineData(lat, lng).chlorophyll;
+      double? chl = await _fetchWmsFeatureInfo(chlDatasetUrl, 'chl', lat, lng);
 
       // Fetch actual SST ('thetao') and SSH ('zos')
-      double sst =
-          await _fetchWmsFeatureInfo(phyDatasetUrl, 'thetao', lat, lng) ??
-          _getMockMarineData(lat, lng).sst;
-      double ssh =
-          await _fetchWmsFeatureInfo(phyDatasetUrl, 'zos', lat, lng) ??
-          _getMockMarineData(lat, lng).ssh;
+      double? sst = await _fetchWmsFeatureInfo(phyDatasetUrl, 'thetao', lat, lng);
+      double? ssh = await _fetchWmsFeatureInfo(phyDatasetUrl, 'zos', lat, lng);
+
+      if (chl == null || sst == null || ssh == null) {
+        return null;
+      }
 
       return MarineData(
         sst: sst.clamp(20.0, 35.0),
@@ -56,8 +51,8 @@ class CopernicusService {
         ssh: ssh.clamp(-1.0, 1.0),
       );
     } catch (e) {
-      print('Copernicus API Error: \$e. Falling back to mock data.');
-      return _getMockMarineData(lat, lng);
+      print('Copernicus API Error: $e');
+      return null;
     }
   }
 
@@ -115,19 +110,4 @@ class CopernicusService {
     return null;
   }
 
-  MarineData _getMockMarineData(double lat, double lng) {
-    double baseSst = 28.0 - ((lat.abs() - 7.0) * 0.2);
-    double baseChl = 0.5 + (_random.nextDouble() * 2.0);
-    double baseSsh = 0.1;
-
-    double sst = baseSst + (_random.nextDouble() * 4.0 - 2.0);
-    double chlorophyll = baseChl + (_random.nextDouble() * 1.5 - 0.5);
-    double ssh = baseSsh + (_random.nextDouble() * 0.4 - 0.2);
-
-    return MarineData(
-      sst: sst.clamp(20.0, 35.0),
-      chlorophyll: chlorophyll.clamp(0.0, 10.0),
-      ssh: ssh.clamp(-1.0, 1.0),
-    );
-  }
 }
