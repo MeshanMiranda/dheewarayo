@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../l10n/app_localizations.dart';
+import '../services/weather_api_service.dart';
 
 // FishermanSettingsScreen allows users to define their fishing schedule and boat type
 class FishermanSettingsScreen extends StatefulWidget {
@@ -20,6 +21,23 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
   
   TimeOfDay? _selectedTime;
   String? _selectedBoatType;
+  String? _selectedFishingArea;
+  List<String> _availablePlaces = [];
+
+  final Map<String, List<String>> _districtCoastalCities = {
+    'Gampaha': ['Negombo', 'Ja-Ela', 'Wattala'],
+    'Colombo': ['Colombo', 'Dehiwala', 'Mount Lavinia', 'Moratuwa'],
+    'Kalutara': ['Panadura', 'Kalutara', 'Beruwala', 'Aluthgama'],
+    'Galle': ['Bentota', 'Ambalangoda', 'Hikkaduwa', 'Galle', 'Koggala'],
+    'Matara': ['Weligama', 'Mirissa', 'Matara', 'Dondra', 'Dickwella'],
+    'Hambantota': ['Tangalle', 'Hambantota', 'Ambalantota'],
+    'Puttalam': ['Puttalam', 'Kalpitiya', 'Chilaw', 'Wennappuwa'],
+    'Mannar': ['Mannar', 'Pesalai'],
+    'Jaffna': ['Jaffna', 'Point Pedro', 'Kankesanthurai'],
+    'Trincomalee': ['Trincomalee', 'Kinniya', 'Mutur'],
+    'Batticaloa': ['Vakarai', 'Kalkudah', 'Batticaloa', 'Kattankudy'],
+    'Ampara': ['Kalmunai', 'Akkaraipattu', 'Pottuvil', 'Arugam Bay'],
+  };
 
   // The predefined list of boat types
   final List<String> _boatTypes = [
@@ -39,6 +57,32 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     _loadExistingData();
   }
 
+  Future<void> _fetchCurrentLocationCities() async {
+    try {
+      final weatherService = WeatherApiService();
+      final weather = await weatherService.fetchWeatherForCurrentLocation();
+      final city = weather.name;
+
+      String? matchedDistrict;
+      for (var entry in _districtCoastalCities.entries) {
+        if (entry.value.any((c) => c.toLowerCase() == city.toLowerCase())) {
+          matchedDistrict = entry.key;
+          break;
+        }
+      }
+
+      if (matchedDistrict != null) {
+        _availablePlaces = List.from(_districtCoastalCities[matchedDistrict]!);
+      } else {
+        _availablePlaces = _districtCoastalCities.values.expand((x) => x).toList();
+        _availablePlaces.sort(); 
+      }
+    } catch (e) {
+      _availablePlaces = _districtCoastalCities.values.expand((x) => x).toList();
+      _availablePlaces.sort();
+    }
+  }
+
   // Fetches any previously saved fisherman settings from Firebase so the user can edit them
   Future<void> _loadExistingData() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -49,6 +93,8 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     });
 
     try {
+      await _fetchCurrentLocationCities();
+
       final docId = user.uid;
       final docSnap = await FirebaseFirestore.instance
           .collection('fisherman_data')
@@ -91,6 +137,13 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
         }
         if (data['boat_type'] != null) {
           _selectedBoatType = data['boat_type'];
+        }
+        if (data['fishing_area'] != null) {
+          final savedArea = data['fishing_area'];
+          if (!_availablePlaces.contains(savedArea)) {
+            _availablePlaces.add(savedArea);
+          }
+          _selectedFishingArea = savedArea;
         }
       }
     } catch (e) {
@@ -159,6 +212,13 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
       return;
     }
 
+    if (_selectedFishingArea == null || _selectedFishingArea!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n?.pleaseSelectAFishingArea ?? 'Please select a fishing area.')),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -174,6 +234,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
         'time_hour': _selectedTime!.hour,
         'time_minute': _selectedTime!.minute,
         'boat_type': _selectedBoatType,
+        'fishing_area': _selectedFishingArea,
         'updated_at': FieldValue.serverTimestamp(),
       });
 
@@ -203,6 +264,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
       _selectedDayIndices.clear();
       _selectedTime = null;
       _selectedBoatType = null;
+      _selectedFishingArea = null;
     });
   }
 
@@ -351,6 +413,38 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectedBoatType = newValue;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    l10n?.selectFishingArea ?? 'Select Fishing Area',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    ),
+                    hint: Text(l10n?.chooseYourFishingArea ?? 'Choose your fishing area'),
+                    value: _selectedFishingArea,
+                    isExpanded: true,
+                    icon: Icon(Icons.arrow_drop_down, color: theme.colorScheme.primary),
+                    items: _availablePlaces.map((String place) {
+                      return DropdownMenuItem<String>(
+                        value: place,
+                        child: Text(place),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedFishingArea = newValue;
                       });
                     },
                   ),

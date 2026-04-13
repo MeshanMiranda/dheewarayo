@@ -16,6 +16,12 @@ class HelpFaqScreen extends StatelessWidget {
       {'q': l10n.faq2Question, 'a': l10n.faq2Answer},
       {'q': l10n.faq3Question, 'a': l10n.faq3Answer},
       {'q': l10n.faq4Question, 'a': l10n.faq4Answer},
+      {'q': l10n.faq5Question, 'a': l10n.faq5Answer},
+      {'q': l10n.faq6Question, 'a': l10n.faq6Answer},
+      {'q': l10n.faq7Question, 'a': l10n.faq7Answer},
+      {'q': l10n.faq8Question, 'a': l10n.faq8Answer},
+      {'q': l10n.faq9Question, 'a': l10n.faq9Answer},
+      {'q': l10n.faq10Question, 'a': l10n.faq10Answer},
     ];
 
     return BaseScreen(

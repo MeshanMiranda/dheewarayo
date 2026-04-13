@@ -287,32 +287,75 @@ class AppLocalizationsEn extends AppLocalizations {
       'This application is a part of a final year research project focusing on applying Artificial Intelligence and Machine Learning techniques to optimize traditional fishing practices while strictly adhering to marine sustainability policies.';
 
   @override
-  String get faq1Question => 'How does the AI Fishing Prediction work?';
+  String get faq1Question => 'What is Dheewarayo app?';
 
   @override
   String get faq1Answer =>
-      'Our AI uses real-time weather, tide, and historical catch data to predict the best times and locations for fishing.';
+      'It\'s a smart mobile application providing weather alerts, AI fishing hotspots, and species identification for local fishing communities.';
 
   @override
-  String get faq2Question => 'How do I identify a species from a photo?';
+  String get faq2Question => 'How does the AI Fishing Prediction work?';
 
   @override
   String get faq2Answer =>
-      'Go to the AI Fishing tab, tap \"Upload Catch Photo\", and choose an image from your gallery or take a new one. The AI will identify it and provide regulations.';
+      'Our AI uses real-time weather, oceanographic data (PFZ), and tide to predict the best fishing locations and times.';
 
   @override
-  String get faq3Question => 'What does \"Safe to Sail\" mean?';
+  String get faq3Question => 'How do I use the Species Identification feature?';
 
   @override
   String get faq3Answer =>
-      'It indicates that current and predicted weather conditions are within safe parameters for small vessels. Always exercise your own judgment as well.';
+      'Navigate to the AI Fishing tab, tap \"Upload Catch Photo,\" and select an image. The AI will identify the species and provide local regulations.';
 
   @override
-  String get faq4Question => 'How do I change the app language?';
+  String get faq4Question => 'What does the \"Safe to Sail\" status mean?';
 
   @override
   String get faq4Answer =>
-      'Go to Settings -> Language, and choose between English and Sinhala.';
+      'It means the current and predicted weather conditions (wind, waves) are favorable and safe for your small vessel. Always use personal judgment.';
+
+  @override
+  String get faq5Question => 'How can I set my fishing area and boat type?';
+
+  @override
+  String get faq5Answer =>
+      'Go to Settings -> Fisherman Settings. You can choose your preferred fishing days, times, boat type, and fishing area.';
+
+  @override
+  String get faq6Question => 'How do I change the app language?';
+
+  @override
+  String get faq6Answer =>
+      'Go to Settings -> Language, and select either English or Sinhala.';
+
+  @override
+  String get faq7Question => 'Can I share my catches with other fishermen?';
+
+  @override
+  String get faq7Answer =>
+      'Yes! You can use the Community tab to add a post, write a caption, and upload an image of your catch or sea conditions.';
+
+  @override
+  String get faq8Question => 'How do I get notifications for bad weather?';
+
+  @override
+  String get faq8Answer =>
+      'The app automatically sends critical alerts like \"High Wind Warning\" to keep you safe. Make sure notifications are enabled in your phone settings.';
+
+  @override
+  String get faq9Question => 'What is the 10-Hour Marine Forecast?';
+
+  @override
+  String get faq9Answer =>
+      'It provides a detailed hour-by-hour prediction of weather, wind, and sea conditions for the next 10 hours so you can plan your daily trip safely.';
+
+  @override
+  String get faq10Question =>
+      'How can I delete a post I made in the community?';
+
+  @override
+  String get faq10Answer =>
+      'Go to your post in the Community Feed, tap the options menu (three dots), and select \"Delete\".';
 
   @override
   String get noNotificationsMessage => 'No notifications right now.';
@@ -761,4 +804,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveBtn => 'Save';
+
+  @override
+  String get selectFishingArea => 'Select Fishing Area';
+
+  @override
+  String get chooseYourFishingArea => 'Choose your fishing area';
+
+  @override
+  String get pleaseSelectAFishingArea => 'Please select a fishing area.';
 }

@@ -617,50 +617,122 @@ abstract class AppLocalizations {
   /// No description provided for @faq1Question.
   ///
   /// In en, this message translates to:
-  /// **'How does the AI Fishing Prediction work?'**
+  /// **'What is Dheewarayo app?'**
   String get faq1Question;
 
   /// No description provided for @faq1Answer.
   ///
   /// In en, this message translates to:
-  /// **'Our AI uses real-time weather, tide, and historical catch data to predict the best times and locations for fishing.'**
+  /// **'It\'s a smart mobile application providing weather alerts, AI fishing hotspots, and species identification for local fishing communities.'**
   String get faq1Answer;
 
   /// No description provided for @faq2Question.
   ///
   /// In en, this message translates to:
-  /// **'How do I identify a species from a photo?'**
+  /// **'How does the AI Fishing Prediction work?'**
   String get faq2Question;
 
   /// No description provided for @faq2Answer.
   ///
   /// In en, this message translates to:
-  /// **'Go to the AI Fishing tab, tap \"Upload Catch Photo\", and choose an image from your gallery or take a new one. The AI will identify it and provide regulations.'**
+  /// **'Our AI uses real-time weather, oceanographic data (PFZ), and tide to predict the best fishing locations and times.'**
   String get faq2Answer;
 
   /// No description provided for @faq3Question.
   ///
   /// In en, this message translates to:
-  /// **'What does \"Safe to Sail\" mean?'**
+  /// **'How do I use the Species Identification feature?'**
   String get faq3Question;
 
   /// No description provided for @faq3Answer.
   ///
   /// In en, this message translates to:
-  /// **'It indicates that current and predicted weather conditions are within safe parameters for small vessels. Always exercise your own judgment as well.'**
+  /// **'Navigate to the AI Fishing tab, tap \"Upload Catch Photo,\" and select an image. The AI will identify the species and provide local regulations.'**
   String get faq3Answer;
 
   /// No description provided for @faq4Question.
   ///
   /// In en, this message translates to:
-  /// **'How do I change the app language?'**
+  /// **'What does the \"Safe to Sail\" status mean?'**
   String get faq4Question;
 
   /// No description provided for @faq4Answer.
   ///
   /// In en, this message translates to:
-  /// **'Go to Settings -> Language, and choose between English and Sinhala.'**
+  /// **'It means the current and predicted weather conditions (wind, waves) are favorable and safe for your small vessel. Always use personal judgment.'**
   String get faq4Answer;
+
+  /// No description provided for @faq5Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How can I set my fishing area and boat type?'**
+  String get faq5Question;
+
+  /// No description provided for @faq5Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings -> Fisherman Settings. You can choose your preferred fishing days, times, boat type, and fishing area.'**
+  String get faq5Answer;
+
+  /// No description provided for @faq6Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I change the app language?'**
+  String get faq6Question;
+
+  /// No description provided for @faq6Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings -> Language, and select either English or Sinhala.'**
+  String get faq6Answer;
+
+  /// No description provided for @faq7Question.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I share my catches with other fishermen?'**
+  String get faq7Question;
+
+  /// No description provided for @faq7Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! You can use the Community tab to add a post, write a caption, and upload an image of your catch or sea conditions.'**
+  String get faq7Answer;
+
+  /// No description provided for @faq8Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I get notifications for bad weather?'**
+  String get faq8Question;
+
+  /// No description provided for @faq8Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'The app automatically sends critical alerts like \"High Wind Warning\" to keep you safe. Make sure notifications are enabled in your phone settings.'**
+  String get faq8Answer;
+
+  /// No description provided for @faq9Question.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the 10-Hour Marine Forecast?'**
+  String get faq9Question;
+
+  /// No description provided for @faq9Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'It provides a detailed hour-by-hour prediction of weather, wind, and sea conditions for the next 10 hours so you can plan your daily trip safely.'**
+  String get faq9Answer;
+
+  /// No description provided for @faq10Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How can I delete a post I made in the community?'**
+  String get faq10Question;
+
+  /// No description provided for @faq10Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to your post in the Community Feed, tap the options menu (three dots), and select \"Delete\".'**
+  String get faq10Answer;
 
   /// No description provided for @noNotificationsMessage.
   ///
@@ -1507,6 +1579,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get saveBtn;
+
+  /// No description provided for @selectFishingArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Fishing Area'**
+  String get selectFishingArea;
+
+  /// No description provided for @chooseYourFishingArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your fishing area'**
+  String get chooseYourFishingArea;
+
+  /// No description provided for @pleaseSelectAFishingArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a fishing area.'**
+  String get pleaseSelectAFishingArea;
 }
 
 class _AppLocalizationsDelegate
