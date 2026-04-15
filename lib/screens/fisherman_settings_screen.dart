@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../l10n/app_localizations.dart';
+
 class FishermanSettingsScreen extends StatefulWidget {
   const FishermanSettingsScreen({super.key});
 
@@ -215,7 +216,8 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     }
 
     final String typedFishingArea = _fishingAreaController.text.trim();
-    if (typedFishingArea.isNotEmpty && _availablePlaces.contains(typedFishingArea)) {
+    if (typedFishingArea.isNotEmpty &&
+        _availablePlaces.contains(typedFishingArea)) {
       _selectedFishingArea = typedFishingArea;
     } else {
       _selectedFishingArea = null;
@@ -478,8 +480,10 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                     controller: _fishingAreaController,
                     initialSelection: _selectedFishingArea,
                     expandedInsets: EdgeInsets.zero,
-                    menuHeight: 350, // Limits to roughly 7-8 items, ensuring it fits easily on most screens 
-                    hintText: l10n?.chooseYourFishingArea ?? 'Choose your fishing area',
+                    menuHeight: 350,
+                    hintText:
+                        l10n?.chooseYourFishingArea ??
+                        'Choose your fishing area',
                     enableFilter: true,
                     enableSearch: true,
                     leadingIcon: Icon(
