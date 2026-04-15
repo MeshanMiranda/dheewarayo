@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../l10n/app_localizations.dart';
-import '../services/weather_api_service.dart';
-
 class FishermanSettingsScreen extends StatefulWidget {
   const FishermanSettingsScreen({super.key});
 
@@ -23,6 +21,8 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     'Sunday',
   ];
   final Set<int> _selectedDayIndices = {};
+
+  final TextEditingController _fishingAreaController = TextEditingController();
 
   TimeOfDay? _selectedTime;
   String? _selectedBoatType;
@@ -61,34 +61,16 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     _loadExistingData();
   }
 
+  @override
+  void dispose() {
+    _fishingAreaController.dispose();
+    super.dispose();
+  }
+
   Future<void> _fetchCurrentLocationCities() async {
-    try {
-      final weatherService = WeatherApiService();
-      final weather = await weatherService.fetchWeatherForCurrentLocation();
-      final city = weather.name;
-
-      String? matchedDistrict;
-      for (var entry in _districtCoastalCities.entries) {
-        if (entry.value.any((c) => c.toLowerCase() == city.toLowerCase())) {
-          matchedDistrict = entry.key;
-          break;
-        }
-      }
-
-      if (matchedDistrict != null) {
-        _availablePlaces = List.from(_districtCoastalCities[matchedDistrict]!);
-      } else {
-        _availablePlaces = _districtCoastalCities.values
-            .expand((x) => x)
-            .toList();
-        _availablePlaces.sort();
-      }
-    } catch (e) {
-      _availablePlaces = _districtCoastalCities.values
-          .expand((x) => x)
-          .toList();
-      _availablePlaces.sort();
-    }
+    _availablePlaces = _districtCoastalCities.values.expand((x) => x).toList();
+    _availablePlaces = _availablePlaces.toSet().toList(); // Ensure uniqueness
+    _availablePlaces.sort();
   }
 
   Future<void> _loadExistingData() async {
@@ -151,6 +133,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
             _availablePlaces.add(savedArea);
           }
           _selectedFishingArea = savedArea;
+          _fishingAreaController.text = savedArea;
         }
       }
     } catch (e) {
@@ -231,6 +214,13 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
       return;
     }
 
+    final String typedFishingArea = _fishingAreaController.text.trim();
+    if (typedFishingArea.isNotEmpty && _availablePlaces.contains(typedFishingArea)) {
+      _selectedFishingArea = typedFishingArea;
+    } else {
+      _selectedFishingArea = null;
+    }
+
     if (_selectedFishingArea == null || _selectedFishingArea!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -299,6 +289,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
       _selectedTime = null;
       _selectedBoatType = null;
       _selectedFishingArea = null;
+      _fishingAreaController.clear();
     });
   }
 
@@ -483,8 +474,19 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
+                  DropdownMenu<String>(
+                    controller: _fishingAreaController,
+                    initialSelection: _selectedFishingArea,
+                    expandedInsets: EdgeInsets.zero,
+                    menuHeight: 350, // Limits to roughly 7-8 items, ensuring it fits easily on most screens 
+                    hintText: l10n?.chooseYourFishingArea ?? 'Choose your fishing area',
+                    enableFilter: true,
+                    enableSearch: true,
+                    leadingIcon: Icon(
+                      Icons.search,
+                      color: theme.colorScheme.primary,
+                    ),
+                    inputDecorationTheme: InputDecorationTheme(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -493,22 +495,17 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                         vertical: 16,
                       ),
                     ),
-                    hint: Text(
-                      l10n?.chooseYourFishingArea ?? 'Choose your fishing area',
-                    ),
-                    value: _selectedFishingArea,
-                    isExpanded: true,
-                    icon: Icon(
+                    trailingIcon: Icon(
                       Icons.arrow_drop_down,
                       color: theme.colorScheme.primary,
                     ),
-                    items: _availablePlaces.map((String place) {
-                      return DropdownMenuItem<String>(
+                    dropdownMenuEntries: _availablePlaces.map((String place) {
+                      return DropdownMenuEntry<String>(
                         value: place,
-                        child: Text(place),
+                        label: place,
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
+                    onSelected: (String? newValue) {
                       setState(() {
                         _selectedFishingArea = newValue;
                       });

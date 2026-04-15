@@ -54,11 +54,13 @@ void callbackDispatcher() {
               forecast.pressure,
             );
 
+            //final prediction = _mlService.predictWeatherChanges(24, 95, 35, 995);
+
             developer.log("Prediction: $prediction");
 
             if (prediction != null) {
               final wind = prediction['wind'] ?? 0.0;
-              if (wind >= 1.0) {
+              if (wind >= 10.0) {
                 //10.0
                 if (warningStart == null) {
                   warningStart = forecast.time;
