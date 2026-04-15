@@ -19,6 +19,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'services/weather_api_service.dart';
 import 'services/ml_service.dart';
 import 'services/notification_service.dart';
+import 'dart:developer' as developer;
 
 const String weatherUpdateTask = "weatherUpdateTask";
 
@@ -35,15 +36,17 @@ void callbackDispatcher() {
           await mlService.initialize();
 
           final weatherApi = WeatherApiService();
-          final forecasts = await weatherApi.fetchUpcoming10HourForecasts(
+          final forecasts = await weatherApi.fetchUpcoming3HourForecasts(
             limit: 8, //8
           );
 
           DateTime? warningStart;
           DateTime? warningEnd;
           double maxWind = 0;
+          developer.log("Task started");
 
           for (var forecast in forecasts) {
+            developer.log("Forecast time: ${forecast.time}");
             final prediction = mlService.predictWeatherChanges(
               forecast.temperature,
               forecast.humidity,
@@ -51,9 +54,11 @@ void callbackDispatcher() {
               forecast.pressure,
             );
 
+            developer.log("Prediction: $prediction");
+
             if (prediction != null) {
               final wind = prediction['wind'] ?? 0.0;
-              if (wind >= 10.0) {
+              if (wind >= 1.0) {
                 //10.0
                 if (warningStart == null) {
                   warningStart = forecast.time;

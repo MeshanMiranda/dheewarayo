@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../l10n/app_localizations.dart';
 
-// ProfileScreen shows the user's personal information and allows them to edit their details
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -26,7 +25,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _fetchUserData();
   }
 
-  // Fetches the user's details from Firebase Authentication and Firestore to populate the form
   Future<void> _fetchUserData() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -141,7 +139,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: () {
-                      // Save logic here
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(l10n.profileUpdatedSuccessfully),

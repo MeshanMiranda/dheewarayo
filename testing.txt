@@ -1,0 +1,11 @@
+Sunny - _mlService.predictWeatherChanges(32, 60, 8, 1015);
+Rainy - _mlService.predictWeatherChanges(26, 90, 20, 1005);
+Stormy - _mlService.predictWeatherChanges(24, 95, 35, 995);
+
+final math.Random random = math.Random();
+      MarineData mockData = MarineData(
+        sst: 26.0 + random.nextDouble() * 3.5,
+        chlorophyll: 0.1 + random.nextDouble() * 4.0,
+        ssh: -0.1 + random.nextDouble() * 0.3,
+      );
+      final pfzProb = await _pfzMlService.predictPfz(mockData);

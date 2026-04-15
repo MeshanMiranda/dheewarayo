@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth.dart';
 import '../l10n/app_localizations.dart';
 
-// RegisterScreen allows new users to create an account using their email and personal details
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -35,12 +34,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  // Attempts to register the user by sending their input data to Firebase
   Future<void> _register() async {
-    if (!_formKey.currentState!.validate()) return; // Stop if form is incomplete
+    if (!_formKey.currentState!.validate()) return;
     final l10n = AppLocalizations.of(context)!;
-    
-    // Ensure both password inputs match before proceeding
+
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(
         context,
@@ -65,9 +62,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (mounted) {
         Navigator.of(context).popUntil((route) => route.isFirst);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.registrationSuccessful)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.registrationSuccessful)));
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
@@ -77,9 +74,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.anErrorOccurred(e.toString()))));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.anErrorOccurred(e.toString()))),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -88,7 +85,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine if it's dark mode
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
 
@@ -106,7 +102,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Optional back button at the top
                   Align(
                     alignment: Alignment.centerLeft,
                     child: IconButton(
@@ -117,7 +112,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  // Logo or Icon
                   Icon(
                     Icons.person_add_rounded,
                     size: 80,
@@ -125,7 +119,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Welcome text
                   Text(
                     l10n.createAccount,
                     textAlign: TextAlign.center,
@@ -143,7 +136,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Register Card
                   Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
@@ -163,8 +155,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            validator: (val) =>
-                                val == null || val.isEmpty ? l10n.requiredField : null,
+                            validator: (val) => val == null || val.isEmpty
+                                ? l10n.requiredField
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
@@ -176,8 +169,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            validator: (val) =>
-                                val == null || val.isEmpty ? l10n.requiredField : null,
+                            validator: (val) => val == null || val.isEmpty
+                                ? l10n.requiredField
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
@@ -190,8 +184,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                             keyboardType: TextInputType.emailAddress,
-                            validator: (val) =>
-                                val == null || val.isEmpty ? l10n.requiredField : null,
+                            validator: (val) => val == null || val.isEmpty
+                                ? l10n.requiredField
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
@@ -204,8 +199,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                             keyboardType: TextInputType.phone,
-                            validator: (val) =>
-                                val == null || val.isEmpty ? l10n.requiredField : null,
+                            validator: (val) => val == null || val.isEmpty
+                                ? l10n.requiredField
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
@@ -218,8 +214,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                             obscureText: true,
-                            validator: (val) =>
-                                val == null || val.isEmpty ? l10n.requiredField : null,
+                            validator: (val) => val == null || val.isEmpty
+                                ? l10n.requiredField
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
@@ -232,12 +229,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                             obscureText: true,
-                            validator: (val) =>
-                                val == null || val.isEmpty ? l10n.requiredField : null,
+                            validator: (val) => val == null || val.isEmpty
+                                ? l10n.requiredField
+                                : null,
                           ),
                           const SizedBox(height: 32),
 
-                          // Register Button
                           ElevatedButton(
                             onPressed: _isLoading ? null : _register,
                             style: ElevatedButton.styleFrom(
@@ -269,7 +266,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Login Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -283,7 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context); // Go back to login screen
+                          Navigator.pop(context);
                         },
                         child: Text(
                           l10n.logInLink,

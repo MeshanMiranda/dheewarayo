@@ -216,7 +216,7 @@ class WeatherApiService {
     }
   }
 
-  Future<List<IntervalForecast>> fetchUpcoming10HourForecasts({
+  Future<List<IntervalForecast>> fetchUpcoming3HourForecasts({
     int limit = 8,
   }) async {
     Position? position;

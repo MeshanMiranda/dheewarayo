@@ -12,7 +12,6 @@ import '../services/pfz_ml_service.dart';
 import '../services/copernicus_service.dart';
 import 'base_screen.dart';
 
-// HomeScreen is the main dashboard of the app, showing weather, AI predictions, and community updates
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -41,10 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _initServicesAndData();
   }
 
-  // Fetches all the data needed for the home screen when it loads
   Future<void> _initServicesAndData() async {
     try {
-      // Initialize the AI models first so they are ready to make predictions
       await _mlService.initialize();
       await _pfzMlService.init();
 
@@ -52,13 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
       final weather = await _weatherApiService.fetchWeatherForCurrentLocation();
       final tides = await _weatherApiService.fetchTideData();
 
-      // Use the local ML service to predict if weather conditions are getting worse based on current data
       final prediction = _mlService.predictWeatherChanges(
         weather.temperature,
         weather.humidity,
         weather.windSpeed,
         weather.pressure,
       );
+
+      //final prediction = _mlService.predictWeatherChanges(24, 95, 35, 995);
 
       TidePoint? nextHighTide;
       final now = DateTime.now();
@@ -69,13 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
-      // 2. AI Fishing Insight (Mock realistic ocean data based on location)
       final math.Random random = math.Random();
       MarineData mockData = MarineData(
         sst: 26.0 + random.nextDouble() * 3.5,
         chlorophyll: 0.1 + random.nextDouble() * 4.0,
         ssh: -0.1 + random.nextDouble() * 0.3,
       );
+
       final pfzProb = await _pfzMlService.predictPfz(mockData);
 
       // 3. Community Post

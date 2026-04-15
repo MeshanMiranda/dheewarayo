@@ -7,7 +7,6 @@ import '../services/weather_api_service.dart';
 import '../services/ml_service.dart';
 import '../services/notification_service.dart';
 
-// WeatherScreen displays current weather conditions, forecasts, tide data, and AI-driven safety alerts
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
 
@@ -32,7 +31,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     _initServicesAndData();
   }
 
-  // Fetches weather, forecast, and tide data from the API and runs local ML predictions for safety
   Future<void> _initServicesAndData() async {
     try {
       await notificationService.initialize();
@@ -42,16 +40,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
       final weather = await _weatherApiService.fetchWeatherForCurrentLocation();
       final forecasts = await _weatherApiService.fetch5DayForecast();
       final intervalForecasts = await _weatherApiService
-          .fetchUpcoming10HourForecasts(limit: 4);
+          .fetchUpcoming3HourForecasts(limit: 4);
       final tides = await _weatherApiService.fetchTideData();
 
-      // predict
       final prediction = _mlService.predictWeatherChanges(
         weather.temperature,
         weather.humidity,
         weather.windSpeed,
         weather.pressure,
       );
+
+      //final prediction = _mlService.predictWeatherChanges(24, 95, 35, 995);
 
       if (mounted) {
         setState(() {
@@ -118,7 +117,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  // Builds the large blue card at the top displaying the current weather conditions
   Widget _buildCurrentWeatherCard(BuildContext context, WeatherData weather) {
     final l10n = AppLocalizations.of(context)!;
     String tempStr = "${weather.temperature}°C";
@@ -253,7 +251,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  // Builds the green "Good Conditions" or red "Heads Up" alert card based on AI predictions
   Widget _buildAlertsCard(
     BuildContext context,
     AppLocalizations l10n,
@@ -263,10 +260,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final wave = prediction['wave'] ?? 0.0;
     final rain = prediction['rain'] ?? 0.0;
 
-    // Define thresholds for rough marine weather
-    final bool highWind = wind >= 1.0; //10.0
-    final bool highWaves = wave >= 2.0; //2.0
-    final bool highRain = rain >= 70.0; //70.0
+    final bool highWind = wind >= 10.0;
+    final bool highWaves = wave >= 2.0;
+    final bool highRain = rain >= 70.0;
     final bool isCritical = highWind || highWaves || highRain;
 
     if (!isCritical) {

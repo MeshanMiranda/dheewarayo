@@ -4,7 +4,6 @@ import '../services/auth.dart';
 import 'register_screen.dart';
 import '../l10n/app_localizations.dart';
 
-// LoginScreen allows users to authenticate using email, Google, or anonymously
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -26,10 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // Attempts to log the user in using the email and password entered in the form
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return; // Form validation failed
-    
+    if (!_formKey.currentState!.validate()) return;
+
     final l10n = AppLocalizations.of(context)!;
 
     setState(() {
@@ -54,16 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Sends a password reset email to the address entered in the email field
   Future<void> _resetPassword() async {
     final l10n = AppLocalizations.of(context)!;
     final email = _emailController.text.trim();
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l10n.resetPasswordEmailPrompt),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.resetPasswordEmailPrompt)));
       return;
     }
 
@@ -72,13 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await _authService.sendPasswordResetEmail(email);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              l10n.resetPasswordEmailSent,
-            ),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.resetPasswordEmailSent)));
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
@@ -91,7 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Initiates the Google Sign-In flow
   Future<void> _signInWithGoogle() async {
     setState(() {
       _isLoading = true;
@@ -105,16 +95,15 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.googleSignInFailed(e.toString()))));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.googleSignInFailed(e.toString()))),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  // Allows the user to continue without creating an account (guest mode)
   Future<void> _loginAnonymously() async {
     setState(() {
       _isLoading = true;
@@ -139,7 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine if it's dark mode
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
 
@@ -182,7 +170,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Login Card
                   Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
@@ -224,7 +211,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 8),
 
-                          // Forgot Password
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
@@ -234,7 +220,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 16),
 
-                          // Login Button
                           ElevatedButton(
                             onPressed: _isLoading ? null : _login,
                             style: ElevatedButton.styleFrom(
@@ -266,7 +251,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Divider
                   Row(
                     children: [
                       const Expanded(child: Divider()),
@@ -287,7 +271,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Google Sign-In Button
                   OutlinedButton(
                     onPressed: _isLoading ? null : _signInWithGoogle,
                     style: OutlinedButton.styleFrom(
@@ -305,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png',
+                          'https://developers.google.com/identity/images/g-logo.png',
                           height: 24,
                           width: 24,
                           errorBuilder: (context, error, stackTrace) =>
@@ -325,14 +308,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Guest Sign-In
                   TextButton(
                     onPressed: _isLoading ? null : _loginAnonymously,
                     child: Text(l10n.continueAsGuest),
                   ),
                   const SizedBox(height: 16),
 
-                  // Register Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
