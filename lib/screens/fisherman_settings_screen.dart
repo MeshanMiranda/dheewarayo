@@ -4,21 +4,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../l10n/app_localizations.dart';
 import '../services/weather_api_service.dart';
 
-// FishermanSettingsScreen allows users to define their fishing schedule and boat type
 class FishermanSettingsScreen extends StatefulWidget {
   const FishermanSettingsScreen({super.key});
 
   @override
-  State<FishermanSettingsScreen> createState() => _FishermanSettingsScreenState();
+  State<FishermanSettingsScreen> createState() =>
+      _FishermanSettingsScreenState();
 }
 
 class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
-
   final List<String> _fullDaysOfWeek = [
-    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
   ];
   final Set<int> _selectedDayIndices = {};
-  
+
   TimeOfDay? _selectedTime;
   String? _selectedBoatType;
   String? _selectedFishingArea;
@@ -39,14 +44,13 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     'Ampara': ['Kalmunai', 'Akkaraipattu', 'Pottuvil', 'Arugam Bay'],
   };
 
-  // The predefined list of boat types
   final List<String> _boatTypes = [
     'Traditional Canoe (Oruwa)',
     'FRP Boat (Fiber Reinforced Plastic)',
     'One-day Boat',
     'Multi-day Boat',
     'Trawler',
-    'Other'
+    'Other',
   ];
 
   bool _isLoading = false;
@@ -74,19 +78,22 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
       if (matchedDistrict != null) {
         _availablePlaces = List.from(_districtCoastalCities[matchedDistrict]!);
       } else {
-        _availablePlaces = _districtCoastalCities.values.expand((x) => x).toList();
-        _availablePlaces.sort(); 
+        _availablePlaces = _districtCoastalCities.values
+            .expand((x) => x)
+            .toList();
+        _availablePlaces.sort();
       }
     } catch (e) {
-      _availablePlaces = _districtCoastalCities.values.expand((x) => x).toList();
+      _availablePlaces = _districtCoastalCities.values
+          .expand((x) => x)
+          .toList();
       _availablePlaces.sort();
     }
   }
 
-  // Fetches any previously saved fisherman settings from Firebase so the user can edit them
   Future<void> _loadExistingData() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return; // Must be logged in
+    if (user == null) return;
 
     setState(() {
       _isLoading = true;
@@ -179,42 +186,58 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     }
   }
 
-  // Saves the selected configuration to the 'fisherman_data' collection in Firebase
   Future<void> _saveData() async {
     final user = FirebaseAuth.instance.currentUser;
     final l10n = AppLocalizations.of(context);
-    
+
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.pleaseLogInFirst ?? 'Please log in first.')),
+        SnackBar(
+          content: Text(l10n?.pleaseLogInFirst ?? 'Please log in first.'),
+        ),
       );
       return;
     }
 
     if (_selectedDayIndices.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.pleaseSelectAtLeastOneDay ?? 'Please select at least one day.')),
+        SnackBar(
+          content: Text(
+            l10n?.pleaseSelectAtLeastOneDay ??
+                'Please select at least one day.',
+          ),
+        ),
       );
       return;
     }
 
     if (_selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.pleaseSelectATime ?? 'Please select a time.')),
+        SnackBar(
+          content: Text(l10n?.pleaseSelectATime ?? 'Please select a time.'),
+        ),
       );
       return;
     }
 
     if (_selectedBoatType == null || _selectedBoatType!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.pleaseSelectABoatType ?? 'Please select a boat type.')),
+        SnackBar(
+          content: Text(
+            l10n?.pleaseSelectABoatType ?? 'Please select a boat type.',
+          ),
+        ),
       );
       return;
     }
 
     if (_selectedFishingArea == null || _selectedFishingArea!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.pleaseSelectAFishingArea ?? 'Please select a fishing area.')),
+        SnackBar(
+          content: Text(
+            l10n?.pleaseSelectAFishingArea ?? 'Please select a fishing area.',
+          ),
+        ),
       );
       return;
     }
@@ -224,31 +247,42 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     });
 
     try {
-      final selectedDaysFull = _selectedDayIndices.map((i) => _fullDaysOfWeek[i]).toList();
-      String timeString = "\${_selectedTime!.hour.toString().padLeft(2, '0')}:\${_selectedTime!.minute.toString().padLeft(2, '0')}";
+      final selectedDaysFull = _selectedDayIndices
+          .map((i) => _fullDaysOfWeek[i])
+          .toList();
+      String timeString =
+          "\${_selectedTime!.hour.toString().padLeft(2, '0')}:\${_selectedTime!.minute.toString().padLeft(2, '0')}";
 
-      await FirebaseFirestore.instance.collection('fisherman_data').doc(user.uid).set({
-        'user_id': user.uid,
-        'days': selectedDaysFull,
-        'time': timeString,
-        'time_hour': _selectedTime!.hour,
-        'time_minute': _selectedTime!.minute,
-        'boat_type': _selectedBoatType,
-        'fishing_area': _selectedFishingArea,
-        'updated_at': FieldValue.serverTimestamp(),
-      });
+      await FirebaseFirestore.instance
+          .collection('fisherman_data')
+          .doc(user.uid)
+          .set({
+            'user_id': user.uid,
+            'days': selectedDaysFull,
+            'time': timeString,
+            'time_hour': _selectedTime!.hour,
+            'time_minute': _selectedTime!.minute,
+            'boat_type': _selectedBoatType,
+            'fishing_area': _selectedFishingArea,
+            'updated_at': FieldValue.serverTimestamp(),
+          });
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Fisherman settings saved successfully!')),
+          SnackBar(
+            content: Text(
+              l10n?.fishermanSettingsSavedSuccessfully ??
+                  'Fisherman settings saved successfully!',
+            ),
+          ),
         );
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save data: \$e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to save data: \$e')));
       }
     } finally {
       if (mounted) {
@@ -272,7 +306,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    
+
     final List<String> localizedDaysOfWeek = [
       l10n?.dayMo ?? 'M',
       l10n?.dayTu ?? 'T',
@@ -286,16 +320,23 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
     String getLocalizedBoatType(String type) {
       if (l10n == null) return type;
       switch (type) {
-        case 'Traditional Canoe (Oruwa)': return l10n.boatTypeTraditional;
-        case 'FRP Boat (Fiber Reinforced Plastic)': return l10n.boatTypeFrp;
-        case 'One-day Boat': return l10n.boatTypeOneDay;
-        case 'Multi-day Boat': return l10n.boatTypeMultiDay;
-        case 'Trawler': return l10n.boatTypeTrawler;
-        case 'Other': return l10n.boatTypeOther;
-        default: return type;
+        case 'Traditional Canoe (Oruwa)':
+          return l10n.boatTypeTraditional;
+        case 'FRP Boat (Fiber Reinforced Plastic)':
+          return l10n.boatTypeFrp;
+        case 'One-day Boat':
+          return l10n.boatTypeOneDay;
+        case 'Multi-day Boat':
+          return l10n.boatTypeMultiDay;
+        case 'Trawler':
+          return l10n.boatTypeTrawler;
+        case 'Other':
+          return l10n.boatTypeOther;
+        default:
+          return type;
       }
     }
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n?.fishermanSettings ?? 'Fisherman Settings'),
@@ -318,7 +359,9 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.generate(localizedDaysOfWeek.length, (index) {
+                    children: List.generate(localizedDaysOfWeek.length, (
+                      index,
+                    ) {
                       final isSelected = _selectedDayIndices.contains(index);
                       return GestureDetector(
                         onTap: () {
@@ -361,7 +404,10 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                     onTap: () => _selectTime(context),
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
                       decoration: BoxDecoration(
                         border: Border.all(color: theme.colorScheme.outline),
                         borderRadius: BorderRadius.circular(12),
@@ -371,7 +417,8 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                         children: [
                           Text(
                             _selectedTime == null
-                                ? (l10n?.tapToSelectTime ?? 'Tap to select time')
+                                ? (l10n?.tapToSelectTime ??
+                                      'Tap to select time')
                                 : '${_selectedTime!.hourOfPeriod == 0 ? 12 : _selectedTime!.hourOfPeriod}:${_selectedTime!.minute.toString().padLeft(2, '0')} ${_selectedTime!.period == DayPeriod.am ? 'AM' : 'PM'}',
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: _selectedTime == null
@@ -379,7 +426,10 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                                   : theme.colorScheme.onSurface,
                             ),
                           ),
-                          Icon(Icons.access_time, color: theme.colorScheme.primary),
+                          Icon(
+                            Icons.access_time,
+                            color: theme.colorScheme.primary,
+                          ),
                         ],
                       ),
                     ),
@@ -398,12 +448,20 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
                     ),
-                    hint: Text(l10n?.chooseYourBoatType ?? 'Choose your boat type'),
+                    hint: Text(
+                      l10n?.chooseYourBoatType ?? 'Choose your boat type',
+                    ),
                     value: _selectedBoatType,
                     isExpanded: true,
-                    icon: Icon(Icons.arrow_drop_down, color: theme.colorScheme.primary),
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: theme.colorScheme.primary,
+                    ),
                     items: _boatTypes.map((String type) {
                       return DropdownMenuItem<String>(
                         value: type,
@@ -430,12 +488,20 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
                     ),
-                    hint: Text(l10n?.chooseYourFishingArea ?? 'Choose your fishing area'),
+                    hint: Text(
+                      l10n?.chooseYourFishingArea ?? 'Choose your fishing area',
+                    ),
                     value: _selectedFishingArea,
                     isExpanded: true,
-                    icon: Icon(Icons.arrow_drop_down, color: theme.colorScheme.primary),
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: theme.colorScheme.primary,
+                    ),
                     items: _availablePlaces.map((String place) {
                       return DropdownMenuItem<String>(
                         value: place,
