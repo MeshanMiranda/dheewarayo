@@ -3,13 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
-// Data model representing a full day's weather forecast
 class DailyForecast {
-  final String day; // E.g., "Monday", "Today"
-  final String condition; // E.g., "clear sky", "light rain"
-  final double maxTemp; // Maximum expected temperature
-  final double minTemp; // Minimum expected temperature
-  final double windSpeed; // Expected wind speed
+  final String day;
+  final String condition;
+  final double maxTemp;
+  final double minTemp;
+  final double windSpeed;
 
   DailyForecast({
     required this.day,
@@ -27,13 +26,12 @@ class TidePoint {
   TidePoint({required this.time, required this.height});
 }
 
-// Data model representing the weather at a specific interval (e.g., 3 hours from now)
 class IntervalForecast {
-  final DateTime time; // The future time this forecast applies to
-  final double temperature; // Expected temperature
-  final double humidity; // Expected humidity
-  final double windSpeed; // Expected wind speed
-  final double pressure; // Expected atmospheric pressure
+  final DateTime time;
+  final double temperature;
+  final double humidity;
+  final double windSpeed;
+  final double pressure;
 
   IntervalForecast({
     required this.time,
@@ -44,14 +42,13 @@ class IntervalForecast {
   });
 }
 
-// Data model representing current weather conditions
 class WeatherData {
-  final double temperature; // Current temperature
-  final double humidity; // Current humidity
-  final double windSpeed; // Current wind speed
-  final double pressure; // Current pressure
-  final String description; // E.g., "moderate rain"
-  final String name; // The name of the city/location
+  final double temperature;
+  final double humidity;
+  final double windSpeed;
+  final double pressure;
+  final String description;
+  final String name;
 
   WeatherData({
     required this.temperature,
@@ -76,20 +73,15 @@ class WeatherData {
   }
 }
 
-// WeatherApiService handles fetching weather data from internet APIs (OpenWeatherMap)
 class WeatherApiService {
-  // API key for authenticating with OpenWeatherMap
   static const String apiKey = '4e713c36a0aae2a622638c328d2c20d7';
-  // Base URLs for the API endpoints
   static const String baseUrl =
       'https://api.openweathermap.org/data/2.5/weather';
   static const String forecastUrl =
       'https://api.openweathermap.org/data/2.5/forecast';
-  // API key for the WorldTides API
   static const String worldTidesApiKey =
-      'YOUR_WORLD_TIDES_KEY'; //3b930da6-b951-4a4d-920b-e4e547a85873
+      'api'; //3b930da6-b951-4a4d-920b-e4e547a85873
 
-  // Function to fetch the current weather using a city name
   Future<WeatherData> fetchWeatherForCity(String city) async {
     final url = Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=metric');
 
@@ -104,7 +96,6 @@ class WeatherApiService {
     }
   }
 
-  // Function to fetch the current weather based on the user's GPS coordinates
   Future<WeatherData> fetchWeatherForCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -143,7 +134,6 @@ class WeatherApiService {
     }
   }
 
-  // Function to get a summarized 5-day weather forecast based on GPS location
   Future<List<DailyForecast>> fetch5DayForecast() async {
     Position position = await Geolocator.getCurrentPosition();
 
@@ -226,7 +216,7 @@ class WeatherApiService {
     }
   }
 
-  Future<List<IntervalForecast>> fetchUpcoming3HourForecasts({
+  Future<List<IntervalForecast>> fetchUpcoming10HourForecasts({
     int limit = 8,
   }) async {
     Position? position;
@@ -305,7 +295,6 @@ class WeatherApiService {
 
       return tidePoints;
     } else {
-      // Return a dummy data if API fails or key is missing for demonstration purposes
       return _generateDummyTideData();
     }
   }

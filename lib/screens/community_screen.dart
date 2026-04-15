@@ -6,7 +6,6 @@ import '../l10n/app_localizations.dart';
 import 'add_post_screen.dart';
 import 'base_screen.dart';
 
-// CommunityScreen displays a social feed where users can see posts from other fishermen
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
 
@@ -42,9 +41,7 @@ class CommunityScreen extends StatelessWidget {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Text(l10n.noPostsYet),
-            );
+            return Center(child: Text(l10n.noPostsYet));
           }
 
           return ListView.builder(
@@ -125,7 +122,6 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
-  // Builds a single post card in the feed
   Widget _buildPostCard(
     BuildContext context,
     String postId,
@@ -199,9 +195,7 @@ class CommunityScreen extends StatelessWidget {
                           context: context,
                           builder: (dialogContext) => AlertDialog(
                             title: Text(l10n.deletePostTitle),
-                            content: Text(
-                              l10n.deletePostPrompt,
-                            ),
+                            content: Text(l10n.deletePostPrompt),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(dialogContext),
@@ -233,7 +227,9 @@ class CommunityScreen extends StatelessWidget {
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            l10n.failedToDeletePost(e.toString()),
+                                            l10n.failedToDeletePost(
+                                              e.toString(),
+                                            ),
                                           ),
                                         ),
                                       );
@@ -252,10 +248,7 @@ class CommunityScreen extends StatelessWidget {
                     },
                     itemBuilder: (context) => [
                       PopupMenuItem(value: 'edit', child: Text(l10n.edit)),
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Text(l10n.delete),
-                      ),
+                      PopupMenuItem(value: 'delete', child: Text(l10n.delete)),
                     ],
                   ),
               ],
@@ -315,10 +308,9 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
-  // Handles when a user taps the "Like" button on a post
   Future<void> _toggleLike(String postId, bool isLiked) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return; // Must be logged in to like
+    if (currentUser == null) return;
     final uid = currentUser.uid;
 
     final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
@@ -342,7 +334,6 @@ class CommunityScreen extends StatelessWidget {
     }
   }
 
-  // Shows a bottom sheet overlay with all comments for a specific post
   void _showCommentsBottomSheet(BuildContext context, String postId) {
     final TextEditingController commentController = TextEditingController();
 
@@ -426,7 +417,9 @@ class CommunityScreen extends StatelessWidget {
                             } else if (diff.inHours > 0) {
                               timeStr = l10n.hoursAgo(diff.inHours.toString());
                             } else if (diff.inMinutes > 0) {
-                              timeStr = l10n.minutesAgo(diff.inMinutes.toString());
+                              timeStr = l10n.minutesAgo(
+                                diff.inMinutes.toString(),
+                              );
                             } else {
                               timeStr = l10n.justNow;
                             }

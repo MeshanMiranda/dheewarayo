@@ -2,19 +2,15 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'base_screen.dart';
 
-// AboutScreen shows information about the Dheewarayo app, developers, and the project
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get the translated text strings for the current language
     final l10n = AppLocalizations.of(context)!;
-    
-    // BaseScreen provides the standard top AppBar and background layout
+
     return BaseScreen(
       title: l10n.aboutDheewarayo,
-      // ListView lets the content scroll if it's too long for the screen
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [

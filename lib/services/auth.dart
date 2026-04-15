@@ -3,37 +3,25 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-// AuthService handles everything related to user accounts (login, register, logout)
 class AuthService {
-  // Instance of FirebaseAuth to handle secure authentication
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // Instance of GoogleSignIn to allow seamless Google login
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  // Instance of Firestore database to store and read user profile data
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Stream that constantly listens to changes in the user's login status (logged in vs logged out)
-  // This helps the app automatically switch between the Login Screen and Main Dashboard
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // Getter to quickly access the currently logged-in user's information
   User? get currentUser => _auth.currentUser;
 
-  // 1. Sign in anonymously (without requiring an email or Google account)
-  // Useful for letting users try the app before committing to an account
   Future<UserCredential?> signInAnonymously() async {
     try {
-      // Call Firebase to create a temporary anonymous session
       UserCredential result = await _auth.signInAnonymously();
       return result;
     } catch (e) {
-      // Print the error to the console if sign-in fails
       debugPrint('Error during anonymous sign in: $e');
       rethrow;
     }
   }
 
-  // 2. Register using email and password
   Future<UserCredential?> registerWithEmailAndPassword(
     String email,
     String password,
@@ -45,7 +33,6 @@ class AuthService {
         password: password,
       );
 
-      // Store additional user data in Firestore
       if (result.user != null) {
         userData['createdAt'] = FieldValue.serverTimestamp();
         _firestore
@@ -61,7 +48,6 @@ class AuthService {
     }
   }
 
-  // 3. Sign in using email and password
   Future<UserCredential?> signInWithEmailAndPassword(
     String email,
     String password,
@@ -78,31 +64,24 @@ class AuthService {
     }
   }
 
-  // 4. Sign in using a Google account
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        // The user canceled the sign-in
         return null;
       }
 
-      // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      // Create a new credential
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // Once signed in, return the UserCredential
       UserCredential result = await _auth.signInWithCredential(credential);
 
-      // Check if this is a new user and add them to Firestore
       if (result.additionalUserInfo?.isNewUser ?? false) {
         _firestore
             .collection('users')
@@ -123,7 +102,6 @@ class AuthService {
     }
   }
 
-  // 5. Send password reset email
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -133,7 +111,6 @@ class AuthService {
     }
   }
 
-  // 6. Sign out
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();

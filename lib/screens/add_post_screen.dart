@@ -11,7 +11,6 @@ import '../l10n/app_localizations.dart';
 import '../services/ai_service.dart';
 import '../services/weather_api_service.dart';
 
-// AddPostScreen allows users to create new community posts or edit existing ones
 class AddPostScreen extends StatefulWidget {
   final String? editPostId;
   final String? editCaption;
@@ -29,14 +28,10 @@ class AddPostScreen extends StatefulWidget {
 }
 
 class _AddPostScreenState extends State<AddPostScreen> {
-  // Controller to read the text the user types into the caption box
   final TextEditingController _captionController = TextEditingController();
-  // Variable to store the image selected by the user from their gallery
   File? _imageFile;
-  // Keeps track of whether the app is currently uploading so we can show a loader
   bool _isLoading = false;
 
-  // State variables for "Weather & Sea Conditions" specific fields
   String _selectedPostType = 'Others';
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
@@ -134,11 +129,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
   }
 
-  // Opens the phone's image gallery to pick a photo
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
-      imageQuality: 70, // compress image
+      imageQuality: 70,
     );
 
     if (pickedFile != null) {
@@ -148,11 +142,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
   }
 
-  // This function handles the entire process of uploading the post to Firebase
   Future<void> _uploadPost() async {
     final l10n = AppLocalizations.of(context)!;
 
-    // Check if the user is actually logged in
     final user = _auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(
@@ -170,7 +162,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
       final postId = widget.editPostId ?? _uuid.v4();
 
       if (_imageFile != null) {
-        // Upload image to Firebase Storage
         final uploadTask = _storage
             .ref()
             .child('post_images')
@@ -178,8 +169,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
             .putFile(_imageFile!);
         final snapshot = await uploadTask.whenComplete(() {});
 
-        // Add retry logic for getting the download URL to account for slight delays
-        // in Firebase Storage returning success vs metadata availability
         int retries = 3;
         while (retries > 0) {
           try {
@@ -194,7 +183,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
           }
         }
       } else if (imageUrl == null && _captionController.text.trim().isEmpty) {
-        // Require either an image or text
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(l10n.imageOrCaptionRequired)));
@@ -218,8 +206,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
           return;
         }
 
-        // AI Verification Check
-        // Before allowing the post, we ask the AI service to verify if the weather condition matches reality
         setState(() {
           _isLoading = true;
         });

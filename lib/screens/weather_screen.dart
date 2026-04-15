@@ -42,7 +42,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       final weather = await _weatherApiService.fetchWeatherForCurrentLocation();
       final forecasts = await _weatherApiService.fetch5DayForecast();
       final intervalForecasts = await _weatherApiService
-          .fetchUpcoming3HourForecasts(limit: 4);
+          .fetchUpcoming10HourForecasts(limit: 4);
       final tides = await _weatherApiService.fetchTideData();
 
       // predict
@@ -264,9 +264,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final rain = prediction['rain'] ?? 0.0;
 
     // Define thresholds for rough marine weather
-    final bool highWind = wind >= 10.0;
-    final bool highWaves = wave >= 2.0;
-    final bool highRain = rain >= 70.0;
+    final bool highWind = wind >= 1.0; //10.0
+    final bool highWaves = wave >= 2.0; //2.0
+    final bool highRain = rain >= 70.0; //70.0
     final bool isCritical = highWind || highWaves || highRain;
 
     if (!isCritical) {
@@ -376,7 +376,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   _buildConditionIndicator(
                     context,
                     label: l10n.windLabel,
-                    value: "${wind.toStringAsFixed(1)} m/s",
+                    value: "${wind.toStringAsFixed(1)} km/h",
                     icon: Icons.air,
                     isHigh: highWind,
                   ),
@@ -469,7 +469,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  // Builds the line chart displaying sea tide height over time
   Widget _buildTideChart(BuildContext context, AppLocalizations l10n) {
     if (_tideData == null || _tideData!.isEmpty) {
       return Container(

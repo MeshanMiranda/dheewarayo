@@ -1,60 +1,53 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:io' show Platform;
 
-// NotificationService handles sending alerts to the user's phone (e.g., high wind warnings)
 class NotificationService {
-  // Plugin instance for handling local notifications on the device
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  // Initializes the notification plugin with required platform-specific settings
   Future<void> initialize() async {
-    // Requires a mipmap named launcher_icon or similar. 
-    // Using @mipmap/ic_launcher which is common, but dheewarayo might have 
-    // launcher_icon
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: DarwinInitializationSettings(),
-    );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: DarwinInitializationSettings(),
+        );
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  // Requests permission from the user to send notifications (required on modern Android/iOS)
   Future<void> requestPermissions() async {
     if (Platform.isAndroid) {
       await _flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin
+          >()
           ?.requestNotificationsPermission();
     } else if (Platform.isIOS) {
-       await _flutterLocalNotificationsPlugin
+      await _flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
     }
   }
 
-  // Shows a notification immediately with a specific title and body text
   Future<void> showPredictionNotification(String title, String body) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'weather_prediction_channel',
-      'Weather Predictions',
-      channelDescription: 'Notifications for weather predictions based on ML',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
+          'weather_prediction_channel',
+          'Weather Predictions',
+          channelDescription:
+              'Notifications for weather predictions based on ML',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
     );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await _flutterLocalNotificationsPlugin.show(
       0,

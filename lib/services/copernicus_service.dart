@@ -1,44 +1,36 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-// A simple "data holder" class to neatly group marine data together
 class MarineData {
-  final double sst; // Sea Surface Temperature in Celsius
-  final double chlorophyll; // Chlorophyll-a in mg/m^3
-  final double ssh; // Sea Surface Height anomaly in meters
+  final double sst;
+  final double chlorophyll;
+  final double ssh;
 
-  // Constructor requires all three values to be provided when creating a MarineData object
   MarineData({required this.sst, required this.chlorophyll, required this.ssh});
 }
 
-// CopernicusService handles fetching real oceanographic data from the European Copernicus Marine Service
 class CopernicusService {
-  // TODO: Enter your Copernicus Marine Service credentials here
-  // These credentials are required to authenticate with the Copernicus API
   final String cmemsUsername = "prashansamm200327@gmail.com";
   final String cmemsPassword = "Copernicus@2003";
-
-  /// WMS (Web Map Service) endpoints based on the dataset IDs provided
-  /// These URLs point to the specific satellite datasets we want to read
   final String chlDatasetUrl =
       'https://wmts.marine.copernicus.eu/teroWms/GLOBAL_ANALYSISFORECAST_BGC_001_028/cmems_mod_glo_bgc-pft_anfc_0.25deg_P1D-m_202311';
   final String phyDatasetUrl =
       'https://wmts.marine.copernicus.eu/teroWms/GLOBAL_ANALYSISFORECAST_PHY_001_024/cmems_mod_glo_phy_anfc_0.083deg_P1D-m_202406';
 
-  // Function to get the marine data for a specific location on the map
   Future<MarineData?> fetchMarineData(double lat, double lng) async {
-    // If no credentials are provided, we cannot fetch real data.
     if (cmemsUsername.isEmpty || cmemsPassword.isEmpty) {
       print('Copernicus credentials missing. Cannot fetch real data.');
       return null;
     }
 
     try {
-      // Fetch actual Chlorophyll-a
       double? chl = await _fetchWmsFeatureInfo(chlDatasetUrl, 'chl', lat, lng);
-
-      // Fetch actual SST ('thetao') and SSH ('zos')
-      double? sst = await _fetchWmsFeatureInfo(phyDatasetUrl, 'thetao', lat, lng);
+      double? sst = await _fetchWmsFeatureInfo(
+        phyDatasetUrl,
+        'thetao',
+        lat,
+        lng,
+      );
       double? ssh = await _fetchWmsFeatureInfo(phyDatasetUrl, 'zos', lat, lng);
 
       if (chl == null || sst == null || ssh == null) {
@@ -62,7 +54,6 @@ class CopernicusService {
     double lat,
     double lng,
   ) async {
-    // Small bounding box around our target point for WMS
     double epsilon = 0.01;
     String bbox =
         '${lat - epsilon},${lng - epsilon},${lat + epsilon},${lng + epsilon}';
@@ -88,17 +79,14 @@ class CopernicusService {
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      // WMS JSON usually returns an array of features
       if (jsonResponse['features'] != null &&
           jsonResponse['features'].isNotEmpty) {
         var properties = jsonResponse['features'][0]['properties'];
-        // The key holding the value is sometimes named after the layer, e.g. properties['chl'] or properties['value']
         if (properties[layer] != null) {
           return (properties[layer] as num).toDouble();
         } else if (properties['value'] != null) {
           return (properties['value'] as num).toDouble();
         }
-        // Custom logic to handle different OGC json structs if required:
         for (var key in properties.keys) {
           if (properties[key] is num)
             return (properties[key] as num).toDouble();
@@ -109,5 +97,4 @@ class CopernicusService {
     }
     return null;
   }
-
 }
