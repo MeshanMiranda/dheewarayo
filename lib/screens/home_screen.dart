@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dheewarayo/screens/community_screen.dart';
 import 'package:dheewarayo/screens/notification_screen.dart';
@@ -9,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../services/weather_api_service.dart';
 import '../services/ml_service.dart';
 import '../services/pfz_ml_service.dart';
+import 'package:geolocator/geolocator.dart';
 import '../services/copernicus_service.dart';
 import 'base_screen.dart';
 
@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final WeatherApiService _weatherApiService = WeatherApiService();
   final MLService _mlService = MLService();
   final PfzMlService _pfzMlService = PfzMlService();
+  final CopernicusService _copernicusService = CopernicusService();
 
   bool _isLoading = true;
 
@@ -45,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
       await _mlService.initialize();
       await _pfzMlService.init();
 
-      // 1. Weather & Tides
       final weather = await _weatherApiService.fetchWeatherForCurrentLocation();
       final tides = await _weatherApiService.fetchTideData();
 
@@ -67,16 +67,21 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
-      final math.Random random = math.Random();
-      MarineData mockData = MarineData(
-        sst: 26.0 + random.nextDouble() * 3.5,
-        chlorophyll: 0.1 + random.nextDouble() * 4.0,
-        ssh: -0.1 + random.nextDouble() * 0.3,
+      Position position = await Geolocator.getCurrentPosition();
+      MarineData? realData = await _copernicusService.fetchMarineData(
+        position.latitude,
+        position.longitude,
       );
 
-      final pfzProb = await _pfzMlService.predictPfz(mockData);
+      double? pfzProb;
+      if (realData != null) {
+        pfzProb = await _pfzMlService.predictPfz(realData);
+      } else {
+        pfzProb = await _pfzMlService.predictPfz(
+          MarineData(sst: 28.5, chlorophyll: 1.2, ssh: 0.1),
+        );
+      }
 
-      // 3. Community Post
       final postsSnapshot = await FirebaseFirestore.instance
           .collection('posts')
           .orderBy('timestamp', descending: true)
@@ -120,19 +125,15 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // 1. Weather Summary Card
                   _buildWeatherSummaryCard(context, l10n),
                   const SizedBox(height: 20),
 
-                  // 2. AI Fishing Insight Card
                   _buildAIFishingInsightCard(context, l10n),
                   const SizedBox(height: 20),
 
-                  // 3. Latest Community Post Snippet
                   _buildCommunitySnippetCard(context, l10n),
                   const SizedBox(height: 20),
 
-                  // 4. Notifications Card
                   _buildNotificationsCard(context, l10n),
                 ],
               ),
@@ -140,7 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Builds the large blue card at the top showing current temperature, wind, etc.
   Widget _buildWeatherSummaryCard(BuildContext context, AppLocalizations l10n) {
     String tempStr = _currentWeather != null
         ? "${_currentWeather!.temperature}°C"
@@ -314,7 +314,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Builds the card showing the AI's prediction for finding fish (Excellent, Good, Moderate)
   Widget _buildAIFishingInsightCard(
     BuildContext context,
     AppLocalizations l10n,
@@ -572,7 +571,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Builds the red/green alert card at the bottom based on AI weather predictions (e.g., High Wind warning)
   Widget _buildNotificationsCard(BuildContext context, AppLocalizations l10n) {
     bool isCritical = false;
     String title = l10n.conditionsGoodTitle;
