@@ -134,7 +134,12 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
             _availablePlaces.add(savedArea);
           }
           _selectedFishingArea = savedArea;
-          _fishingAreaController.text = savedArea;
+          if (mounted) {
+            final l10n = AppLocalizations.of(context);
+            _fishingAreaController.text = _getLocalizedCity(savedArea, l10n);
+          } else {
+            _fishingAreaController.text = savedArea;
+          }
         }
       }
     } catch (e) {
@@ -215,10 +220,19 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
       return;
     }
 
-    final String typedFishingArea = _fishingAreaController.text.trim();
-    if (typedFishingArea.isNotEmpty &&
-        _availablePlaces.contains(typedFishingArea)) {
-      _selectedFishingArea = typedFishingArea;
+    String typedFishingArea = _fishingAreaController.text.trim();
+
+    String? matchedArea;
+    for (String place in _availablePlaces) {
+      if (_getLocalizedCity(place, l10n) == typedFishingArea ||
+          place == typedFishingArea) {
+        matchedArea = place;
+        break;
+      }
+    }
+
+    if (matchedArea != null) {
+      _selectedFishingArea = matchedArea;
     } else {
       _selectedFishingArea = null;
     }
@@ -293,6 +307,110 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
       _selectedFishingArea = null;
       _fishingAreaController.clear();
     });
+  }
+
+  String _getLocalizedCity(String city, AppLocalizations? l10n) {
+    if (l10n == null) return city;
+    switch (city) {
+      case 'Negombo':
+        return l10n.cityNegombo;
+      case 'Ja-Ela':
+        return l10n.cityJaEla;
+      case 'Wattala':
+        return l10n.cityWattala;
+      case 'Colombo':
+        return l10n.cityColombo;
+      case 'Dehiwala':
+        return l10n.cityDehiwala;
+      case 'Mount Lavinia':
+        return l10n.cityMountLavinia;
+      case 'Moratuwa':
+        return l10n.cityMoratuwa;
+      case 'Angulana':
+        return l10n.cityAngulana;
+      case 'Panadura':
+        return l10n.cityPanadura;
+      case 'Kalutara':
+        return l10n.cityKalutara;
+      case 'Beruwala':
+        return l10n.cityBeruwala;
+      case 'Aluthgama':
+        return l10n.cityAluthgama;
+      case 'Bentota':
+        return l10n.cityBentota;
+      case 'Ambalangoda':
+        return l10n.cityAmbalangoda;
+      case 'Hikkaduwa':
+        return l10n.cityHikkaduwa;
+      case 'Galle':
+        return l10n.cityGalle;
+      case 'Koggala':
+        return l10n.cityKoggala;
+      case 'Weligama':
+        return l10n.cityWeligama;
+      case 'Mirissa':
+        return l10n.cityMirissa;
+      case 'Matara':
+        return l10n.cityMatara;
+      case 'Dondra':
+        return l10n.cityDondra;
+      case 'Dickwella':
+        return l10n.cityDickwella;
+      case 'Tangalle':
+        return l10n.cityTangalle;
+      case 'Hambantota':
+        return l10n.cityHambantota;
+      case 'Ambalantota':
+        return l10n.cityAmbalantota;
+      case 'Puttalam':
+        return l10n.cityPuttalam;
+      case 'Kalpitiya':
+        return l10n.cityKalpitiya;
+      case 'Chilaw':
+        return l10n.cityChilaw;
+      case 'Wennappuwa':
+        return l10n.cityWennappuwa;
+      case 'Marawila':
+        return l10n.cityMarawila;
+      case 'Mannar':
+        return l10n.cityMannar;
+      case 'Pesalai':
+        return l10n.cityPesalai;
+      case 'Jaffna':
+        return l10n.cityJaffna;
+      case 'Point Pedro':
+        return l10n.cityPointPedro;
+      case 'Kankesanthurai':
+        return l10n.cityKankesanthurai;
+      case 'Trincomalee':
+        return l10n.cityTrincomalee;
+      case 'Kinniya':
+        return l10n.cityKinniya;
+      case 'Mutur':
+        return l10n.cityMutur;
+      case 'Vakarai':
+        return l10n.cityVakarai;
+      case 'Kalkudah':
+        return l10n.cityKalkudah;
+      case 'Batticaloa':
+        return l10n.cityBatticaloa;
+      case 'Kattankudy':
+        return l10n.cityKattankudy;
+      case 'Kalmunai':
+        return l10n.cityKalmunai;
+      case 'Akkaraipattu':
+        return l10n.cityAkkaraipattu;
+      case 'Pottuvil':
+        return l10n.cityPottuvil;
+      case 'Arugam Bay':
+        return l10n.cityArugamBay;
+      case 'Gampaha':
+        return l10n.cityGampaha;
+      case 'Ampara':
+        return l10n.cityAmpara;
+      default:
+        return city;
+    }
   }
 
   @override
@@ -506,7 +624,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                     dropdownMenuEntries: _availablePlaces.map((String place) {
                       return DropdownMenuEntry<String>(
                         value: place,
-                        label: place,
+                        label: _getLocalizedCity(place, l10n),
                       );
                     }).toList(),
                     onSelected: (String? newValue) {

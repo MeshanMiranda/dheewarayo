@@ -78,7 +78,7 @@ void callbackDispatcher() {
           if (warningStart != null && warningEnd != null) {
             final format = DateFormat('HH:mm');
             final timeRange =
-                "${format.format(warningStart)} - ${format.format(warningEnd)}";
+                "${format.format(warningStart)} - ${format.format(warningEnd.add(Duration(hours: 1)))}";
 
             await notificationService.showPredictionNotification(
               "⚠️ High Wind Warning",

@@ -1597,6 +1597,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please select a fishing area.'**
   String get pleaseSelectAFishingArea;
+
+  /// No description provided for @cityNegombo.
+  ///
+  /// In en, this message translates to:
+  /// **'Negombo'**
+  String get cityNegombo;
+
+  /// No description provided for @cityJaEla.
+  ///
+  /// In en, this message translates to:
+  /// **'Ja-Ela'**
+  String get cityJaEla;
+
+  /// No description provided for @cityWattala.
+  ///
+  /// In en, this message translates to:
+  /// **'Wattala'**
+  String get cityWattala;
+
+  /// No description provided for @cityColombo.
+  ///
+  /// In en, this message translates to:
+  /// **'Colombo'**
+  String get cityColombo;
+
+  /// No description provided for @cityDehiwala.
+  ///
+  /// In en, this message translates to:
+  /// **'Dehiwala'**
+  String get cityDehiwala;
+
+  /// No description provided for @cityMountLavinia.
+  ///
+  /// In en, this message translates to:
+  /// **'Mount Lavinia'**
+  String get cityMountLavinia;
+
+  /// No description provided for @cityMoratuwa.
+  ///
+  /// In en, this message translates to:
+  /// **'Moratuwa'**
+  String get cityMoratuwa;
+
+  /// No description provided for @cityAngulana.
+  ///
+  /// In en, this message translates to:
+  /// **'Angulana'**
+  String get cityAngulana;
+
+  /// No description provided for @cityPanadura.
+  ///
+  /// In en, this message translates to:
+  /// **'Panadura'**
+  String get cityPanadura;
+
+  /// No description provided for @cityKalutara.
+  ///
+  /// In en, this message translates to:
+  /// **'Kalutara'**
+  String get cityKalutara;
+
+  /// No description provided for @cityBeruwala.
+  ///
+  /// In en, this message translates to:
+  /// **'Beruwala'**
+  String get cityBeruwala;
+
+  /// No description provided for @cityAluthgama.
+  ///
+  /// In en, this message translates to:
+  /// **'Aluthgama'**
+  String get cityAluthgama;
+
+  /// No description provided for @cityBentota.
+  ///
+  /// In en, this message translates to:
+  /// **'Bentota'**
+  String get cityBentota;
+
+  /// No description provided for @cityAmbalangoda.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambalangoda'**
+  String get cityAmbalangoda;
+
+  /// No description provided for @cityHikkaduwa.
+  ///
+  /// In en, this message translates to:
+  /// **'Hikkaduwa'**
+  String get cityHikkaduwa;
+
+  /// No description provided for @cityGalle.
+  ///
+  /// In en, this message translates to:
+  /// **'Galle'**
+  String get cityGalle;
+
+  /// No description provided for @cityKoggala.
+  ///
+  /// In en, this message translates to:
+  /// **'Koggala'**
+  String get cityKoggala;
+
+  /// No description provided for @cityWeligama.
+  ///
+  /// In en, this message translates to:
+  /// **'Weligama'**
+  String get cityWeligama;
+
+  /// No description provided for @cityMirissa.
+  ///
+  /// In en, this message translates to:
+  /// **'Mirissa'**
+  String get cityMirissa;
+
+  /// No description provided for @cityMatara.
+  ///
+  /// In en, this message translates to:
+  /// **'Matara'**
+  String get cityMatara;
+
+  /// No description provided for @cityDondra.
+  ///
+  /// In en, this message translates to:
+  /// **'Dondra'**
+  String get cityDondra;
+
+  /// No description provided for @cityDickwella.
+  ///
+  /// In en, this message translates to:
+  /// **'Dickwella'**
+  String get cityDickwella;
+
+  /// No description provided for @cityTangalle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tangalle'**
+  String get cityTangalle;
+
+  /// No description provided for @cityHambantota.
+  ///
+  /// In en, this message translates to:
+  /// **'Hambantota'**
+  String get cityHambantota;
+
+  /// No description provided for @cityAmbalantota.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambalantota'**
+  String get cityAmbalantota;
+
+  /// No description provided for @cityPuttalam.
+  ///
+  /// In en, this message translates to:
+  /// **'Puttalam'**
+  String get cityPuttalam;
+
+  /// No description provided for @cityKalpitiya.
+  ///
+  /// In en, this message translates to:
+  /// **'Kalpitiya'**
+  String get cityKalpitiya;
+
+  /// No description provided for @cityChilaw.
+  ///
+  /// In en, this message translates to:
+  /// **'Chilaw'**
+  String get cityChilaw;
+
+  /// No description provided for @cityWennappuwa.
+  ///
+  /// In en, this message translates to:
+  /// **'Wennappuwa'**
+  String get cityWennappuwa;
+
+  /// No description provided for @cityMarawila.
+  ///
+  /// In en, this message translates to:
+  /// **'Marawila'**
+  String get cityMarawila;
+
+  /// No description provided for @cityMannar.
+  ///
+  /// In en, this message translates to:
+  /// **'Mannar'**
+  String get cityMannar;
+
+  /// No description provided for @cityPesalai.
+  ///
+  /// In en, this message translates to:
+  /// **'Pesalai'**
+  String get cityPesalai;
+
+  /// No description provided for @cityJaffna.
+  ///
+  /// In en, this message translates to:
+  /// **'Jaffna'**
+  String get cityJaffna;
+
+  /// No description provided for @cityPointPedro.
+  ///
+  /// In en, this message translates to:
+  /// **'Point Pedro'**
+  String get cityPointPedro;
+
+  /// No description provided for @cityKankesanthurai.
+  ///
+  /// In en, this message translates to:
+  /// **'Kankesanthurai'**
+  String get cityKankesanthurai;
+
+  /// No description provided for @cityTrincomalee.
+  ///
+  /// In en, this message translates to:
+  /// **'Trincomalee'**
+  String get cityTrincomalee;
+
+  /// No description provided for @cityKinniya.
+  ///
+  /// In en, this message translates to:
+  /// **'Kinniya'**
+  String get cityKinniya;
+
+  /// No description provided for @cityMutur.
+  ///
+  /// In en, this message translates to:
+  /// **'Mutur'**
+  String get cityMutur;
+
+  /// No description provided for @cityVakarai.
+  ///
+  /// In en, this message translates to:
+  /// **'Vakarai'**
+  String get cityVakarai;
+
+  /// No description provided for @cityKalkudah.
+  ///
+  /// In en, this message translates to:
+  /// **'Kalkudah'**
+  String get cityKalkudah;
+
+  /// No description provided for @cityBatticaloa.
+  ///
+  /// In en, this message translates to:
+  /// **'Batticaloa'**
+  String get cityBatticaloa;
+
+  /// No description provided for @cityKattankudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Kattankudy'**
+  String get cityKattankudy;
+
+  /// No description provided for @cityKalmunai.
+  ///
+  /// In en, this message translates to:
+  /// **'Kalmunai'**
+  String get cityKalmunai;
+
+  /// No description provided for @cityAkkaraipattu.
+  ///
+  /// In en, this message translates to:
+  /// **'Akkaraipattu'**
+  String get cityAkkaraipattu;
+
+  /// No description provided for @cityPottuvil.
+  ///
+  /// In en, this message translates to:
+  /// **'Pottuvil'**
+  String get cityPottuvil;
+
+  /// No description provided for @cityArugamBay.
+  ///
+  /// In en, this message translates to:
+  /// **'Arugam Bay'**
+  String get cityArugamBay;
+
+  /// No description provided for @cityGampaha.
+  ///
+  /// In en, this message translates to:
+  /// **'Gampaha'**
+  String get cityGampaha;
+
+  /// No description provided for @cityAmpara.
+  ///
+  /// In en, this message translates to:
+  /// **'Ampara'**
+  String get cityAmpara;
 }
 
 class _AppLocalizationsDelegate

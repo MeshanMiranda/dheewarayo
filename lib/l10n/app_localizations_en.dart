@@ -813,4 +813,148 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pleaseSelectAFishingArea => 'Please select a fishing area.';
+
+  @override
+  String get cityNegombo => 'Negombo';
+
+  @override
+  String get cityJaEla => 'Ja-Ela';
+
+  @override
+  String get cityWattala => 'Wattala';
+
+  @override
+  String get cityColombo => 'Colombo';
+
+  @override
+  String get cityDehiwala => 'Dehiwala';
+
+  @override
+  String get cityMountLavinia => 'Mount Lavinia';
+
+  @override
+  String get cityMoratuwa => 'Moratuwa';
+
+  @override
+  String get cityAngulana => 'Angulana';
+
+  @override
+  String get cityPanadura => 'Panadura';
+
+  @override
+  String get cityKalutara => 'Kalutara';
+
+  @override
+  String get cityBeruwala => 'Beruwala';
+
+  @override
+  String get cityAluthgama => 'Aluthgama';
+
+  @override
+  String get cityBentota => 'Bentota';
+
+  @override
+  String get cityAmbalangoda => 'Ambalangoda';
+
+  @override
+  String get cityHikkaduwa => 'Hikkaduwa';
+
+  @override
+  String get cityGalle => 'Galle';
+
+  @override
+  String get cityKoggala => 'Koggala';
+
+  @override
+  String get cityWeligama => 'Weligama';
+
+  @override
+  String get cityMirissa => 'Mirissa';
+
+  @override
+  String get cityMatara => 'Matara';
+
+  @override
+  String get cityDondra => 'Dondra';
+
+  @override
+  String get cityDickwella => 'Dickwella';
+
+  @override
+  String get cityTangalle => 'Tangalle';
+
+  @override
+  String get cityHambantota => 'Hambantota';
+
+  @override
+  String get cityAmbalantota => 'Ambalantota';
+
+  @override
+  String get cityPuttalam => 'Puttalam';
+
+  @override
+  String get cityKalpitiya => 'Kalpitiya';
+
+  @override
+  String get cityChilaw => 'Chilaw';
+
+  @override
+  String get cityWennappuwa => 'Wennappuwa';
+
+  @override
+  String get cityMarawila => 'Marawila';
+
+  @override
+  String get cityMannar => 'Mannar';
+
+  @override
+  String get cityPesalai => 'Pesalai';
+
+  @override
+  String get cityJaffna => 'Jaffna';
+
+  @override
+  String get cityPointPedro => 'Point Pedro';
+
+  @override
+  String get cityKankesanthurai => 'Kankesanthurai';
+
+  @override
+  String get cityTrincomalee => 'Trincomalee';
+
+  @override
+  String get cityKinniya => 'Kinniya';
+
+  @override
+  String get cityMutur => 'Mutur';
+
+  @override
+  String get cityVakarai => 'Vakarai';
+
+  @override
+  String get cityKalkudah => 'Kalkudah';
+
+  @override
+  String get cityBatticaloa => 'Batticaloa';
+
+  @override
+  String get cityKattankudy => 'Kattankudy';
+
+  @override
+  String get cityKalmunai => 'Kalmunai';
+
+  @override
+  String get cityAkkaraipattu => 'Akkaraipattu';
+
+  @override
+  String get cityPottuvil => 'Pottuvil';
+
+  @override
+  String get cityArugamBay => 'Arugam Bay';
+
+  @override
+  String get cityGampaha => 'Gampaha';
+
+  @override
+  String get cityAmpara => 'Ampara';
 }

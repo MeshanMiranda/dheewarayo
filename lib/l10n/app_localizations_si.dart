@@ -823,4 +823,148 @@ class AppLocalizationsSi extends AppLocalizations {
   @override
   String get pleaseSelectAFishingArea =>
       'කරුණාකර මසුන් ඇල්ලීමේ ප්‍රදේශයක් තෝරන්න.';
+
+  @override
+  String get cityNegombo => 'මීගමුව';
+
+  @override
+  String get cityJaEla => 'ජා-ඇල';
+
+  @override
+  String get cityWattala => 'වත්තල';
+
+  @override
+  String get cityColombo => 'කොළඹ';
+
+  @override
+  String get cityDehiwala => 'දෙහිවල';
+
+  @override
+  String get cityMountLavinia => 'ගල්කිස්ස';
+
+  @override
+  String get cityMoratuwa => 'මොරටුව';
+
+  @override
+  String get cityAngulana => 'අඟුලාන';
+
+  @override
+  String get cityPanadura => 'පානදුර';
+
+  @override
+  String get cityKalutara => 'කළුතර';
+
+  @override
+  String get cityBeruwala => 'බේරුවල';
+
+  @override
+  String get cityAluthgama => 'අලුත්ගම';
+
+  @override
+  String get cityBentota => 'බෙන්තොට';
+
+  @override
+  String get cityAmbalangoda => 'අම්බලන්ගොඩ';
+
+  @override
+  String get cityHikkaduwa => 'හික්කඩුව';
+
+  @override
+  String get cityGalle => 'ගාල්ල';
+
+  @override
+  String get cityKoggala => 'කොග්ගල';
+
+  @override
+  String get cityWeligama => 'වැලිගම';
+
+  @override
+  String get cityMirissa => 'මිරිස්ස';
+
+  @override
+  String get cityMatara => 'මාතර';
+
+  @override
+  String get cityDondra => 'දෙවිනුවර';
+
+  @override
+  String get cityDickwella => 'දික්වැල්ල';
+
+  @override
+  String get cityTangalle => 'තංගල්ල';
+
+  @override
+  String get cityHambantota => 'හම්බන්තොට';
+
+  @override
+  String get cityAmbalantota => 'අම්බලන්තොට';
+
+  @override
+  String get cityPuttalam => 'පුත්තලම';
+
+  @override
+  String get cityKalpitiya => 'කල්පිටිය';
+
+  @override
+  String get cityChilaw => 'හලාවත';
+
+  @override
+  String get cityWennappuwa => 'වෙන්නප්පුව';
+
+  @override
+  String get cityMarawila => 'මාරවිල';
+
+  @override
+  String get cityMannar => 'මන්නාරම';
+
+  @override
+  String get cityPesalai => 'පේසාලෙයි';
+
+  @override
+  String get cityJaffna => 'යාපනය';
+
+  @override
+  String get cityPointPedro => 'පේදුරුතුඩුව';
+
+  @override
+  String get cityKankesanthurai => 'කන්කසන්තුරේ';
+
+  @override
+  String get cityTrincomalee => 'ත්‍රිකුණාමලය';
+
+  @override
+  String get cityKinniya => 'කින්නියා';
+
+  @override
+  String get cityMutur => 'මූතූර්';
+
+  @override
+  String get cityVakarai => 'වාකරෙයි';
+
+  @override
+  String get cityKalkudah => 'කල්කුඩා';
+
+  @override
+  String get cityBatticaloa => 'මඩකලපුව';
+
+  @override
+  String get cityKattankudy => 'කාත්තන්කුඩි';
+
+  @override
+  String get cityKalmunai => 'කල්මුණේ';
+
+  @override
+  String get cityAkkaraipattu => 'අක්කරෙයිපත්තු';
+
+  @override
+  String get cityPottuvil => 'පොතුවිල්';
+
+  @override
+  String get cityArugamBay => 'ආරුගම් බොක්ක';
+
+  @override
+  String get cityGampaha => 'ගම්පහ';
+
+  @override
+  String get cityAmpara => 'අම්පාර';
 }
