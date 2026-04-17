@@ -43,10 +43,10 @@ void callbackDispatcher() {
           DateTime? warningStart;
           DateTime? warningEnd;
           double maxWind = 0;
-          developer.log("Task started");
+
+          developer.log("Weather Notification Task Started");
 
           for (var forecast in forecasts) {
-            developer.log("Forecast time: ${forecast.time}");
             final prediction = mlService.predictWeatherChanges(
               forecast.temperature,
               forecast.humidity,
@@ -55,8 +55,6 @@ void callbackDispatcher() {
             );
 
             //final prediction = _mlService.predictWeatherChanges(24, 95, 35, 995);
-
-            developer.log("Prediction: $prediction");
 
             if (prediction != null) {
               final wind = prediction['wind'] ?? 0.0;
