@@ -71,11 +71,10 @@ class AboutScreen extends StatelessWidget {
   }
 }
 
-// A private helper widget to display a single section of information consistently
 class _InfoSection extends StatelessWidget {
-  final String title; // Section heading
-  final String content; // Section body text
-  final IconData icon; // Icon displayed next to the heading
+  final String title;
+  final String content;
+  final IconData icon;
 
   const _InfoSection({
     required this.title,

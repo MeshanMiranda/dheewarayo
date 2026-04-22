@@ -37,7 +37,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
   TimeOfDay? _selectedTime;
   String? _selectedWeatherType;
 
-  // The different categories a post can belong to
   final List<String> _postTypes = [
     'Weather & Sea Conditions',
     'Fish Information & Tips',
@@ -219,7 +218,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
           caption: _captionController.text.trim(),
         );
 
-        // If the AI determines the post is fake or inaccurate, block the upload
         if (verificationResult['isAccurate'] == false) {
           if (mounted) {
             showDialog(
@@ -246,7 +244,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
       }
 
       if (widget.editPostId != null) {
-        // Update existing post
         final updateData = <String, dynamic>{
           'caption': _captionController.text.trim(),
           'postType': _selectedPostType,
@@ -264,7 +261,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
         }
         await _firestore.collection('posts').doc(postId).update(updateData);
       } else {
-        // Fetch user data from firestore
         final userDoc = await _firestore
             .collection('users')
             .doc(user.uid)
@@ -274,14 +270,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
           username =
               userDoc.data()!['fullName'] ?? user.displayName ?? 'Unknown User';
         }
-
-        // Create post document
         final postData = <String, dynamic>{
           'postId': postId,
           'userId': user.uid,
           'username': username,
-          'userProfilePic': user
-              .photoURL, // Note: storing photoURL directly from auth might not reflect changes if they uploaded a custom one unless updated in auth profile
+          'userProfilePic': user.photoURL,
           'imageUrl': imageUrl,
           'caption': _captionController.text.trim(),
           'postType': _selectedPostType,
@@ -300,7 +293,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       }
 
       if (mounted) {
-        Navigator.pop(context); // Go back to community screen
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
@@ -326,62 +319,110 @@ class _AddPostScreenState extends State<AddPostScreen> {
   String _getLocalizedCity(String city, AppLocalizations? l10n) {
     if (l10n == null) return city;
     switch (city) {
-      case 'Negombo': return l10n.cityNegombo;
-      case 'Ja-Ela': return l10n.cityJaEla;
-      case 'Wattala': return l10n.cityWattala;
-      case 'Colombo': return l10n.cityColombo;
-      case 'Dehiwala': return l10n.cityDehiwala;
-      case 'Mount Lavinia': return l10n.cityMountLavinia;
-      case 'Moratuwa': return l10n.cityMoratuwa;
-      case 'Angulana': return l10n.cityAngulana;
-      case 'Panadura': return l10n.cityPanadura;
-      case 'Kalutara': return l10n.cityKalutara;
-      case 'Beruwala': return l10n.cityBeruwala;
-      case 'Aluthgama': return l10n.cityAluthgama;
-      case 'Bentota': return l10n.cityBentota;
-      case 'Ambalangoda': return l10n.cityAmbalangoda;
-      case 'Hikkaduwa': return l10n.cityHikkaduwa;
-      case 'Galle': return l10n.cityGalle;
-      case 'Koggala': return l10n.cityKoggala;
-      case 'Weligama': return l10n.cityWeligama;
-      case 'Mirissa': return l10n.cityMirissa;
-      case 'Matara': return l10n.cityMatara;
-      case 'Dondra': return l10n.cityDondra;
-      case 'Dickwella': return l10n.cityDickwella;
-      case 'Tangalle': return l10n.cityTangalle;
-      case 'Hambantota': return l10n.cityHambantota;
-      case 'Ambalantota': return l10n.cityAmbalantota;
-      case 'Puttalam': return l10n.cityPuttalam;
-      case 'Kalpitiya': return l10n.cityKalpitiya;
-      case 'Chilaw': return l10n.cityChilaw;
-      case 'Wennappuwa': return l10n.cityWennappuwa;
-      case 'Marawila': return l10n.cityMarawila;
-      case 'Mannar': return l10n.cityMannar;
-      case 'Pesalai': return l10n.cityPesalai;
-      case 'Jaffna': return l10n.cityJaffna;
-      case 'Point Pedro': return l10n.cityPointPedro;
-      case 'Kankesanthurai': return l10n.cityKankesanthurai;
-      case 'Trincomalee': return l10n.cityTrincomalee;
-      case 'Kinniya': return l10n.cityKinniya;
-      case 'Mutur': return l10n.cityMutur;
-      case 'Vakarai': return l10n.cityVakarai;
-      case 'Kalkudah': return l10n.cityKalkudah;
-      case 'Batticaloa': return l10n.cityBatticaloa;
-      case 'Kattankudy': return l10n.cityKattankudy;
-      case 'Kalmunai': return l10n.cityKalmunai;
-      case 'Akkaraipattu': return l10n.cityAkkaraipattu;
-      case 'Pottuvil': return l10n.cityPottuvil;
-      case 'Arugam Bay': return l10n.cityArugamBay;
-      case 'Gampaha': return l10n.cityGampaha;
-      case 'Ampara': return l10n.cityAmpara;
-      default: return city;
+      case 'Negombo':
+        return l10n.cityNegombo;
+      case 'Ja-Ela':
+        return l10n.cityJaEla;
+      case 'Wattala':
+        return l10n.cityWattala;
+      case 'Colombo':
+        return l10n.cityColombo;
+      case 'Dehiwala':
+        return l10n.cityDehiwala;
+      case 'Mount Lavinia':
+        return l10n.cityMountLavinia;
+      case 'Moratuwa':
+        return l10n.cityMoratuwa;
+      case 'Angulana':
+        return l10n.cityAngulana;
+      case 'Panadura':
+        return l10n.cityPanadura;
+      case 'Kalutara':
+        return l10n.cityKalutara;
+      case 'Beruwala':
+        return l10n.cityBeruwala;
+      case 'Aluthgama':
+        return l10n.cityAluthgama;
+      case 'Bentota':
+        return l10n.cityBentota;
+      case 'Ambalangoda':
+        return l10n.cityAmbalangoda;
+      case 'Hikkaduwa':
+        return l10n.cityHikkaduwa;
+      case 'Galle':
+        return l10n.cityGalle;
+      case 'Koggala':
+        return l10n.cityKoggala;
+      case 'Weligama':
+        return l10n.cityWeligama;
+      case 'Mirissa':
+        return l10n.cityMirissa;
+      case 'Matara':
+        return l10n.cityMatara;
+      case 'Dondra':
+        return l10n.cityDondra;
+      case 'Dickwella':
+        return l10n.cityDickwella;
+      case 'Tangalle':
+        return l10n.cityTangalle;
+      case 'Hambantota':
+        return l10n.cityHambantota;
+      case 'Ambalantota':
+        return l10n.cityAmbalantota;
+      case 'Puttalam':
+        return l10n.cityPuttalam;
+      case 'Kalpitiya':
+        return l10n.cityKalpitiya;
+      case 'Chilaw':
+        return l10n.cityChilaw;
+      case 'Wennappuwa':
+        return l10n.cityWennappuwa;
+      case 'Marawila':
+        return l10n.cityMarawila;
+      case 'Mannar':
+        return l10n.cityMannar;
+      case 'Pesalai':
+        return l10n.cityPesalai;
+      case 'Jaffna':
+        return l10n.cityJaffna;
+      case 'Point Pedro':
+        return l10n.cityPointPedro;
+      case 'Kankesanthurai':
+        return l10n.cityKankesanthurai;
+      case 'Trincomalee':
+        return l10n.cityTrincomalee;
+      case 'Kinniya':
+        return l10n.cityKinniya;
+      case 'Mutur':
+        return l10n.cityMutur;
+      case 'Vakarai':
+        return l10n.cityVakarai;
+      case 'Kalkudah':
+        return l10n.cityKalkudah;
+      case 'Batticaloa':
+        return l10n.cityBatticaloa;
+      case 'Kattankudy':
+        return l10n.cityKattankudy;
+      case 'Kalmunai':
+        return l10n.cityKalmunai;
+      case 'Akkaraipattu':
+        return l10n.cityAkkaraipattu;
+      case 'Pottuvil':
+        return l10n.cityPottuvil;
+      case 'Arugam Bay':
+        return l10n.cityArugamBay;
+      case 'Gampaha':
+        return l10n.cityGampaha;
+      case 'Ampara':
+        return l10n.cityAmpara;
+      default:
+        return city;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    // Handle case where l10n might be null during hot reload of new strings. It will rebuild.
     if (l10n == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -616,7 +657,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     ),
                   ),
                   items: _availablePlaces.map((place) {
-                    return DropdownMenuItem(value: place, child: Text(_getLocalizedCity(place, l10n)));
+                    return DropdownMenuItem(
+                      value: place,
+                      child: Text(_getLocalizedCity(place, l10n)),
+                    );
                   }).toList(),
                   onChanged: (value) => setState(() => _selectedPlace = value),
                 ),

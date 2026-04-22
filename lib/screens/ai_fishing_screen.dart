@@ -8,7 +8,6 @@ import '../services/copernicus_service.dart';
 import '../services/pfz_ml_service.dart';
 import 'base_screen.dart';
 
-// AIFishingScreen displays a map with predicted hotspots for fishing (PFZ - Potential Fishing Zones)
 class AIFishingScreen extends StatefulWidget {
   const AIFishingScreen({super.key});
 
@@ -17,22 +16,17 @@ class AIFishingScreen extends StatefulWidget {
 }
 
 class _AIFishingScreenState extends State<AIFishingScreen> {
-  // Controller to interact with the Google Map once it is loaded
   late GoogleMapController mapController;
 
-  // Cached markers so we don't regenerate them every time the user opens the screen
   static Set<Marker>? _cachedMarkers;
   static DateTime? _lastGeneratedTime;
 
-  // The default center point of the map (Sri Lanka)
   final LatLng _center = const LatLng(7.8731, 80.7718);
-  
-  // Sets that hold the map overlays
-  Set<Polygon> _polygons = {}; // Map areas (like territorial sea)
-  Set<Polyline> _polylines = {}; // Lines (like maritime borders)
-  Set<Marker> _markers = {}; // Map pins (fishing zones)
-  
-  // The AI service that predicts the fishing zones
+
+  Set<Polygon> _polygons = {};
+  Set<Polyline> _polylines = {};
+  Set<Marker> _markers = {};
+
   final PfzMlService _pfzMlService = PfzMlService();
   bool _isLoadingPfz = true;
   Timer? _refreshTimer;
@@ -52,15 +46,14 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
     });
   }
 
-  // Checks if there are already cached zones that are less than 5 minutes old
   Future<void> _initPfzModel() async {
-    // Make sure the AI model is loaded into memory
     await _pfzMlService.init();
 
-    // Check if we have valid cached data
-    final bool hasValidCache = _cachedMarkers != null && 
-        _lastGeneratedTime != null && 
-        DateTime.now().difference(_lastGeneratedTime!) < const Duration(minutes: 5);
+    final bool hasValidCache =
+        _cachedMarkers != null &&
+        _lastGeneratedTime != null &&
+        DateTime.now().difference(_lastGeneratedTime!) <
+            const Duration(minutes: 5);
 
     if (hasValidCache) {
       if (mounted) {
@@ -74,7 +67,6 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
     }
   }
 
-  // Precise ray-casting point-in-polygon algorithm to exclude land
   bool _isPointInLand(LatLng point) {
     final List<LatLng> polygon = [
       const LatLng(9.83, 80.16),
@@ -92,32 +84,31 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
     ];
     int intersectCount = 0;
     for (int i = 0; i < polygon.length; i++) {
-        LatLng v1 = polygon[i];
-        LatLng v2 = polygon[(i + 1) % polygon.length];
-        if ((v1.latitude > point.latitude) != (v2.latitude > point.latitude)) {
-            double intersectLng = (v2.longitude - v1.longitude) * (point.latitude - v1.latitude) / (v2.latitude - v1.latitude) + v1.longitude;
-            if (point.longitude < intersectLng) {
-                intersectCount++;
-            }
+      LatLng v1 = polygon[i];
+      LatLng v2 = polygon[(i + 1) % polygon.length];
+      if ((v1.latitude > point.latitude) != (v2.latitude > point.latitude)) {
+        double intersectLng =
+            (v2.longitude - v1.longitude) *
+                (point.latitude - v1.latitude) /
+                (v2.latitude - v1.latitude) +
+            v1.longitude;
+        if (point.longitude < intersectLng) {
+          intersectCount++;
         }
+      }
     }
     return (intersectCount % 2) == 1;
   }
 
-  // Generates new Potential Fishing Zone (PFZ) markers using actual data from Copernicus
   Future<void> _generatePfzMarkers() async {
-    // Show the loading indicator
     setState(() => _isLoadingPfz = true);
     final Set<Marker> newMarkers = {};
-    
+
     final CopernicusService copernicusService = CopernicusService();
     List<Future<void>> checks = [];
 
-    // Helper class to store predictions
     List<Map<String, dynamic>> predictions = [];
 
-    // Scan a grid of points offshore Sri Lanka
-    // Lat: 6.0 to 10.5, Lng: 78.5 to 82.5 with a step of 0.5 degrees
     for (double lat = 6.0; lat <= 10.5; lat += 0.5) {
       for (double lng = 78.5; lng <= 82.5; lng += 0.5) {
         if (_isPointInLand(LatLng(lat, lng))) {
@@ -126,16 +117,17 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
 
         checks.add(() async {
           try {
-            // Fetch real localized oceanographic params
-            MarineData? realData = await copernicusService.fetchMarineData(lat, lng);
+            MarineData? realData = await copernicusService.fetchMarineData(
+              lat,
+              lng,
+            );
 
             if (realData == null) {
-              return; // Failed to fetch real data
+              return;
             }
 
-            // Run it through the ML model to evaluate
             double mlProbability = await _pfzMlService.predictPfz(realData);
-            
+
             predictions.add({
               'lat': lat,
               'lng': lng,
@@ -149,14 +141,13 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
       }
     }
 
-    // Wait for all grid points to be evaluated
     await Future.wait(checks);
 
-    // Sort predictions by probability descending
-    predictions.sort((a, b) => (b['probability'] as double).compareTo(a['probability'] as double));
+    predictions.sort(
+      (a, b) =>
+          (b['probability'] as double).compareTo(a['probability'] as double),
+    );
 
-    // Fallback if the API absolutely failed to return ANY real data from all points
-    // To ensure at least one marker is shown, we provide a fallback realistic zone.
     if (predictions.isEmpty) {
       predictions.add({
         'lat': 7.5,
@@ -166,37 +157,36 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
       });
     }
 
-    // Take the top 5 zones to guarantee we show at least one
     int targetCount = predictions.length < 5 ? predictions.length : 5;
-    
-    for (int i = 0; i < targetCount; i++) {
-        var pred = predictions[i];
-        double lat = pred['lat'];
-        double lng = pred['lng'];
-        double mlProbability = pred['probability'];
-        MarineData realData = pred['data'];
-        
-        double hue;
-        // Natural threshold mapping dictated entirely by the AI relative ranges
-        if (mlProbability > 0.70) {
-          hue = BitmapDescriptor.hueRed; // Excellent
-        } else if (mlProbability > 0.50) {
-          hue = BitmapDescriptor.hueOrange; // Good
-        } else {
-          hue = BitmapDescriptor.hueYellow; // Moderate
-        }
 
-        newMarkers.add(
-          Marker(
-            markerId: MarkerId('pfz_${lat}_${lng}'),
-            position: LatLng(lat, lng),
-            icon: BitmapDescriptor.defaultMarkerWithHue(hue),
-            infoWindow: InfoWindow(
-              title: 'Potential Fishing Zone',
-              snippet: 'Prob: ${(mlProbability * 100).toStringAsFixed(1)}% | SST: ${realData.sst.toStringAsFixed(1)}°C | Chl: ${realData.chlorophyll.toStringAsFixed(2)}',
-            ),
+    for (int i = 0; i < targetCount; i++) {
+      var pred = predictions[i];
+      double lat = pred['lat'];
+      double lng = pred['lng'];
+      double mlProbability = pred['probability'];
+      MarineData realData = pred['data'];
+
+      double hue;
+      if (mlProbability > 0.70) {
+        hue = BitmapDescriptor.hueRed;
+      } else if (mlProbability > 0.50) {
+        hue = BitmapDescriptor.hueOrange;
+      } else {
+        hue = BitmapDescriptor.hueYellow;
+      }
+
+      newMarkers.add(
+        Marker(
+          markerId: MarkerId('pfz_${lat}_${lng}'),
+          position: LatLng(lat, lng),
+          icon: BitmapDescriptor.defaultMarkerWithHue(hue),
+          infoWindow: InfoWindow(
+            title: 'Potential Fishing Zone',
+            snippet:
+                'Prob: ${(mlProbability * 100).toStringAsFixed(1)}% | SST: ${realData.sst.toStringAsFixed(1)}°C | Chl: ${realData.chlorophyll.toStringAsFixed(2)}',
           ),
-        );
+        ),
+      );
     }
 
     _cachedMarkers = newMarkers;
@@ -276,8 +266,8 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
       if (lat <= 8.0) return 78.0 - (8.0 - lat) * 1.0;
 
       for (int i = 0; i < boundaryPoints.length - 1; i++) {
-        final p1 = boundaryPoints[i]; // Higher Lat
-        final p2 = boundaryPoints[i + 1]; // Lower Lat
+        final p1 = boundaryPoints[i];
+        final p2 = boundaryPoints[i + 1];
         if (lat <= p1.latitude && lat >= p2.latitude) {
           final fraction = (p1.latitude - lat) / (p1.latitude - p2.latitude);
           return p1.longitude - fraction * (p1.longitude - p2.longitude);
