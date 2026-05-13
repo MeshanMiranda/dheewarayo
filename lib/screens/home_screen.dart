@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ? DateFormat('hh:mm a').format(_nextHighTide!.time)
         : "--";
     String windStr = _currentWeather != null
-        ? "${_currentWeather!.windSpeed} km/h"
+        ? "${_currentWeather!.windSpeed.toStringAsFixed(1)} km/h"
         : "--";
     String humStr = _currentWeather != null
         ? "${_currentWeather!.humidity}%"
@@ -585,7 +585,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final bool highWind = wind >= 10.0;
       final bool highWaves = wave >= 2.0;
-      final bool highRain = rain >= 70.0;
+      final bool highRain = rain >= 1.0;
       isCritical = highWind || highWaves || highRain;
 
       if (isCritical) {

@@ -58,7 +58,15 @@ void callbackDispatcher() {
 
             if (prediction != null) {
               final wind = prediction['wind'] ?? 0.0;
-              if (wind >= 10.0) {
+              final wave = prediction['wave'] ?? 0.0;
+              final rain = prediction['rain'] ?? 0.0;
+
+              final bool highWind = wind >= 10.0;
+              final bool highWaves = wave >= 2.0;
+              final bool highRain = rain >= 1.0;
+              final bool isCritical = highWind || highWaves || highRain;
+
+              if (isCritical) {
                 //10.0
                 if (warningStart == null) {
                   warningStart = forecast.time;

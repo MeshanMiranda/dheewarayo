@@ -64,7 +64,7 @@ class WeatherData {
       temperature: (json['main']['temp'] as num).toDouble(),
       humidity: (json['main']['humidity'] as num).toDouble(),
       pressure: (json['main']['pressure'] as num).toDouble(),
-      windSpeed: (json['wind']['speed'] as num).toDouble(),
+      windSpeed: (json['wind']['speed'] as num).toDouble() * 3.6,
       description: json['weather'] != null && json['weather'].isNotEmpty
           ? json['weather'][0]['description'] as String
           : 'Unknown',
@@ -80,7 +80,7 @@ class WeatherApiService {
   static const String forecastUrl =
       'https://api.openweathermap.org/data/2.5/forecast';
   static const String worldTidesApiKey =
-      'api'; //3b930da6-b951-4a4d-920b-e4e547a85873
+      '3b930da6-b951-4a4d-920b-e4e547a85873'; //3b930da6-b951-4a4d-920b-e4e547a85873
 
   Future<WeatherData> fetchWeatherForCity(String city) async {
     final url = Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=metric');
@@ -172,7 +172,7 @@ class WeatherApiService {
 
         for (var item in items) {
           final double temp = (item['main']['temp'] as num).toDouble();
-          final double wind = (item['wind']['speed'] as num).toDouble();
+          final double wind = (item['wind']['speed'] as num).toDouble() * 3.6;
           final String condition = item['weather'][0]['description'] as String;
 
           if (temp > maxTemp) maxTemp = temp;
@@ -258,7 +258,7 @@ class WeatherApiService {
             temperature: (item['main']['temp'] as num).toDouble(),
             humidity: (item['main']['humidity'] as num).toDouble(),
             pressure: (item['main']['pressure'] as num).toDouble(),
-            windSpeed: (item['wind']['speed'] as num).toDouble(),
+            windSpeed: (item['wind']['speed'] as num).toDouble() * 3.6,
           ),
         );
       }

@@ -27,7 +27,7 @@ class MLService {
 
     try {
       var input = [
-        [tmp, hum, wind, pres],
+        [tmp, hum, pres, wind],
       ];
 
       var output = List<double>.filled(3, 0.0).reshape([1, 3]);

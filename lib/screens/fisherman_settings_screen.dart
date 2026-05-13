@@ -70,7 +70,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
 
   Future<void> _fetchCurrentLocationCities() async {
     _availablePlaces = _districtCoastalCities.values.expand((x) => x).toList();
-    _availablePlaces = _availablePlaces.toSet().toList(); // Ensure uniqueness
+    _availablePlaces = _availablePlaces.toSet().toList();
     _availablePlaces.sort();
   }
 

@@ -121,7 +121,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final l10n = AppLocalizations.of(context)!;
     String tempStr = "${weather.temperature}°C";
     String descStr = weather.description.toUpperCase();
-    String windStr = "${weather.windSpeed} km/h";
+    String windStr = "${weather.windSpeed.toStringAsFixed(1)} km/h";
     String humStr = "${weather.humidity}%";
     String pressStr = "${weather.pressure} hPa";
 
@@ -262,7 +262,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
     final bool highWind = wind >= 10.0;
     final bool highWaves = wave >= 2.0;
-    final bool highRain = rain >= 70.0;
+    final bool highRain = rain >= 1.0;
     final bool isCritical = highWind || highWaves || highRain;
 
     if (!isCritical) {
@@ -386,7 +386,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   _buildConditionIndicator(
                     context,
                     label: l10n.rainLabel,
-                    value: "${rain.toStringAsFixed(0)}%",
+                    value: "${rain.toStringAsFixed(1)} mm",
                     icon: Icons.umbrella,
                     isHigh: highRain,
                   ),
