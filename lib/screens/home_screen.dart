@@ -68,19 +68,12 @@ class _HomeScreenState extends State<HomeScreen> {
       }
 
       Position position = await Geolocator.getCurrentPosition();
-      MarineData? realData = await _copernicusService.fetchMarineData(
+      final MarineData realData = await _copernicusService.fetchMarineData(
         position.latitude,
         position.longitude,
       );
 
-      double? pfzProb;
-      if (realData != null) {
-        pfzProb = await _pfzMlService.predictPfz(realData);
-      } else {
-        pfzProb = await _pfzMlService.predictPfz(
-          MarineData(sst: 28.5, chlorophyll: 1.2, ssh: 0.1),
-        );
-      }
+      final double pfzProb = await _pfzMlService.predictPfz(realData);
 
       final postsSnapshot = await FirebaseFirestore.instance
           .collection('posts')

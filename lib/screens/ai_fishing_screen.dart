@@ -117,14 +117,10 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
 
         checks.add(() async {
           try {
-            MarineData? realData = await copernicusService.fetchMarineData(
+            final MarineData realData = await copernicusService.fetchMarineData(
               lat,
               lng,
             );
-
-            if (realData == null) {
-              return;
-            }
 
             double mlProbability = await _pfzMlService.predictPfz(realData);
 
@@ -203,7 +199,6 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
   @override
   void dispose() {
     _refreshTimer?.cancel();
-    _pfzMlService.dispose();
     mapController.dispose();
     super.dispose();
   }

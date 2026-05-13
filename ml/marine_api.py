@@ -1,12 +1,16 @@
+import os
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import copernicusmarine as cm
 import xarray as xr
-import pandas as pd
-from datetime import datetime
+import numpy as np
+import threading
+import time
+from datetime import datetime, timedelta
+import gc
 
-app = FastAPI(title="Copernicus Marine Local API")
+app = FastAPI(title="Copernicus Marine Optimized API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,74 +20,195 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global variables to hold datasets for fast access
-ds_sst = None
-ds_ssh = None
-ds_chl = None
+# -----------------------------------------------
+# IN-MEMORY CACHE — stores raw numpy arrays to save memory
+# -----------------------------------------------
+_cache: dict = {
+    "sst": None,   # tuple: (lats, lons, vals)
+    "ssh": None,   # tuple: (lats, lons, vals)
+    "chl": None,   # tuple: (lats, lons, vals)
+    "ready": False,
+    "error": None,
+    "loaded_at": None,
+}
 
+# Sri Lanka + surrounding waters bounding box
+BBOX = dict(
+    minimum_latitude=5.0,
+    maximum_latitude=12.0,
+    minimum_longitude=75.0,
+    maximum_longitude=85.0,
+)
+
+# Fetch last 3 days so we always have the most recent time slice
+def _date_range():
+    end = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
+    start = (datetime.utcnow() - timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%S")
+    return start, end
+
+
+# -----------------------------------------------
+# BACKGROUND LOADER — eager subset fetch
+# -----------------------------------------------
+def load_datasets():
+    global _cache
+    try:
+        start_date, end_date = _date_range()
+        print(f"[Marine API] Loading datasets ({start_date} → {end_date}) ...")
+
+        # --- SST (Sea Surface Temperature) ---
+        print("[Marine API] Fetching SST ...")
+        ds_sst = cm.open_dataset(
+            dataset_id="cmems_mod_glo_phy-thetao_anfc_0.083deg_P1D-m",
+            minimum_latitude=BBOX["minimum_latitude"],
+            maximum_latitude=BBOX["maximum_latitude"],
+            minimum_longitude=BBOX["minimum_longitude"],
+            maximum_longitude=BBOX["maximum_longitude"],
+            start_datetime=start_date,
+            end_datetime=end_date,
+            variables=["thetao"],
+        )
+        # Eagerly load into memory and keep only surface (depth=0) latest time
+        da_sst = ds_sst["thetao"]
+        if "depth" in da_sst.dims:
+            da_sst = da_sst.isel(depth=0)
+        if "time" in da_sst.dims:
+            da_sst = da_sst.isel(time=-1)
+        _cache["sst"] = (da_sst.latitude.values, da_sst.longitude.values, da_sst.values)
+        ds_sst.close()
+        del ds_sst, da_sst
+        gc.collect()
+        print("[Marine API] SST loaded.")
+
+        # --- SSH (Sea Surface Height) ---
+        print("[Marine API] Fetching SSH ...")
+        ds_ssh = cm.open_dataset(
+            dataset_id="cmems_mod_glo_phy_anfc_0.083deg_P1D-m",
+            minimum_latitude=BBOX["minimum_latitude"],
+            maximum_latitude=BBOX["maximum_latitude"],
+            minimum_longitude=BBOX["minimum_longitude"],
+            maximum_longitude=BBOX["maximum_longitude"],
+            start_datetime=start_date,
+            end_datetime=end_date,
+            variables=["zos"],
+        )
+        da_ssh = ds_ssh["zos"]
+        if "time" in da_ssh.dims:
+            da_ssh = da_ssh.isel(time=-1)
+        _cache["ssh"] = (da_ssh.latitude.values, da_ssh.longitude.values, da_ssh.values)
+        ds_ssh.close()
+        del ds_ssh, da_ssh
+        gc.collect()
+        print("[Marine API] SSH loaded.")
+
+        # --- Chlorophyll ---
+        print("[Marine API] Fetching Chlorophyll ...")
+        ds_chl = cm.open_dataset(
+            dataset_id="cmems_mod_glo_bgc-pft_anfc_0.25deg_P1D-m_202311",
+            minimum_latitude=BBOX["minimum_latitude"],
+            maximum_latitude=BBOX["maximum_latitude"],
+            minimum_longitude=BBOX["minimum_longitude"],
+            maximum_longitude=BBOX["maximum_longitude"],
+            start_datetime=start_date,
+            end_datetime=end_date,
+            variables=["chl"],
+        )
+        da_chl = ds_chl["chl"]
+        if "depth" in da_chl.dims:
+            da_chl = da_chl.isel(depth=0)
+        if "time" in da_chl.dims:
+            da_chl = da_chl.isel(time=-1)
+        _cache["chl"] = (da_chl.latitude.values, da_chl.longitude.values, da_chl.values)
+        ds_chl.close()
+        del ds_chl, da_chl
+        gc.collect()
+        print("[Marine API] Chlorophyll loaded.")
+
+        _cache["ready"] = True
+        _cache["loaded_at"] = datetime.utcnow().isoformat()
+        _cache["error"] = None
+        print("[Marine API] All datasets ready in memory.")
+
+    except Exception as e:
+        _cache["error"] = str(e)
+        _cache["ready"] = False
+        print(f"[Marine API] Dataset loading failed: {e}")
+
+
+# -----------------------------------------------
+# STARTUP
+# -----------------------------------------------
 @app.on_event("startup")
-async def startup_event():
-    global ds_sst, ds_ssh, ds_chl
-    print("Loading Copernicus Marine datasets. This might take a few seconds...")
-    try:
-        # Load SST (thetao)
-        ds_sst = cm.open_dataset(dataset_id="cmems_mod_glo_phy-thetao_anfc_0.083deg_P1D-m")
-        # Load SSH (zos)
-        ds_ssh = cm.open_dataset(dataset_id="cmems_mod_glo_phy_anfc_0.083deg_P1D-m")
-        # Load Chlorophyll (chl)
-        ds_chl = cm.open_dataset(dataset_id="cmems_mod_glo_bgc-pft_anfc_0.25deg_P1D-m_202311")
-        print("Datasets loaded successfully!")
-    except Exception as e:
-        print(f"Error loading datasets: {e}")
+def startup_event():
+    thread = threading.Thread(target=load_datasets, daemon=True)
+    thread.start()
 
+
+# -----------------------------------------------
+# STATUS ENDPOINT  (Flutter can poll this)
+# -----------------------------------------------
+@app.get("/api/status")
+def get_status():
+    return {
+        "ready": _cache["ready"],
+        "loaded_at": _cache["loaded_at"],
+        "error": _cache["error"],
+    }
+
+
+# -----------------------------------------------
+# HELPER
+# -----------------------------------------------
+def safe_nearest(cache_data, lat: float, lon: float, fallback: float) -> float:
+    if cache_data is None:
+        return fallback
+    try:
+        lats, lons, vals = cache_data
+        lat_idx = np.abs(lats - lat).argmin()
+        lon_idx = np.abs(lons - lon).argmin()
+        val = vals[lat_idx, lon_idx]
+        if np.isnan(val):
+            return fallback
+        return float(val)
+    except Exception as e:
+        print(f"[Marine API] sel error: {e}")
+        return fallback
+
+
+# -----------------------------------------------
+# MAIN ENDPOINT  — now served instantly from RAM
+# -----------------------------------------------
 @app.get("/api/marine_data")
-async def get_marine_data(lat: float, lng: float):
-    global ds_sst, ds_ssh, ds_chl
-    
-    if ds_sst is None or ds_ssh is None or ds_chl is None:
-        raise HTTPException(status_code=503, detail="Datasets are not initialized yet")
-
-    try:
-        # Select the nearest coordinate, and the latest time available
-        # Some variables are 3D (with depth), so we select depth=0.494 (surface) or nearest to 0
-        
-        # 1. SST (thetao)
-        # Using .isel(time=-1) gets the latest available time step
-        val_sst = ds_sst['thetao'].sel(latitude=lat, longitude=lng, method='nearest')
-        if 'depth' in val_sst.dims:
-            val_sst = val_sst.sel(depth=0, method='nearest')
-        if 'time' in val_sst.dims:
-            val_sst = val_sst.isel(time=-1)
-        sst_res = float(val_sst.values)
-
-        # 2. SSH (zos)
-        val_ssh = ds_ssh['zos'].sel(latitude=lat, longitude=lng, method='nearest')
-        if 'time' in val_ssh.dims:
-            val_ssh = val_ssh.isel(time=-1)
-        ssh_res = float(val_ssh.values)
-
-        # 3. Chlorophyll (chl)
-        val_chl = ds_chl['chl'].sel(latitude=lat, longitude=lng, method='nearest')
-        if 'depth' in val_chl.dims:
-            val_chl = val_chl.sel(depth=0, method='nearest')
-        if 'time' in val_chl.dims:
-            val_chl = val_chl.isel(time=-1)
-        chl_res = float(val_chl.values)
-
-        return {
-            "sst": max(20.0, min(35.0, sst_res)) if not pd.isna(sst_res) else 28.0,
-            "chlorophyll": max(0.0, min(10.0, chl_res)) if not pd.isna(chl_res) else 0.5,
-            "ssh": max(-1.0, min(1.0, ssh_res)) if not pd.isna(ssh_res) else 0.0,
-        }
-        
-    except Exception as e:
-        print(f"Error extracting data: {e}")
-        # Return fallback values on error so the app doesn't crash
+def get_marine_data(lat: float, lng: float):
+    if not _cache["ready"]:
+        # Return fallback values instead of 503 so Flutter never blocks
         return {
             "sst": 28.0,
             "chlorophyll": 0.5,
             "ssh": 0.0,
+            "status": "loading",
         }
 
+    sst = safe_nearest(_cache["sst"], lat, lng, fallback=28.0)
+    ssh = safe_nearest(_cache["ssh"], lat, lng, fallback=0.0)
+    chl = safe_nearest(_cache["chl"], lat, lng, fallback=0.5)
+
+    return {
+        "sst": float(np.clip(sst, 20.0, 35.0)),
+        "chlorophyll": float(np.clip(chl, 0.0, 10.0)),
+        "ssh": float(np.clip(ssh, -1.0, 1.0)),
+        "status": "success",
+    }
+
+
+# -----------------------------------------------
+# RUN
+# -----------------------------------------------
 if __name__ == "__main__":
-    uvicorn.run("marine_api:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(
+        "marine_api:app",
+        host="0.0.0.0",
+        port=port,
+        reload=False,   # reload=True conflicts with background threads
+    )

@@ -1,9 +1,19 @@
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class MLService {
+  static final MLService _instance = MLService._internal();
+
+  factory MLService() {
+    return _instance;
+  }
+
+  MLService._internal();
+
   Interpreter? _interpreter;
 
   Future<void> initialize() async {
+    if (_interpreter != null) return;
+    
     try {
       _interpreter = await Interpreter.fromAsset(
         'assets/models/weather_model.tflite',

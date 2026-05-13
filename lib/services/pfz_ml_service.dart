@@ -2,10 +2,20 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 import 'copernicus_service.dart';
 
 class PfzMlService {
+  static final PfzMlService _instance = PfzMlService._internal();
+
+  factory PfzMlService() {
+    return _instance;
+  }
+
+  PfzMlService._internal();
+
   Interpreter? _interpreter;
   bool _isModelLoaded = false;
 
   Future<void> init() async {
+    if (_isModelLoaded && _interpreter != null) return;
+
     try {
       _interpreter = await Interpreter.fromAsset(
         'assets/models/pfz_model.tflite',
