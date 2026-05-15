@@ -17,7 +17,7 @@ class AIService {
 
       final apiCondition = actualWeather.description.toLowerCase();
       final userCondition = weatherType.toLowerCase();
-      final windSpeed = actualWeather.windSpeed;
+      final windSpeed = actualWeather.windSpeed.toStringAsFixed(1);
 
       bool isMatch = false;
 
@@ -35,7 +35,7 @@ class AIService {
           isMatch = true;
         }
       } else if (userCondition.contains('high wind')) {
-        if (windSpeed > 10.0) {
+        if (actualWeather.windSpeed > 10.0) {
           isMatch = true;
         }
       } else if (userCondition.contains('tsunami')) {

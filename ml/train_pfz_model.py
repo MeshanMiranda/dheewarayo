@@ -10,19 +10,17 @@ def fetch_marine_data():
     records = []
     print("Fetching real marine data from local Marine API...")
     
-    # Sri Lankan Fishing Regions Bounding Boxes (lat_min, lat_max, lng_min, lng_max)
     regions = [
-        (6.5, 8.5, 79.5, 80.0), # West Coast (Colombo, Gampaha, Puttalam)
-        (5.8, 6.3, 80.0, 81.5), # South Coast (Galle, Matara, Hambantota)
-        (6.5, 9.0, 81.5, 82.0), # East Coast (Ampara, Batticaloa, Trincomalee)
-        (8.8, 9.9, 79.5, 80.5)  # North Coast (Jaffna, Mannar)
+        (6.5, 8.5, 79.5, 80.0),
+        (5.8, 6.3, 80.0, 81.5),
+        (6.5, 9.0, 81.5, 82.0), 
+        (8.8, 9.9, 79.5, 80.5) 
     ]
     
     np.random.seed(42)
     lats = []
     lngs = []
     
-    # Generate 2000 points (500 per region)
     for r in regions:
         lats.extend(np.random.uniform(r[0], r[1], 500))
         lngs.extend(np.random.uniform(r[2], r[3], 500))
@@ -33,7 +31,7 @@ def fetch_marine_data():
     
     for i, (lat, lng) in enumerate(coords):
         try:
-            res = requests.get(f"https://dheewarayo-marine-api.onrender.com/api/marine_data?lat={lat}&lng={lng}", timeout=10)
+            res = requests.get(f"http://192.168.8.127:8000/api/marine_data?lat={lat}&lng={lng}", timeout=10)
             if res.status_code == 200:
                 data = res.json()
                 records.append({
@@ -59,19 +57,16 @@ def preprocess_data(df):
     def calculate_pfz(row):
         score = 0.0
         
-        # SST Factor (max 0.4)
         if 27.0 <= row['sst'] <= 29.5:
             score += 0.4
         elif 26.0 <= row['sst'] <= 30.0:
             score += 0.2
-            
-        # Chlorophyll Factor (max 0.3)
+
         if row['chlorophyll'] > 0.2:
             score += 0.3
         elif row['chlorophyll'] > 0.1:
             score += 0.15
-            
-        # SSH Factor (max 0.3) - Upwelling regions or neutral SSH are usually better
+
         if -0.2 <= row['ssh'] <= 0.1:
             score += 0.3
         elif -0.4 <= row['ssh'] <= 0.2:

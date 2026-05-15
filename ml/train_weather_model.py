@@ -6,7 +6,7 @@ import pandas as pd
 
 def fetch_weather_data():
     print("Fetching historical weather data from Open-Meteo")
-    url = "https://archive-api.open-meteo.com/v1/archive?latitude=6.9271&longitude=79.8612&start_date=2024-01-01&end_date=2025-12-31&hourly=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,rain"
+    url = "https://archive-api.open-meteo.com/v1/archive?latitude=6.9271&longitude=79.8612&start_date=2026-01-01&end_date=2026-05-13&hourly=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,rain"
     response = requests.get(url)
     data = response.json()
     
@@ -25,18 +25,14 @@ def fetch_weather_data():
 def preprocess_data(df):
     print("Preprocessing data...")
     
-    # Synthesize wave height based on wind speed (rough approximation for ML purposes)
     np.random.seed(42)
     df['wave'] = df['wind_speed'] * 0.15 + np.random.normal(0, 0.1, len(df))
     df['wave'] = df['wave'].clip(lower=0.0)
     
-    # Features: temperature, humidity, pressure, wind_speed
     features = df[['temperature', 'humidity', 'pressure', 'wind_speed']].values
     
-    # Targets: wind_speed, wave, rain
     targets = df[['wind_speed', 'wave', 'rain']].values
     
-    # Predict next hour
     X = features[:-1]
     y = targets[1:]
     
