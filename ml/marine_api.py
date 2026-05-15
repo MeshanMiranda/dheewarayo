@@ -20,19 +20,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# -----------------------------------------------
-# IN-MEMORY CACHE — stores raw numpy arrays to save memory
-# -----------------------------------------------
 _cache: dict = {
-    "sst": None,   # tuple: (lats, lons, vals)
-    "ssh": None,   # tuple: (lats, lons, vals)
-    "chl": None,   # tuple: (lats, lons, vals)
+    "sst": None, 
+    "ssh": None,  
+    "chl": None, 
     "ready": False,
     "error": None,
     "loaded_at": None,
 }
 
-# Sri Lanka + surrounding waters bounding box
 BBOX = dict(
     minimum_latitude=5.0,
     maximum_latitude=12.0,
@@ -40,25 +36,24 @@ BBOX = dict(
     maximum_longitude=85.0,
 )
 
-# Fetch last 3 days so we always have the most recent time slice
+
 def _date_range():
     end = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
     start = (datetime.utcnow() - timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%S")
     return start, end
 
 
-# -----------------------------------------------
-# BACKGROUND LOADER — eager subset fetch
-# -----------------------------------------------
 def load_datasets():
     global _cache
     try:
         start_date, end_date = _date_range()
         print(f"[Marine API] Loading datasets ({start_date} → {end_date}) ...")
 
-        # --- SST (Sea Surface Temperature) ---
         print("[Marine API] Fetching SST ...")
-        ds_sst = cm.open_dataset(
+        if os.path.exists("temp_sst.nc"):
+            os.remove("temp_sst.nc")
+            
+        cm.subset(
             dataset_id="cmems_mod_glo_phy-thetao_anfc_0.083deg_P1D-m",
             minimum_latitude=BBOX["minimum_latitude"],
             maximum_latitude=BBOX["maximum_latitude"],
@@ -67,8 +62,11 @@ def load_datasets():
             start_datetime=start_date,
             end_datetime=end_date,
             variables=["thetao"],
+            output_filename="temp_sst.nc",
+            overwrite_output_data=True,
         )
-        # Eagerly load into memory and keep only surface (depth=0) latest time
+        ds_sst = xr.open_dataset("temp_sst.nc")
+
         da_sst = ds_sst["thetao"]
         if "depth" in da_sst.dims:
             da_sst = da_sst.isel(depth=0)
@@ -78,11 +76,16 @@ def load_datasets():
         ds_sst.close()
         del ds_sst, da_sst
         gc.collect()
+        if os.path.exists("temp_sst.nc"):
+            os.remove("temp_sst.nc")
         print("[Marine API] SST loaded.")
 
-        # --- SSH (Sea Surface Height) ---
+
         print("[Marine API] Fetching SSH ...")
-        ds_ssh = cm.open_dataset(
+        if os.path.exists("temp_ssh.nc"):
+            os.remove("temp_ssh.nc")
+            
+        cm.subset(
             dataset_id="cmems_mod_glo_phy_anfc_0.083deg_P1D-m",
             minimum_latitude=BBOX["minimum_latitude"],
             maximum_latitude=BBOX["maximum_latitude"],
@@ -91,7 +94,10 @@ def load_datasets():
             start_datetime=start_date,
             end_datetime=end_date,
             variables=["zos"],
+            output_filename="temp_ssh.nc",
+            overwrite_output_data=True,
         )
+        ds_ssh = xr.open_dataset("temp_ssh.nc")
         da_ssh = ds_ssh["zos"]
         if "time" in da_ssh.dims:
             da_ssh = da_ssh.isel(time=-1)
@@ -99,11 +105,15 @@ def load_datasets():
         ds_ssh.close()
         del ds_ssh, da_ssh
         gc.collect()
+        if os.path.exists("temp_ssh.nc"):
+            os.remove("temp_ssh.nc")
         print("[Marine API] SSH loaded.")
 
-        # --- Chlorophyll ---
         print("[Marine API] Fetching Chlorophyll ...")
-        ds_chl = cm.open_dataset(
+        if os.path.exists("temp_chl.nc"):
+            os.remove("temp_chl.nc")
+            
+        cm.subset(
             dataset_id="cmems_mod_glo_bgc-pft_anfc_0.25deg_P1D-m_202311",
             minimum_latitude=BBOX["minimum_latitude"],
             maximum_latitude=BBOX["maximum_latitude"],
@@ -112,7 +122,10 @@ def load_datasets():
             start_datetime=start_date,
             end_datetime=end_date,
             variables=["chl"],
+            output_filename="temp_chl.nc",
+            overwrite_output_data=True,
         )
+        ds_chl = xr.open_dataset("temp_chl.nc")
         da_chl = ds_chl["chl"]
         if "depth" in da_chl.dims:
             da_chl = da_chl.isel(depth=0)
@@ -122,6 +135,8 @@ def load_datasets():
         ds_chl.close()
         del ds_chl, da_chl
         gc.collect()
+        if os.path.exists("temp_chl.nc"):
+            os.remove("temp_chl.nc")
         print("[Marine API] Chlorophyll loaded.")
 
         _cache["ready"] = True
@@ -135,18 +150,12 @@ def load_datasets():
         print(f"[Marine API] Dataset loading failed: {e}")
 
 
-# -----------------------------------------------
-# STARTUP
-# -----------------------------------------------
 @app.on_event("startup")
 def startup_event():
     thread = threading.Thread(target=load_datasets, daemon=True)
     thread.start()
 
 
-# -----------------------------------------------
-# STATUS ENDPOINT  (Flutter can poll this)
-# -----------------------------------------------
 @app.get("/api/status")
 def get_status():
     return {
@@ -156,9 +165,6 @@ def get_status():
     }
 
 
-# -----------------------------------------------
-# HELPER
-# -----------------------------------------------
 def safe_nearest(cache_data, lat: float, lon: float, fallback: float) -> float:
     if cache_data is None:
         return fallback
@@ -175,13 +181,9 @@ def safe_nearest(cache_data, lat: float, lon: float, fallback: float) -> float:
         return fallback
 
 
-# -----------------------------------------------
-# MAIN ENDPOINT  — now served instantly from RAM
-# -----------------------------------------------
 @app.get("/api/marine_data")
 def get_marine_data(lat: float, lng: float):
     if not _cache["ready"]:
-        # Return fallback values instead of 503 so Flutter never blocks
         return {
             "sst": 28.0,
             "chlorophyll": 0.5,
@@ -201,14 +203,11 @@ def get_marine_data(lat: float, lng: float):
     }
 
 
-# -----------------------------------------------
-# RUN
-# -----------------------------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(
         "marine_api:app",
         host="0.0.0.0",
         port=port,
-        reload=False,   # reload=True conflicts with background threads
+        reload=False, 
     )

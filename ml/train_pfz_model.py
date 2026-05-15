@@ -33,7 +33,7 @@ def fetch_marine_data():
     
     for i, (lat, lng) in enumerate(coords):
         try:
-            res = requests.get(f"http://127.0.0.1:8000/api/marine_data?lat={lat}&lng={lng}", timeout=10)
+            res = requests.get(f"https://dheewarayo-marine-api.onrender.com/api/marine_data?lat={lat}&lng={lng}", timeout=10)
             if res.status_code == 200:
                 data = res.json()
                 records.append({
