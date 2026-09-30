@@ -118,6 +118,10 @@ Enjoy using Dheewarayo! 🚀
 
 ---
 
-https://github.com/MeshanMiranda/dheewarayo/blob/main/Dheewarayo%20Poster4.png?raw=true
+## 📄 Project Poster
+
+<p align="center">
+  <img src="https://github.com/MeshanMiranda/dheewarayo/blob/main/Dheewarayo%20Poster4.png?raw=true" alt="Dheewarayo Project Poster" width="800">
+</p>
 
 ---
