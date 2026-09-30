@@ -173,7 +173,7 @@ class _AIFishingScreenState extends State<AIFishingScreen> {
 
       newMarkers.add(
         Marker(
-          markerId: MarkerId('pfz_${lat}_${lng}'),
+          markerId: MarkerId('pfz_${lat}_$lng'),
           position: LatLng(lat, lng),
           icon: BitmapDescriptor.defaultMarkerWithHue(hue),
           infoWindow: InfoWindow(

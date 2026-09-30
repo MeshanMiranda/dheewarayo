@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class MarineData {
@@ -27,11 +28,11 @@ class CopernicusService {
     const timeoutPerAttempt = Duration(seconds: 15);
 
     final uri = Uri.parse('$_baseUrl/api/marine_data?lat=$lat&lng=$lng');
-    print('[Marine API] Request URL: $uri');
+    debugPrint('[Marine API] Request URL: $uri');
 
     for (int attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
-        print('[Marine API] Attempt $attempt / $maxAttempts ...');
+        debugPrint('[Marine API] Attempt $attempt / $maxAttempts ...');
         final response = await http.get(uri).timeout(timeoutPerAttempt);
 
         if (response.statusCode == 200) {
@@ -42,7 +43,7 @@ class CopernicusService {
           final chl = (json['chlorophyll'] as num).toDouble().clamp(0.0, 10.0);
           final ssh = (json['ssh'] as num).toDouble().clamp(-1.0, 1.0);
 
-          print(
+          debugPrint(
             '[Marine API] Data received — SST: $sst, CHL: $chl, SSH: $ssh '
             '(status: $apiStatus)',
           );
@@ -54,18 +55,18 @@ class CopernicusService {
             status: apiStatus,
           );
         } else {
-          print(
+          debugPrint(
             '[Marine API] HTTP ${response.statusCode} on attempt $attempt'
             '${attempt < maxAttempts ? " — retrying..." : " — using fallback."}',
           );
         }
       } on TimeoutException {
-        print(
+        debugPrint(
           '[Marine API] Timeout on attempt $attempt'
           '${attempt < maxAttempts ? " — retrying..." : " — using fallback."}',
         );
       } catch (e) {
-        print(
+        debugPrint(
           '[Marine API] Error on attempt $attempt: $e'
           '${attempt < maxAttempts ? " — retrying..." : " — using fallback."}',
         );
@@ -76,7 +77,7 @@ class CopernicusService {
       }
     }
 
-    print('[Marine API] All attempts exhausted — using fallback values.');
+    debugPrint('[Marine API] All attempts exhausted — using fallback values.');
     return MarineData.fallback();
   }
 }

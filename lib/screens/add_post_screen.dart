@@ -191,6 +191,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
         return;
       }
 
+      if (!mounted) return;
+
       if (_selectedPostType == 'Weather & Sea Conditions') {
         if (_selectedDate == null ||
             _selectedTime == null ||
@@ -218,27 +220,27 @@ class _AddPostScreenState extends State<AddPostScreen> {
           caption: _captionController.text.trim(),
         );
 
+        if (!mounted) return;
+
         if (verificationResult['isAccurate'] == false) {
-          if (mounted) {
-            showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text('Post Verification Failed'),
-                content: Text(
-                  verificationResult['reason'] ?? 'False information detected.',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: const Text('OK'),
-                  ),
-                ],
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Post Verification Failed'),
+              content: Text(
+                verificationResult['reason'] ?? 'False information detected.',
               ),
-            );
-            setState(() {
-              _isLoading = false;
-            });
-          }
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+          setState(() {
+            _isLoading = false;
+          });
           return;
         }
       }
@@ -535,7 +537,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
             const SizedBox(height: 20),
             DropdownButtonFormField<String>(
-              value: _selectedPostType,
+              initialValue: _selectedPostType,
               decoration: InputDecoration(
                 labelText: l10n.postType,
                 border: OutlineInputBorder(
@@ -544,14 +546,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
               items: _postTypes.map((type) {
                 String display = type;
-                if (type == 'Weather & Sea Conditions')
+                if (type == 'Weather & Sea Conditions') {
                   display = l10n.weatherAndSeaConditions;
-                else if (type == 'Fish Information & Tips')
+                } else if (type == 'Fish Information & Tips') {
                   display = l10n.fishInformationAndTips;
-                else if (type == 'Community & Fisherman Stories')
+                } else if (type == 'Community & Fisherman Stories') {
                   display = l10n.communityAndFishermanStories;
-                else if (type == 'Others')
+                } else if (type == 'Others') {
                   display = l10n.others;
+                }
                 return DropdownMenuItem(value: type, child: Text(display));
               }).toList(),
               onChanged: (value) {
@@ -649,7 +652,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 )
               else
                 DropdownButtonFormField<String>(
-                  value: _selectedPlace,
+                  initialValue: _selectedPlace,
                   decoration: InputDecoration(
                     labelText: l10n.place,
                     border: OutlineInputBorder(
@@ -666,7 +669,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedWeatherType,
+                initialValue: _selectedWeatherType,
                 decoration: InputDecoration(
                   labelText: l10n.weatherType,
                   border: OutlineInputBorder(
@@ -675,16 +678,17 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 ),
                 items: _weatherTypes.map((wType) {
                   String display = wType;
-                  if (wType == 'Rain')
+                  if (wType == 'Rain') {
                     display = l10n.rain;
-                  else if (wType == 'Storm')
+                  } else if (wType == 'Storm') {
                     display = l10n.storm;
-                  else if (wType == 'Thunder')
+                  } else if (wType == 'Thunder') {
                     display = l10n.thunder;
-                  else if (wType == 'High Wind')
+                  } else if (wType == 'High Wind') {
                     display = l10n.highWind;
-                  else if (wType == 'Tsunami')
+                  } else if (wType == 'Tsunami') {
                     display = l10n.tsunami;
+                  }
                   return DropdownMenuItem(value: wType, child: Text(display));
                 }).toList(),
                 onChanged: (value) =>

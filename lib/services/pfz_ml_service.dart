@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'copernicus_service.dart';
 
@@ -21,16 +22,16 @@ class PfzMlService {
         'assets/models/pfz_model.tflite',
       );
       _isModelLoaded = true;
-      print('PFZ TFLite model loaded successfully.');
+      debugPrint('PFZ TFLite model loaded successfully.');
     } catch (e) {
-      print('Failed to load PFZ model: $e');
+      debugPrint('Failed to load PFZ model: $e');
       _isModelLoaded = false;
     }
   }
 
   Future<double> predictPfz(MarineData data) async {
     if (!_isModelLoaded || _interpreter == null) {
-      print('Model not loaded, cannot predict.');
+      debugPrint('Model not loaded, cannot predict.');
       return 0.0;
     }
 
@@ -45,7 +46,7 @@ class PfzMlService {
       double probability = output[0][0];
       return probability.clamp(0.0, 1.0);
     } catch (e) {
-      print('Error during PFZ prediction: $e');
+      debugPrint('Error during PFZ prediction: $e');
       return 0.0;
     }
   }

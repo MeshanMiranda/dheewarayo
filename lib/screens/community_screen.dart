@@ -295,6 +295,7 @@ class CommunityScreen extends StatelessWidget {
                   onPressed: () {
                     final String shareText =
                         "$user posted:\n$text${imageUrl != null ? '\n$imageUrl' : ''}";
+                    // ignore: deprecated_member_use
                     Share.share(shareText);
                   },
                   icon: const Icon(Icons.share_outlined, size: 18),

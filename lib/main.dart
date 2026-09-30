@@ -97,7 +97,7 @@ void callbackDispatcher() {
             );
           }
         } catch (e) {
-          print('Background task error: $e');
+          developer.log('Background task error: $e');
         }
         break;
     }
@@ -110,7 +110,7 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  Workmanager().initialize(callbackDispatcher);
 
   Workmanager().registerPeriodicTask(
     "weather_task_1",

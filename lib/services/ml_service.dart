@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class MLService {
@@ -18,9 +19,9 @@ class MLService {
       _interpreter = await Interpreter.fromAsset(
         'assets/models/weather_model.tflite',
       );
-      print('Weather model loaded successfully.');
+      debugPrint('Weather model loaded successfully.');
     } catch (e) {
-      print('Failed to load Weather model: $e');
+      debugPrint('Failed to load Weather model: $e');
     }
   }
 
@@ -31,7 +32,7 @@ class MLService {
     double pres,
   ) {
     if (_interpreter == null) {
-      print('Interpreter is not initialized.');
+      debugPrint('Interpreter is not initialized.');
       return null;
     }
 
@@ -50,7 +51,7 @@ class MLService {
         'rain': output[0][2] as double,
       };
     } catch (e) {
-      print('Error running inference: $e');
+      debugPrint('Error running inference: $e');
       return null;
     }
   }

@@ -567,7 +567,7 @@ class _FishermanSettingsScreenState extends State<FishermanSettingsScreen> {
                     hint: Text(
                       l10n?.chooseYourBoatType ?? 'Choose your boat type',
                     ),
-                    value: _selectedBoatType,
+                    initialValue: _selectedBoatType,
                     isExpanded: true,
                     icon: Icon(
                       Icons.arrow_drop_down,
