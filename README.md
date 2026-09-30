@@ -112,17 +112,8 @@ Enjoy using Dheewarayo! 🚀
 
 ---
 
-## 📸 Screenshots
+## 📸 Live Demonstration
 
-<table>
-  <tr>
-    <td><img src="https://github.com/MeshanMiranda/dheewarayo/blob/main/Screenshot%20(1).png?raw=true" width="500"/></td>
-    <td><img src="https://github.com/MeshanMiranda/dheewarayo/blob/main/Screenshot%20(2).png?raw=true" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/MeshanMiranda/dheewarayo/blob/main/Screenshot%20(3).png?raw=true" width="500"/></td>
-    <td><img src="https://github.com/MeshanMiranda/dheewarayo/blob/main/Screenshot%20(4).png?raw=true" width="500"/></td>
-  </tr>
-</table>
+[View the Live Demonstration](https://drive.google.com/file/d/1AMOP3UTUK2PEoZ1RC-TdthU5SLxsZjV7/view?usp=sharing)
 
 ---
